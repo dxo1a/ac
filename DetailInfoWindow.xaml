@@ -1,0 +1,78 @@
+﻿<mah:MetroWindow x:Class="ac.DetailInfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ac"
+        mc:Ignorable="d"
+        Title="Информация о детали" Height="420" Width="560" MinHeight="420" MinWidth="560">
+    <Window.Resources>
+        <Style x:Key="ForInfos_Header">
+            <Setter Property="TextBlock.Background" Value="Transparent"/>
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="TextBlock.FontSize" Value="18"/>
+        </Style>
+        <Style x:Key="ForInfos_Body">
+            <Setter Property="TextBlock.Background" Value="Transparent"/>
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="TextBlock.FontSize" Value="18"/>
+            <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="245"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="245"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1">
+            <Image Name="Img" Grid.Row="1" Grid.Column="1" Source="{Binding Data, TargetNullValue={x:Null}}"/>
+        </DockPanel>
+        <StackPanel Grid.Row="1" Grid.Column="2">
+            <StackPanel Orientation="Vertical" Margin="10 0 0 0">
+                <StackPanel Orientation="Vertical" Margin="0 5">
+                    <TextBlock Text="Операция: " Style="{StaticResource ForInfos_Header}"/>
+                    <TextBlock Name="OperationTB" Style="{StaticResource ForInfos_Body}" Text="Лазерная резка (5)"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="0 5">
+                    <TextBlock Text="Исполнитель: " Style="{StaticResource ForInfos_Header}"/>
+                    <TextBlock Name="ExecutorTB" Style="{StaticResource ForInfos_Body}" Text="012001 -  Лазерная резка (кооперация)"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="0 5 0 0">
+                    <TextBlock Text="Время (ед)" Style="{StaticResource ForInfos_Header}"/>
+                    <TextBlock Name="PriceTB" Style="{StaticResource ForInfos_Body}" Text="2:15"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Время (комплект)" Style="{StaticResource ForInfos_Header}"/>
+                    <TextBlock Name="CostTB" Style="{StaticResource ForInfos_Body}" Text="4:30"/>
+                </StackPanel>
+                
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Grid.Column="1">
+            <StackPanel Orientation="Vertical" Margin="10 5 10 0">
+                <DockPanel HorizontalAlignment="Stretch" Margin="0 5">
+                    <TextBlock Style="{StaticResource ForInfos_Header}" Text="Количество: " FontSize="16"/>
+                    <TextBlock Name="CountTB" Background="Transparent" FontSize="16" Text="0" TextAlignment="Right" MinWidth="130" Padding="0 0 5 0"/>
+                </DockPanel>
+                <StackPanel Orientation="Vertical" Margin="0 5">
+                    <TextBlock Text="Статус: " Style="{StaticResource ForInfos_Header}" FontSize="16"/>
+                    <TextBlock Name="StatusTB" Style="{StaticResource ForInfos_Body}" Text="Готово" FontSize="16"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+        <DockPanel HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="2">
+            <Button Name="PrPBtn" Width="150" Height="60" Content="Инф. о партии" FontSize="14   "/>
+        </DockPanel>
+        
+    </Grid>
+</mah:MetroWindow>
