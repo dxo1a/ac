@@ -1,0 +1,76 @@
+﻿<Window x:Class="ac.SpecProcessInfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ac"
+        mc:Ignorable="d"
+        Title="Информация о спец. процессе" Height="800" Width="1200" Icon="Resources/ac.ico">
+    <Window.Resources>
+        <DropShadowEffect x:Key="ShadowEffect" ShadowDepth="5" Direction="320" BlurRadius="10" Opacity="1" Color="Gray"/>
+        <BlurEffect x:Key="BlurEffect" Radius="10" KernelType="Gaussian"/>
+        <DataTemplate x:Key="SpecialProcessTemplate">
+            <UniformGrid Margin="0" Columns="1" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <Border CornerRadius="10" Background="LightGray" Width="350" Height="250" BorderThickness="2" BorderBrush="Gray" HorizontalAlignment="Center" MouseLeftButtonDown="Border_MouseLeftButtonDown" Effect="{StaticResource ShadowEffect}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.5*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Margin="10" Orientation="Horizontal" Grid.Row="0" MinWidth="325">
+                            <StackPanel>
+                                <TextBlock Text="{Binding OP_NAME}" FontSize="16" MaxWidth="190" TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding OP_DESCR}" FontSize="12" Foreground="Gray"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel x:Name="ELParameters" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10 0">
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="Resources/icons/temp3.ico" Width="25" Height="25"/>
+                                    <TextBlock x:Name="Temp" Text="{Binding Temp}" FontSize="16" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Aliased"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="Resources/icons/hum2.ico" Width="25" Height="25" Margin="5 0 2.5 0" HorizontalAlignment="Right"/>
+                                    <TextBlock x:Name="Hum" Text="{Binding CurHum}" FontSize="16" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Aliased"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel x:Name="Info" VerticalAlignment="Top" Grid.Row="1" Margin="10 0">
+                            <TextBlock Text="{Binding OP_EL_ID}" FontSize="12"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </UniformGrid>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ItemsControl Name="SpecProcessesItemsControl" ItemTemplate="{StaticResource SpecialProcessTemplate}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style>
+                        <Setter Property="FrameworkElement.Margin" Value="5" />
+                        <Setter Property="FrameworkElement.HorizontalAlignment" Value="Center"/>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
+        </ScrollViewer>
+        <StackPanel Grid.Row="0" Margin="10 10 10 0" MinHeight="115">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Фильтр: " FontSize="16"/>
+                <TextBox x:Name="SearchSPTBX" Width="200" KeyDown="SearchSPTBX_KeyDown"/>
+            </StackPanel>
+        </StackPanel>
+        <Separator Grid.Row="0"/>
+    </Grid>
+</Window>

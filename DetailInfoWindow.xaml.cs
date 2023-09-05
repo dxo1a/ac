@@ -7,60 +7,52 @@ using System.Windows.Media;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using System.IO;
+using System.Text;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace ac
 {
     /// <summary>
     /// Логика взаимодействия для DetailInfo.xaml
     /// </summary>
-    public partial class DetailInfoWindow
+    public partial class DetailInfoWindow : Window
     {
         private DetailsView SelectedDetail { get; set; }
-        DetailsView Detail { get; set; }
-        List<DetailsView> Details = new List<DetailsView>();
+        List<DetailsView> DetailInfo = new List<DetailsView>();
 
-        public DetailInfoWindow(DetailsView selectedDetail)
+        public string SerialNumber;
+
+        public DetailInfoWindow(DetailsView selectedDetail, string serialNumber)
         {
             InitializeComponent();
             SelectedDetail = selectedDetail;
+            SerialNumber = serialNumber;
             this.Title = SelectedDetail.Detail;
-            Odb.db = new System.Data.Entity.DbContext("Data Source=sql;initial catalog=dsl_sp;MultipleActiveResultSets=True;App=EntityFramework&quot;Integrated Security=SSPI;");
 
-            OperationTB.Text = SelectedDetail.OperationName + " (" + SelectedDetail.OperationNum + ")";
-            ExecutorTB.Text = SelectedDetail.Executor;
-
-            double price = Convert.ToDouble(SelectedDetail.Price);
-            price = Math.Round(price, 3);
-            PriceTB.Text = price.ToString();
-
-            double cost = Convert.ToDouble(SelectedDetail.Cost);
-            cost = Math.Round(cost, 3);
-            CostTB.Text = cost.ToString();
-
-            CountTB.Text = SelectedDetail.Count.ToString();
-
-            StatusTB.Text = StatusConverter.ConvertThis(SelectedDetail.Status);
-            if (SelectedDetail.Status == 4)
-            {
-                StatusTB.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF56DA56"));
-            }
-
-            SetImage();
+            //DetailInfo = Odb.db.Database.SqlQuery<DetailsView>("SELECT ПрП AS PrP, Операция AS OperationName, НомерО AS OperationNum, Исполнитель AS Executor, Цена AS Price, Стоимость AS Cost, Количество AS Count, Статус AS Status, (SELECT TOP (1) Data from dsl_sp.dbo.DEV_IMAGES_V WHERE ПрП = NUMM) as Data FROM [Cooperation].[dbo].[DetailsView] LEFT JOIN dsl_sp.dbo.DEV_IMAGES_V ON НомерД = PRT$$$MNF WHERE НомерД=@detnode AND Договор=@numpp GROUP BY Операция, НомерО, Исполнитель, Цена, Стоимость, Количество, Статус, ПрП, НомерД, Договор", new SqlParameter("detnode", SelectedDetail.DetailNode), new SqlParameter("numpp", SelectedDetail.PP)).ToList();
+            DetailInfo = Odb.db.Database.SqlQuery<DetailsView>("SELECT ПрП AS PrP, Операция AS OperationName, НомерО AS OperationNum, Исполнитель AS Executor, Цена AS Price, Стоимость AS Cost, Количество AS Count, Статус AS Status, (SELECT TOP (1) Data from dsl_sp.dbo.DEV_IMAGES_V WHERE ПрП = NUMM) as Data FROM [Cooperation].[dbo].[DetailsView] LEFT JOIN dsl_sp.dbo.DEV_IMAGES_V ON НомерД = PRT$$$MNF WHERE НомерД=@detnode AND Договор=@numpp AND ПрП=@prp GROUP BY Операция, НомерО, Исполнитель, Цена, Стоимость, Количество, Статус, ПрП, НомерД, Договор", new SqlParameter("detnode", SelectedDetail.DetailNode), new SqlParameter("numpp", SelectedDetail.PP), new SqlParameter("prp", SelectedDetail.PrP)).ToList();
+            DetailDG.ItemsSource = DetailInfo;
         }
 
-        private void SetImage()
+        private void ImgCB_Checked(object sender, RoutedEventArgs e)
         {
-            string detailnode = SelectedDetail.DetailNode;
-            byte[] imageData = Odb.db.Database.SqlQuery<byte[]>("select Data from dsl_sp.dbo.DEV_IMAGES_V where PRT$$$MNF = @param1", new SqlParameter("@param1", detailnode)).FirstOrDefault();
-            BitmapImage image = new BitmapImage();
-            using (MemoryStream memoryStream = new MemoryStream(imageData))
+            ImageColumn.Visibility = Visibility.Visible;
+        }
+
+        private void ImgCB_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ImageColumn.Visibility= Visibility.Collapsed;
+        }
+
+        private void DetailDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (DetailDG.SelectedItem is DetailsView detailsView)
             {
-                image.BeginInit();
-                image.CacheOption = BitmapCacheOption.OnLoad; // Загрузка изображения в память
-                image.StreamSource = memoryStream;
-                image.EndInit();
+                SpecProcessInfoWindow specProcessInfoWindow = new SpecProcessInfoWindow(SelectedDetail, SerialNumber);
+                specProcessInfoWindow.ShowDialog();
             }
-            Img.Source = image;
         }
     }
 }

@@ -1,21 +1,11 @@
-﻿<mah:MetroWindow x:Class="ac.MainWindow"
+﻿<Window x:Class="ac.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ac"
         mc:Ignorable="d"
-        Title="Главное окно" Height="800" Width="1200" MinHeight="150" MinWidth="250">
-    <mah:MetroWindow.LeftWindowCommands>
-        <mah:WindowCommands>
-            <iconPacks:PackIconModern Width="22" Height="22" VerticalAlignment="Center" Kind="Book" />
-        </mah:WindowCommands>
-    </mah:MetroWindow.LeftWindowCommands>
-    <Window.Resources>
-        <local:StatusConverter x:Key="StatusConverter"/>
-    </Window.Resources>
+        Title="Главное окно" Height="800" Width="1200" MinHeight="150" MinWidth="250" Icon="Resources/ac.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="45"/>
@@ -32,36 +22,31 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 5 0 0">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
                     <TextBlock Text="Серийный номер " HorizontalAlignment="Center" Grid.Column="1" FontSize="16" VerticalAlignment="Center"/>
-                    <TextBox x:Name="SerialNumberTBX" MinWidth="200" HorizontalContentAlignment="Center" FontSize="16"/>
-                    <Button Name="FindPPBtn" Width="30" Height="30" Margin="5 0" Click="FindPPBtn_Click"/>
+                    <TextBox x:Name="SerialNumberTBX" MinWidth="200" HorizontalContentAlignment="Center" FontSize="16" Margin="0 0 -10 0"/>
+                    <Button Name="FindPPBtn" Width="30" Height="30" Click="FindPPBtn_Click" Style="{StaticResource RoundedButtonStyle}">
+                        <Image Source="Resources/icons/find1.ico" Width="22" Height="22" Margin="2" ToolTip="Поиск по серийному номеру"/>
+                    </Button>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
                 <TextBlock Text="Плановая позиция " HorizontalAlignment="Center" Grid.Column="1" FontSize="16" Margin="10 0 0 0" VerticalAlignment="Center"/>
                 <StackPanel MinWidth="200">
-                    <TextBox x:Name="PPTBX" HorizontalContentAlignment="Center" MouseDoubleClick="PPTBX_MouseDoubleClick" IsReadOnly="True" BorderThickness="0" Background="Transparent" FontSize="16" FontStyle="Italic" FontWeight="SemiBold"/>
+                    <TextBox x:Name="PPTBX" Text="0000000000" HorizontalContentAlignment="Center" MouseDoubleClick="PPTBX_MouseDoubleClick" IsReadOnly="True" BorderThickness="0" Background="Transparent" FontSize="16" FontStyle="Italic" FontWeight="SemiBold"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top" Panel.ZIndex="2">
-            <TextBlock x:Name="CopyNotificationTB" Text="Скопировано" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" Margin="525 0 0 0"/>
+        <TextBlock x:Name="SNNotFoundTB" Grid.Column="1" Grid.Row="1" Text="Не найдено" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed" Margin="410 0 0 0" Foreground="#FF2F2F"/>
+        <TextBlock x:Name="CopyNotificationTB" Grid.Column="1" Grid.Row="1" Text="Скопировано" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="Collapsed" Margin="0 0 272.5 0"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="5 0">
+            <TextBox Name="DetailSearchTBX" Grid.Row="1" Grid.Column="1" Width="0" TextAlignment="Center" HorizontalAlignment="Left" FontSize="16" VerticalAlignment="Bottom" Padding="5 0" KeyDown="DetailSearchTBX_KeyDown" Height="30" Style="{StaticResource ShowTextboxAnimation}" Margin="0 0 -10 0"/>
+            <Button Name="DetailSearchBTN" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="60" Height="30" VerticalAlignment="Bottom" Click="DetailSearchBTN_Click" Style="{StaticResource RoundedButtonStyle}" Content="Поиск" FontSize="16"/>
         </StackPanel>
-        <TextBlock Name="PPNameTB" Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Center" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
-        <DataGrid x:Name="DetailsDG" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5" CanUserDeleteRows="False" MouseDoubleClick="DetailsDG_MouseDoubleClick">
+        <TextBlock Name="PPNameTB" Text="awdadawdawdadawdadw" Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Center" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
+        <TextBlock Name="PPPrP" Text="324329420" Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Right" HorizontalAlignment="Right" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
+        <DataGrid x:Name="DetailsDG" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5" CanUserDeleteRows="False" MouseDoubleClick="DetailsDG_MouseDoubleClick" Style="{StaticResource DataGridOwn}">
             <DataGrid.Columns>
-                <!--<DataGridTextColumn Binding="{Binding Product}" Header="Изделие" Width="*" IsReadOnly="True"/>-->
                 <DataGridTextColumn Binding="{Binding Detail}" Header="Деталь" Width="*" IsReadOnly="True"/>
-                <!--<DataGridTextColumn Binding="{Binding OperationNum}" Header="№ операции" Width="*" IsReadOnly="True"/>-->
-                <!--<DataGridTextColumn Binding="{Binding OperationName}" Header="Операция" Width="*" IsReadOnly="True"/>-->
-                <!--<DataGridTextColumn Binding="{Binding DateV,StringFormat='{}{0:dd.MM.yyyy}'}" Header="Дата выпуска" Width="*" IsReadOnly="True"/>-->
-                <!--<DataGridTextColumn Binding="{Binding Executor}" Header="Исполнитель" Width="*" IsReadOnly="True"/>-->
-                <!--<DataGridTextColumn Binding="{Binding Status, Converter={StaticResource StatusConverter}}" Header="Статус" Width="*" IsReadOnly="True"/>-->
-                <!--<DataGridTextColumn Binding="{Binding Price, StringFormat={}{0:N2}}" Header="Время (ед.)" Width="*" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding Cost, StringFormat={}{0:N2}}" Header="Время (комплект)" Width="*" IsReadOnly="True"/>-->
-                <!--<DataGridTextColumn Binding="{Binding RSTS, Converter={StaticResource StatusConverter}}" Header="Статус плановой позиции" Width="*" IsReadOnly="True"/>-->
-                <!--<DataGridTextColumn Binding="{Binding DateZ,StringFormat='{}{0:dd.MM.yyyy}'}" Header="Дата по заказу" Width="*" IsReadOnly="True"/>-->
-                <!--<DataGridTextColumn Binding="{Binding PrP}" Header="Партия" Width="*" IsReadOnly="True"/>-->
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
-</mah:MetroWindow>
+</Window>
