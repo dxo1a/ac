@@ -50,7 +50,7 @@ namespace ac
         {
             if (DetailDG.SelectedItem is DetailsView detailsView)
             {
-                SpecProcessInfoWindow specProcessInfoWindow = new SpecProcessInfoWindow(SelectedDetail, SerialNumber);
+                SpecProcessInfoWindow specProcessInfoWindow = new SpecProcessInfoWindow(SelectedDetail, SerialNumber); //поменять на сущность операции SP_SS (и создать её) чтобы передавать именно операцию
                 specProcessInfoWindow.ShowDialog();
             }
         }

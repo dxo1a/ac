@@ -25,6 +25,8 @@ namespace ac
             SelectedDetail = selectedDetail;
             SerialNumber = serialNumber;
 
+            this.Title = SelectedDetail.OperationName; //null
+
             ss_id = Odb.db.Database.SqlQuery<int>("SELECT SS_DEV_NUM.SS_ID FROM SP_SS LEFT JOIN SS_DEV_NUM ON SP_SS.SS_ID = SS_DEV_NUM.SS_ID WHERE DEV_SN=@devsn", new SqlParameter("devsn", SerialNumber)).SingleOrDefault();
 
             MessageBox.Show(SelectedDetail.PrP);

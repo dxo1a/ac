@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Title="Информация о спец. процессе" Height="800" Width="1200" Icon="Resources/ac.ico">
     <Window.Resources>
-        <DropShadowEffect x:Key="ShadowEffect" ShadowDepth="5" Direction="320" BlurRadius="10" Opacity="1" Color="Gray"/>
+        <DropShadowEffect x:Key="ShadowEffectDown" ShadowDepth="5" Direction="320" BlurRadius="10" Opacity="1" Color="Gray"/>
+        <DropShadowEffect x:Key="ShadowEffectUp" ShadowDepth="5" Direction="160" BlurRadius="10" Opacity="1" Color="Gray"/>
         <BlurEffect x:Key="BlurEffect" Radius="10" KernelType="Gaussian"/>
         <DataTemplate x:Key="SpecialProcessTemplate">
             <UniformGrid Margin="0" Columns="1" HorizontalAlignment="Center" VerticalAlignment="Top">
@@ -71,6 +72,8 @@
                 <TextBox x:Name="SearchSPTBX" Width="200" KeyDown="SearchSPTBX_KeyDown"/>
             </StackPanel>
         </StackPanel>
-        <Separator Grid.Row="0"/>
+
+        <Border Grid.Row="0" VerticalAlignment="Bottom" Effect="{StaticResource ShadowEffectDown}" BorderBrush="#bcbcbc" BorderThickness="1" Width="Auto" Height="2" CornerRadius="10"/>
+        <Border Grid.Row="2" VerticalAlignment="Top" Effect="{StaticResource ShadowEffectUp}" BorderBrush="#bcbcbc" BorderThickness="1" Width="Auto" Height="2" CornerRadius="10"/>
     </Grid>
 </Window>
