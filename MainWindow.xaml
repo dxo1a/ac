@@ -4,12 +4,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ac"
+        xmlns:converters="clr-namespace:ac.Converters"
         mc:Ignorable="d"
         Title="Главное окно" Height="800" Width="1200" MinHeight="150" MinWidth="250" Icon="Resources/ac.ico">
+    <Window.Resources>
+        <!--#region CONVERTERS-->
+        <converters:StatusConverter x:Key="StatusConverter"/>
+        <converters:StatusFromBoolConverter x:Key="StatusFromBoolConverter"/>
+        <converters:BytesToBitmapImageConverter x:Key="BytesToBitmapImageConverter"/>
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+        <!--#endregion-->
+    </Window.Resources>
     <Grid>
+        <!--#region Definitions-->
         <Grid.RowDefinitions>
-            <RowDefinition Height="45"/>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="35"/>
             <RowDefinition/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
@@ -18,32 +28,44 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="30"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top" Panel.ZIndex="2">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 5 0 0">
+        <!--#endregion-->
+
+        <!--#region TOP PANEL-->
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top" Panel.ZIndex="2" Grid.Row="0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 10 0 0">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                        <TextBlock Text="Сер. номер " HorizontalAlignment="Center" Grid.Column="1" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBox x:Name="SerialNumberTBX" MinWidth="200" HorizontalContentAlignment="Center" FontSize="16" Margin="0 0 -10 0"/>
+                        <Button Name="FindPPBtn" Width="30" Height="30" Click="FindPPBtn_Click" Style="{StaticResource RoundedButtonStyle}">
+                            <Image Source="Resources/icons/find1.ico" Width="22" Height="22" Margin="2" ToolTip="Поиск по серийному номеру"/>
+                        </Button>
+                    </StackPanel>
+                    <TextBlock x:Name="SNNotFoundTB" Grid.Column="1" Grid.Row="1" Text="Не найдено" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed" Margin="165 0 0 0" Foreground="#FF2F2F"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="0 10 0 0">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
-                    <TextBlock Text="Серийный номер " HorizontalAlignment="Center" Grid.Column="1" FontSize="16" VerticalAlignment="Center"/>
-                    <TextBox x:Name="SerialNumberTBX" MinWidth="200" HorizontalContentAlignment="Center" FontSize="16" Margin="0 0 -10 0"/>
-                    <Button Name="FindPPBtn" Width="30" Height="30" Click="FindPPBtn_Click" Style="{StaticResource RoundedButtonStyle}">
-                        <Image Source="Resources/icons/find1.ico" Width="22" Height="22" Margin="2" ToolTip="Поиск по серийному номеру"/>
-                    </Button>
+                    <TextBlock Text="Плановая позиция " HorizontalAlignment="Center" Grid.Column="1" FontSize="16" Margin="10 0 0 0" VerticalAlignment="Center"/>
+                    <StackPanel MinWidth="200">
+                        <TextBox x:Name="PPTBX" Text="0000000000" HorizontalContentAlignment="Center" MouseDoubleClick="PPTBX_MouseDoubleClick" IsReadOnly="True" BorderThickness="0" Background="Transparent" FontSize="16" FontStyle="Italic" FontWeight="SemiBold"/>
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
-                <TextBlock Text="Плановая позиция " HorizontalAlignment="Center" Grid.Column="1" FontSize="16" Margin="10 0 0 0" VerticalAlignment="Center"/>
-                <StackPanel MinWidth="200">
-                    <TextBox x:Name="PPTBX" Text="0000000000" HorizontalContentAlignment="Center" MouseDoubleClick="PPTBX_MouseDoubleClick" IsReadOnly="True" BorderThickness="0" Background="Transparent" FontSize="16" FontStyle="Italic" FontWeight="SemiBold"/>
-                </StackPanel>
+                <TextBlock x:Name="CopyNotificationTB" Grid.Column="1" Grid.Row="1" Text="Скопировано" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="Collapsed" Margin="152.5 0 0 0"/>
             </StackPanel>
         </StackPanel>
-        <TextBlock x:Name="SNNotFoundTB" Grid.Column="1" Grid.Row="1" Text="Не найдено" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed" Margin="410 0 0 0" Foreground="#FF2F2F"/>
-        <TextBlock x:Name="CopyNotificationTB" Grid.Column="1" Grid.Row="1" Text="Скопировано" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="Collapsed" Margin="0 0 272.5 0"/>
+        <!--#endregion-->
+        
+        <!--#region BOTTOM PANEL-->
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="5 0">
-            <TextBox Name="DetailSearchTBX" Grid.Row="1" Grid.Column="1" Width="0" TextAlignment="Center" HorizontalAlignment="Left" FontSize="16" VerticalAlignment="Bottom" Padding="5 0" KeyDown="DetailSearchTBX_KeyDown" Height="30" Style="{StaticResource ShowTextboxAnimation}" Margin="0 0 -10 0"/>
-            <Button Name="DetailSearchBTN" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="60" Height="30" VerticalAlignment="Bottom" Click="DetailSearchBTN_Click" Style="{StaticResource RoundedButtonStyle}" Content="Поиск" FontSize="16"/>
+            <TextBox Name="DetailSearchTBX" Grid.Column="1" Width="0" TextAlignment="Center" HorizontalAlignment="Left" FontSize="16" VerticalAlignment="Bottom" Padding="5 0" KeyDown="DetailSearchTBX_KeyDown" Height="30" Style="{StaticResource ShowTextboxAnimation}" Margin="0 0 -10 0"/>
+            <Button Name="DetailSearchBTN" Grid.Column="1" HorizontalAlignment="Left" Width="60" Height="30" VerticalAlignment="Bottom" Click="DetailSearchBTN_Click" Style="{StaticResource RoundedButtonStyle}" Content="Поиск" FontSize="16"/>
         </StackPanel>
-        <TextBlock Name="PPNameTB" Text="awdadawdawdadawdadw" Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Center" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
-        <TextBlock Name="PPPrP" Text="324329420" Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Right" HorizontalAlignment="Right" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
-        <DataGrid x:Name="DetailsDG" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5" CanUserDeleteRows="False" MouseDoubleClick="DetailsDG_MouseDoubleClick" Style="{StaticResource DataGridOwn}">
+        <TextBlock Name="PPNameTB" Text="Наименование детали" Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Center" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
+        <TextBlock Name="PPPrPTB" Text="ПрП: " Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Right" HorizontalAlignment="Right" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
+        <!--#endregion-->
+        
+        <DataGrid x:Name="DetailsDG" HeadersVisibility="None" BorderThickness="5" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5" CanUserDeleteRows="False" MouseDoubleClick="DetailsDG_MouseDoubleClick" Style="{StaticResource DataGridOwn}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Detail}" Header="Деталь" Width="*" IsReadOnly="True"/>
             </DataGrid.Columns>

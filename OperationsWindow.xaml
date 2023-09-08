@@ -1,0 +1,54 @@
+﻿<Window x:Class="ac.OperationsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ac"
+        xmlns:converters="clr-namespace:ac.Converters"
+        mc:Ignorable="d"
+        Title="Операции" Height="700" Width="1000" MinHeight="420" MinWidth="560" Icon="Resources/ac.ico">
+    <Window.Resources>
+        <converters:StatusConverter x:Key="StatusConverter"/>
+        <converters:StatusFromBoolConverter x:Key="StatusFromBoolConverter"/>
+        <converters:BytesToBitmapImageConverter x:Key="BytesToBitmapImageConverter"/>
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.075*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+
+        <!--<CheckBox Name="ImgCB" IsChecked="False" Content="Эскиз" Grid.Column="1" Grid.Row="0" VerticalAlignment="Bottom" Margin="10 0 0 0" Checked="ImgCB_Checked" Unchecked="ImgCB_Unchecked" FontSize="14"/>-->
+
+        <DataGrid Name="OperationsDG" CanUserAddRows="False" Grid.Row="1" Grid.Column="1" Margin="5" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn x:Name="ImageColumn" Header="Эскиз" Width="*" IsReadOnly="True" Visibility="Collapsed" MaxWidth="150" MinWidth="50">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding Data, Converter={StaticResource BytesToBitmapImageConverter}, TargetNullValue={x:Null}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding OperationNum}" Header="№" Width="*"/>
+                <DataGridTextColumn Binding="{Binding OperationName}" Header="Операция" Width="*"/>
+                <DataGridTextColumn Binding="{Binding Executor}" Header="Исполнитель" Width="*"/>
+                <!--<DataGridTextColumn Binding="{Binding Price, StringFormat={}{0:N2}}" Header="Время (ед.)" Width="*"/>
+                <DataGridTextColumn Binding="{Binding Cost, StringFormat={}{0:N2}}" Header="Время (комплект)" Width="*"/>-->
+                <!--<DataGridTextColumn Binding="{Binding WARN, Converter={StaticResource StatusFromBoolConverter}}" Header="Нарушения в СП" Width="*"/>-->
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Name="SpecProcessesBtn" Click="SpecProcessesBtn_Click" Width="250" Height="40" FontSize="16" Content="Спец. процессы" Margin="10 0"/>
+            <Button Name="MaterialsBtn" Click="MaterialsBtn_Click" Width="250" Height="40" FontSize="16" Content="Материалы" Margin="10 0"/>
+        </StackPanel>
+        
+    </Grid>
+</Window>

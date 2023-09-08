@@ -7,47 +7,98 @@
         mc:Ignorable="d"
         Title="Информация о спец. процессе" Height="800" Width="1200" Icon="Resources/ac.ico">
     <Window.Resources>
-        <DropShadowEffect x:Key="ShadowEffectDown" ShadowDepth="5" Direction="320" BlurRadius="10" Opacity="1" Color="Gray"/>
-        <DropShadowEffect x:Key="ShadowEffectUp" ShadowDepth="5" Direction="160" BlurRadius="10" Opacity="1" Color="Gray"/>
-        <BlurEffect x:Key="BlurEffect" Radius="10" KernelType="Gaussian"/>
+        <DropShadowEffect x:Key="shadForSeparator" BlurRadius="10" Direction="280" ShadowDepth="3" Color="Black" Opacity="1"/>
+        <!--#region DATA TEMPLATE-->
         <DataTemplate x:Key="SpecialProcessTemplate">
             <UniformGrid Margin="0" Columns="1" HorizontalAlignment="Center" VerticalAlignment="Top">
-                <Border CornerRadius="10" Background="LightGray" Width="350" Height="250" BorderThickness="2" BorderBrush="Gray" HorizontalAlignment="Center" MouseLeftButtonDown="Border_MouseLeftButtonDown" Effect="{StaticResource ShadowEffect}">
+                <Border CornerRadius="10" Background="LightGray" Width="350" Height="330" BorderThickness="2" BorderBrush="Gray" HorizontalAlignment="Center" MouseLeftButtonDown="Border_MouseLeftButtonDown" Effect="{StaticResource ShadowEffect}">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="0.5*"/>
+                            <RowDefinition Height="0.35*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <StackPanel Margin="10" Orientation="Horizontal" Grid.Row="0" MinWidth="325">
-                            <StackPanel>
-                                <TextBlock Text="{Binding OP_NAME}" FontSize="16" MaxWidth="190" TextWrapping="Wrap"/>
-                                <TextBlock Text="{Binding OP_DESCR}" FontSize="12" Foreground="Gray"/>
+                        <StackPanel Grid.Row="0" Background="#FFADADAD" Orientation="Horizontal">
+                            <StackPanel Margin="10" Orientation="Horizontal" Grid.Row="0" MinWidth="325">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding OP_NAME}" FontSize="17" MinWidth="185" MaxWidth="185" TextWrapping="Wrap" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{Binding OP_DESCR}" FontSize="12" Foreground="Gray"/>
+                                </StackPanel>
+                                <StackPanel x:Name="ELParameters" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10 0">
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Orientation="Horizontal">
+                                            <StackPanel Orientation="Vertical">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="Resources/icons/temp3.ico" Width="25" Height="25"/>
+                                                    <TextBlock x:Name="WarnTempTBX" Text="{Binding Temp}" FontSize="16" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Aliased" Foreground="{Binding EL_TMP_RESULT_COLOR}"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Vertical">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="Resources/icons/hum2.ico" Width="25" Height="25" Margin="5 0 2.5 0" HorizontalAlignment="Right"/>
+                                                    <TextBlock x:Name="HumTBX" Text="{Binding CurHum}" FontSize="16" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Aliased" Foreground="{Binding EL_HUM_RESULT_COLOR}"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding EL_NAME}" FontSize="12"/>
+                                    </StackPanel>
+                                </StackPanel>
                             </StackPanel>
                         </StackPanel>
-                        <StackPanel x:Name="ELParameters" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10 0">
-                            <StackPanel Orientation="Horizontal">
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="Resources/icons/temp3.ico" Width="25" Height="25"/>
-                                    <TextBlock x:Name="Temp" Text="{Binding Temp}" FontSize="16" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Aliased"/>
+
+                        <Border Grid.Row="0" VerticalAlignment="Bottom" Effect="{StaticResource shadForSeparator}" BorderBrush="Gray" BorderThickness="1" Width="Auto" Height="2" CornerRadius="0"/>
+
+                        <StackPanel x:Name="Info" Margin="10 5" Grid.Row="1" VerticalAlignment="Top">
+                            <StackPanel Name="TimePanel">
+                                <StackPanel Orientation="Horizontal" Margin="10 0">
+                                    <TextBlock Text="Время" FontSize="16" Margin="0 0 2.5 0" FontWeight="SemiBold"/>
+                                    <TextBlock Name="TLTypeTB" Text="{Binding TL_TYPE}" VerticalAlignment="Bottom"/> <!--Нужен конвертер-->
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="Resources/icons/hum2.ico" Width="25" Height="25" Margin="5 0 2.5 0" HorizontalAlignment="Right"/>
-                                    <TextBlock x:Name="Hum" Text="{Binding CurHum}" FontSize="16" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Aliased"/>
+                                <Separator/>
+                                <StackPanel Orientation="Horizontal" Margin="15 0">
+                                    <TextBlock Name="TLValue1TB" Text="{Binding TL_VALUE1}" FontSize="14" ToolTip="Значение 1"/>
+                                    <TextBlock Text="-" FontSize="14" Margin="5 0"/>
+                                    <TextBlock Name="TLValue2TB" Text="0" FontSize="{Binding TL_VALUE2}" Margin="0 0 10 0" ToolTip="Значение 2"/>
+                                    <TextBlock Name="TLValueTB" Text="{Binding TL_VALUE}" FontSize="16" ToolTip="Фактическое значение" Foreground="#FF51C351"/>
+                                </StackPanel>
+                                <TextBlock Text="Дата" FontSize="16" Margin="10 5 0 0" FontWeight="SemiBold"/>
+                                <Separator/>
+                                <StackPanel Orientation="Horizontal" Margin="15 0" HorizontalAlignment="Center">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Name="TStartTB" Text="{Binding T_START, StringFormat='{}{0:dd.MM.yyyy}'}" FontSize="15" ToolTip="Дата начала"/>
+                                        <TextBlock Text="Дата начала" FontSize="11" TextAlignment="Center" Foreground="Gray"/>
+                                    </StackPanel>
+                                    <TextBlock Text="-" HorizontalAlignment="Center" Margin="10 0"/>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Name="TEndTB" Text="{Binding T_END, StringFormat='{}{0:dd.MM.yyyy}'}" FontSize="15" ToolTip="Дата окончания"/>
+                                        <TextBlock Text="Дата окончания" FontSize="11" TextAlignment="Center" Foreground="Gray"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <TextBlock Text="Пользователь" FontSize="16" Margin="10 10 0 0" FontWeight="SemiBold"/>
+                                <Separator Grid.Row="1"/>
+                                <StackPanel Orientation="Horizontal" Margin="15 0">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Name="USERFIOTB" Text="{Binding USER_SFIO}" FontSize="15" ToolTip="Пользователь"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <TextBlock Text="Тип" FontSize="16" Margin="10 10 0 0" FontWeight="SemiBold"/>
+                                <Separator Grid.Row="1"/>
+                                <StackPanel Orientation="Horizontal" Margin="15 0">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Name="OPTYPENameTB" Text="{Binding OP_TYPE_NAME}" FontSize="15" ToolTip="Пользователь"/>
+                                    </StackPanel>
                                 </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-                        <StackPanel x:Name="Info" VerticalAlignment="Top" Grid.Row="1" Margin="10 0">
-                            <TextBlock Text="{Binding OP_EL_ID}" FontSize="12"/>
                         </StackPanel>
                     </Grid>
                 </Border>
             </UniformGrid>
         </DataTemplate>
+    <!--#endregion-->
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.075*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
@@ -66,10 +117,13 @@
                 </ItemsControl.ItemContainerStyle>
             </ItemsControl>
         </ScrollViewer>
-        <StackPanel Grid.Row="0" Margin="10 10 10 0" MinHeight="115">
+        <StackPanel Grid.Row="0" Margin="10 10 10 10" HorizontalAlignment="Center" VerticalAlignment="Bottom">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Фильтр: " FontSize="16"/>
-                <TextBox x:Name="SearchSPTBX" Width="200" KeyDown="SearchSPTBX_KeyDown"/>
+                <TextBlock Text="Поиск: " FontSize="18"/>
+                <TextBox x:Name="SearchSPTBX" Width="200" KeyDown="SearchSPTBX_KeyDown" FontSize="18" TextAlignment="Center" Margin="0 0 -10 0"/>
+                <Button x:Name="SearchSPBtn" Height="Auto" Width="30" Style="{StaticResource RoundedButtonStyle}" Click="SearchSPBtn_Click">
+                    <Image Source="Resources/icons/find1.ico" Margin="2.5"/>
+                </Button>
             </StackPanel>
         </StackPanel>
 

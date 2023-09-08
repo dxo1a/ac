@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Media;
 
 namespace ac
 {
@@ -25,20 +26,19 @@ namespace ac
             SelectedDetail = selectedDetail;
             SerialNumber = serialNumber;
 
-            this.Title = SelectedDetail.OperationName; //null
+            //this.Title = SelectedDetail.OperationName; //null
 
             ss_id = Odb.db.Database.SqlQuery<int>("SELECT SS_DEV_NUM.SS_ID FROM SP_SS LEFT JOIN SS_DEV_NUM ON SP_SS.SS_ID = SS_DEV_NUM.SS_ID WHERE DEV_SN=@devsn", new SqlParameter("devsn", SerialNumber)).SingleOrDefault();
-
-            MessageBox.Show(SelectedDetail.PrP);
 
             specProcesses = Odb.db.Database.SqlQuery<SpecProcesses>(
                 @"
 
                 SELECT DISTINCT
+                  SP_SS.NUM_NOM,
                   SP_DES.OP_SEQ, 
                   OPS.OP_NAME, 
                   OPS.OP_DESCR, 
-                  OPS.OP_EL_ID, 
+                  OP_EL.EL_NAME, 
                   OP_EL.EL_TMP_VALUE1 as MinTemp,
                   OP_EL.EL_TMP_VALUE2 as MaxTemp,
                   OP_ENV_RES.EL_TMP as CurTemp,
@@ -82,12 +82,28 @@ namespace ac
                   LEFT JOIN OPS_TYPE ON OPS.OP_TYPE = OPS_TYPE.OP_TYPE_ID 
                   LEFT JOIN OP_CON_SET ON OP_CON_RES.OP_CON_SET_ID = OP_CON_SET.OP_CON_SET_ID
                 WHERE 
-                  SP_SS.SS_ID = @ssid AND DEV_NAME = @devname
+                  NUM_PAR = @prp AND SP_SS.SS_ID = @ssid
                 ORDER BY 
                   SP_DES.OP_SEQ DESC
 
-                ", new SqlParameter("ssid", ss_id), new SqlParameter("prp", SelectedDetail.PrP), new SqlParameter("devname", SelectedDetail.DetailNode)).ToList();
+                ", new SqlParameter("ssid", ss_id), new SqlParameter("prp", SelectedDetail.PrP)).ToList();
             SpecProcessesItemsControl.ItemsSource = specProcesses;
+            
+            for (int i = 0; i < specProcesses.Count; i++)
+            {
+                if (specProcesses[i].EL_TMP_RESULT.HasValue)
+                {
+                    bool tmpResultValue = specProcesses[i].EL_TMP_RESULT.Value;
+                    specProcesses[i].EL_TMP_RESULT_COLOR = tmpResultValue ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF56DA56")) : Brushes.Red;
+                }
+
+                if (specProcesses[i].EL_HUM_RESULT.HasValue)
+                {
+                    bool tmpResultValue = specProcesses[i].EL_HUM_RESULT.Value;
+                    specProcesses[i].EL_HUM_RESULT_COLOR = tmpResultValue ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF56DA56")) : Brushes.Red;
+                }
+            }
+            MessageBox.Show($"SSID: {ss_id}");
         }
 
         private void Border_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -119,6 +135,11 @@ namespace ac
             {
                 search();
             }
+        }
+
+        private void SearchSPBtn_Click(object sender, RoutedEventArgs e)
+        {
+            search();
         }
     }
 }

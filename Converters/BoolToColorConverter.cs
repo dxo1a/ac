@@ -5,24 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows;
+using System.Windows.Media;
 
-namespace ac
+namespace ac.Converters
 {
-    public class StatusFromBoolConverter : IValueConverter
+    public class BoolToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool statusValue = (bool)value;
-
-            switch(statusValue)
+            if (value is bool boolValue)
             {
-                case true:
-                    return "Имеются";
-                case false:
-                    return "Не найдено";
-                default:
-                    return "";
+                return boolValue ? Brushes.LightGreen : Brushes.Red;
             }
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

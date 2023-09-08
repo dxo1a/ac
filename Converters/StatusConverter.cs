@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace ac
+namespace ac.Converters
 {
     public class StatusConverter : IValueConverter
     {

@@ -8,20 +8,33 @@ namespace ac.Models
 {
     public class Materials
     {
-        public string OrderNum { get; set; }
-        public string PRC { get; set; }
-        public string NM { get; set; }
-        public double TotalPlanQTY { get; set; }
-        public double TotalFactQTY { get; set; }
-        public string Unit { get; set; }
+        public string PrP { get; set; }
+        public string Matname { get; set; }
         public string Size { get; set; }
+        public DateTime? EditDTE { get; set; }
 
         public string MaterialName
         {
             get
             {
-                return PRC + " - " + NM;
+                return Matname + EDSize;
             }
         }
+
+        public string EDSize {
+            get
+            {
+                if (Size == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return " (" + Size + ")";
+                }
+            } 
+        }
+
+        public bool StatusBool { get; set; } public int Status { get; set; }
     }
 }

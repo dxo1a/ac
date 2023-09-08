@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
-namespace ac
+namespace ac.Converters
 {
     public class BytesToBitmapImageConverter : IValueConverter
     {

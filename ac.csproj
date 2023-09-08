@@ -71,20 +71,33 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BytesToBitmapImageConverter.cs" />
-    <Compile Include="DetailInfoWindow.xaml.cs">
-      <DependentUpon>DetailInfoWindow.xaml</DependentUpon>
+    <Compile Include="Converters\BoolToColorConverter.cs" />
+    <Compile Include="Converters\BytesToBitmapImageConverter.cs" />
+    <Compile Include="MaterialsWindow.xaml.cs">
+      <DependentUpon>MaterialsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OperationsWindow.xaml.cs">
+      <DependentUpon>OperationsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Operations.cs" />
+    <Compile Include="Models\SmenZadanie.cs" />
     <Compile Include="Models\Sp.cs" />
     <Compile Include="Models\SpecProcesses.cs" />
+    <Compile Include="SmenZadanieWindow.xaml.cs">
+      <DependentUpon>SmenZadanieWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SpecProcessInfoWindow.xaml.cs">
       <DependentUpon>SpecProcessInfoWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StatusConverter.cs" />
-    <Compile Include="StatusFromBoolConverter.cs" />
+    <Compile Include="Converters\StatusConverter.cs" />
+    <Compile Include="Converters\StatusFromBoolConverter.cs" />
     <Compile Include="TileView.cs" />
     <Compile Include="ViewModel.cs" />
-    <Page Include="DetailInfoWindow.xaml">
+    <Page Include="MaterialsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OperationsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -108,6 +121,10 @@
     <Page Include="Resources\IconsNonShared.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SmenZadanieWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SpecProcessInfoWindow.xaml">
       <SubType>Designer</SubType>
@@ -171,6 +188,9 @@
     <Resource Include="Resources\icons\right_arrow.ico" />
     <Resource Include="Resources\icons\right_arrow_double_1.ico" />
     <Resource Include="Resources\icons\right_arrow_double_2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Zavod.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
