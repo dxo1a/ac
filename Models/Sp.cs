@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ac.Models
 {
@@ -16,6 +12,6 @@ namespace ac.Models
         public string DEV_NAME { get; set; }
         public bool WARN { get; set; }              // Наличие нарушений в СП (спецпроцессе)
         public int SP_CR_USER { get; set; }         // id создавшего деталь
-        
+
     }
 }

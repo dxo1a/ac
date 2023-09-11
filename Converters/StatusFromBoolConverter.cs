@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace ac.Converters
@@ -14,7 +10,7 @@ namespace ac.Converters
         {
             bool statusValue = (bool)value;
 
-            switch(statusValue)
+            switch (statusValue)
             {
                 case true:
                     return "Готово";

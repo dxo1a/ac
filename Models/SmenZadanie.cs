@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ac.Models
 {
@@ -15,6 +11,7 @@ namespace ac.Models
         public string NUM { get; set; }
         public string Operation { get; set; }
         public int OperationNum { get; set; }
+        public double? Cost { get; set; }
         public string DEP { get; set; }
         public string WCR { get; set; }
         public int SHIFT { get; set; }
@@ -23,5 +20,21 @@ namespace ac.Models
 
         public bool StatusBool { get; set; }
         public int Status { get; set; }
+
+        public string CostString
+        {
+            get
+            {
+                return Convert.ToString(Cost);
+            }
+        }
+
+        public string SmenZadString
+        {
+            get
+            {
+                return OrderNum + " " + Product + "" + Detail + " " + Convert.ToString(Count) + " " + Operation + " " + Convert.ToString(OperationNum) + " " + Convert.ToString(Cost) + " " + DEP + " " + WCR + " " + (int)SHIFT + FIO;
+            }
+        }
     }
 }

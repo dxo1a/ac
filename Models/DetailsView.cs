@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ac.Models
 {
@@ -40,6 +36,14 @@ namespace ac.Models
             get
             {
                 return ProductNum + " - " + ProductName;
+            }
+        }
+
+        public string ProductWithSpace
+        {
+            get
+            {
+                return ProductNum + " " + ProductName;
             }
         }
     }

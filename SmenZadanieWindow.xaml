@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ac"
         mc:Ignorable="d"
-        Title="SmenZadanieWindow" Height="450" Width="800">
+        Title="SmenZadanieWindow" Height="450" Width="1200" Icon="Resources/ac.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -17,21 +17,36 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="20"/>
         </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="10 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Поиск: " FontSize="18" MaxHeight="30"/>
+                    <TextBox x:Name="SearchSPTBX" Width="200" KeyDown="SearchSPTBX_KeyDown" FontSize="18" TextAlignment="Center" Margin="0 0 -10 0" MaxHeight="30"/>
+                    <Button x:Name="SearchSPBtn" Height="Auto" Width="30" MaxHeight="30" Style="{StaticResource RoundedButtonStyle}" Click="SearchSPBtn_Click">
+                        <Image Source="Resources/icons/find1.ico" Margin="2.5"/>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+            
+        </StackPanel>
+
         <DataGrid x:Name="SmenZadanieDG" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="1" Grid.Column="1" Margin="5" CanUserDeleteRows="False" Style="{StaticResource DataGridOwn}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding OrderNum}" Header="№ заказа" Width="*" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding Product}" Header="Изделие" Width="*" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding Detail}" Header="Деталь" Width="*" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding Count}" Header="Количество" Width="*" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding NUM}" Header="NUM" Width="*" IsReadOnly="True"/>
+                <!--<DataGridTextColumn Binding="{Binding NUM}" Header="NUM" Width="*" IsReadOnly="True"/>-->
                 <DataGridTextColumn Binding="{Binding Operation}" Header="Операция" Width="*" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding OperationNum}" Header="№" Width="*" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding StatusBool, Converter={StaticResource StatusFromBoolConverter}}" Header="Статус" Width="*" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding DEP}" Header="?" Width="*" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding WCR}" Header="?" Width="*" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding SHIFT}" Header="?" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding Cost}" Header="Время" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding DEP}" Header="Цех" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding WCR}" Header="Рабочий центр" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding SHIFT}" Header="Смена" Width="*" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding FIO}" Header="ФИО" Width="*" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding DTE}" Header="Дата" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding DTE, StringFormat='{}{0:dd.MM.yyyy}'}" Header="Дата" Width="*" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

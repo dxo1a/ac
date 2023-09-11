@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ac.Models
+﻿namespace ac.Models
 {
     public class Operations
     {
         public string PP { get; set; }              // ПП
-        
+
         public int OperationNum { get; set; }
         public string OperationName { get; set; }
         public string Executor { get; set; }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ac"
         mc:Ignorable="d"
-        Title="MaterialsWindow" Height="450" Width="800">
+        Title="MaterialsWindow" Height="450" Width="800" Icon="Resources/ac.ico">
     <Grid>
         <DataGrid Name="MaterialsDG" CanUserAddRows="False" Grid.Row="1" Grid.Column="1" Margin="5" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}">
             <DataGrid.Columns>

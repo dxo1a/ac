@@ -1,12 +1,12 @@
 ﻿using ac.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Windows;
 using System.Threading.Tasks;
-using System.Windows.Media.Animation;
-using System;
+using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace ac
 {
@@ -17,6 +17,7 @@ namespace ac
 
         DetailsView SelectedDetail { get; set; }
         public ViewModel ViewModel { get; set; }
+        DetailsView productNameAndStatus { get; set; }
 
         public string SerialNumber;
         #endregion
@@ -83,7 +84,7 @@ namespace ac
                     PPTBX.Text = numppFromNumser;
                     SerialNumber = SerialNumberTBX.Text;
 
-                    DetailsView productNameAndStatus = Odb.db.Database.SqlQuery<DetailsView>("SELECT TOP (1) НомерИ AS ProductNum, Изделие AS ProductName, RSTS FROM [Cooperation].[dbo].[DetailsView] WHERE Договор=@numpp", new SqlParameter("numpp", numppFromNumser)).SingleOrDefault();
+                    productNameAndStatus = Odb.db.Database.SqlQuery<DetailsView>("SELECT TOP (1) НомерИ AS ProductNum, Изделие AS ProductName, RSTS FROM [Cooperation].[dbo].[DetailsView] WHERE Договор=@numpp", new SqlParameter("numpp", numppFromNumser)).SingleOrDefault();
                     PPNameTB.Text = productNameAndStatus.Product;
 
                     #region Цвет в зависимости от статуса
@@ -92,7 +93,7 @@ namespace ac
                         PPNameTB.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF56DA56"));
                     }
                     #endregion
-
+                    
                     updateGrid();
 
                 }
@@ -141,7 +142,7 @@ namespace ac
             if (DetailsDG.SelectedItem is DetailsView selectedDetail)
             {
                 PPPrPTB.Text = "ПрП: " + SelectedDetail.PrP;
-                OperationsWindow operationsWindow = new OperationsWindow(SelectedDetail, SerialNumber);
+                OperationsWindow operationsWindow = new OperationsWindow(SelectedDetail, SerialNumber, productNameAndStatus);
                 operationsWindow.Show();
             }
         }

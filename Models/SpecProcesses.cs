@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace ac.Models
@@ -20,7 +16,7 @@ namespace ac.Models
         public string EL_NAME { get; set; }
 
         public string OP_TYPE_NAME { get; set; }
-        
+
         public string TL_VALUE1 { get; set; }
         public string TL_VALUE2 { get; set; }
         public string TL_VALUE { get; set; }

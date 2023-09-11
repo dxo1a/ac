@@ -36,7 +36,7 @@
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
                         <TextBlock Text="Сер. номер " HorizontalAlignment="Center" Grid.Column="1" FontSize="16" VerticalAlignment="Center"/>
-                        <TextBox x:Name="SerialNumberTBX" MinWidth="200" HorizontalContentAlignment="Center" FontSize="16" Margin="0 0 -10 0"/>
+                        <TextBox x:Name="SerialNumberTBX" MinWidth="200" HorizontalContentAlignment="Center" FontSize="16" Margin="0 0 -10 0" Padding="0 0 10 0"/>
                         <Button Name="FindPPBtn" Width="30" Height="30" Click="FindPPBtn_Click" Style="{StaticResource RoundedButtonStyle}">
                             <Image Source="Resources/icons/find1.ico" Width="22" Height="22" Margin="2" ToolTip="Поиск по серийному номеру"/>
                         </Button>
@@ -58,13 +58,13 @@
         
         <!--#region BOTTOM PANEL-->
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="5 0">
-            <TextBox Name="DetailSearchTBX" Grid.Column="1" Width="0" TextAlignment="Center" HorizontalAlignment="Left" FontSize="16" VerticalAlignment="Bottom" Padding="5 0" KeyDown="DetailSearchTBX_KeyDown" Height="30" Style="{StaticResource ShowTextboxAnimation}" Margin="0 0 -10 0"/>
+            <TextBox Name="DetailSearchTBX" Grid.Column="1" Width="0" TextAlignment="Center" HorizontalAlignment="Left" FontSize="16" VerticalAlignment="Bottom" Padding="0 0 15 0" KeyDown="DetailSearchTBX_KeyDown" Height="30" Style="{StaticResource ShowTextboxAnimation}" Margin="0 0 -10 0"/>
             <Button Name="DetailSearchBTN" Grid.Column="1" HorizontalAlignment="Left" Width="60" Height="30" VerticalAlignment="Bottom" Click="DetailSearchBTN_Click" Style="{StaticResource RoundedButtonStyle}" Content="Поиск" FontSize="16"/>
         </StackPanel>
         <TextBlock Name="PPNameTB" Text="Наименование детали" Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Center" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
         <TextBlock Name="PPPrPTB" Text="ПрП: " Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Right" HorizontalAlignment="Right" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
         <!--#endregion-->
-        
+
         <DataGrid x:Name="DetailsDG" HeadersVisibility="None" BorderThickness="5" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5" CanUserDeleteRows="False" MouseDoubleClick="DetailsDG_MouseDoubleClick" Style="{StaticResource DataGridOwn}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Detail}" Header="Деталь" Width="*" IsReadOnly="True"/>

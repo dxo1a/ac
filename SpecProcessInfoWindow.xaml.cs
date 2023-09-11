@@ -4,7 +4,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Media;
 
 namespace ac
@@ -15,9 +14,10 @@ namespace ac
     public partial class SpecProcessInfoWindow : Window
     {
         List<SpecProcesses> specProcesses = new List<SpecProcesses>();
-        private DetailsView SelectedDetail { get; set; }
-        private int ss_id;
 
+        private DetailsView SelectedDetail { get; set; }
+
+        private int ss_id;
         public string SerialNumber;
 
         public SpecProcessInfoWindow(DetailsView selectedDetail, string serialNumber)
@@ -25,8 +25,6 @@ namespace ac
             InitializeComponent();
             SelectedDetail = selectedDetail;
             SerialNumber = serialNumber;
-
-            //this.Title = SelectedDetail.OperationName; //null
 
             ss_id = Odb.db.Database.SqlQuery<int>("SELECT SS_DEV_NUM.SS_ID FROM SP_SS LEFT JOIN SS_DEV_NUM ON SP_SS.SS_ID = SS_DEV_NUM.SS_ID WHERE DEV_SN=@devsn", new SqlParameter("devsn", SerialNumber)).SingleOrDefault();
 
@@ -88,7 +86,8 @@ namespace ac
 
                 ", new SqlParameter("ssid", ss_id), new SqlParameter("prp", SelectedDetail.PrP)).ToList();
             SpecProcessesItemsControl.ItemsSource = specProcesses;
-            
+
+            #region Цвет для поля в зависимости от результата другого поля, учитывая DataTemplate
             for (int i = 0; i < specProcesses.Count; i++)
             {
                 if (specProcesses[i].EL_TMP_RESULT.HasValue)
@@ -103,7 +102,7 @@ namespace ac
                     specProcesses[i].EL_HUM_RESULT_COLOR = tmpResultValue ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF56DA56")) : Brushes.Red;
                 }
             }
-            MessageBox.Show($"SSID: {ss_id}");
+            #endregion
         }
 
         private void Border_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -119,6 +118,7 @@ namespace ac
             }
         }
 
+        #region Поиск
         private void search()
         {
             List<SpecProcesses> sp = new List<SpecProcesses>();
@@ -141,5 +141,6 @@ namespace ac
         {
             search();
         }
+        #endregion
     }
 }

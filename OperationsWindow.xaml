@@ -28,7 +28,7 @@
 
         <!--<CheckBox Name="ImgCB" IsChecked="False" Content="Эскиз" Grid.Column="1" Grid.Row="0" VerticalAlignment="Bottom" Margin="10 0 0 0" Checked="ImgCB_Checked" Unchecked="ImgCB_Unchecked" FontSize="14"/>-->
 
-        <DataGrid Name="OperationsDG" CanUserAddRows="False" Grid.Row="1" Grid.Column="1" Margin="5" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}">
+        <DataGrid Name="OperationsDG" CanUserAddRows="False" Grid.Row="1" Grid.Column="1" Margin="5" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}" MouseDoubleClick="OperationsDG_MouseDoubleClick">
             <DataGrid.Columns>
                 <DataGridTemplateColumn x:Name="ImageColumn" Header="Эскиз" Width="*" IsReadOnly="True" Visibility="Collapsed" MaxWidth="150" MinWidth="50">
                     <DataGridTemplateColumn.CellTemplate>

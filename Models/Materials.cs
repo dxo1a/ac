@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ac.Models
 {
@@ -21,7 +17,8 @@ namespace ac.Models
             }
         }
 
-        public string EDSize {
+        public string EDSize
+        {
             get
             {
                 if (Size == null)
@@ -32,9 +29,10 @@ namespace ac.Models
                 {
                     return " (" + Size + ")";
                 }
-            } 
+            }
         }
 
-        public bool StatusBool { get; set; } public int Status { get; set; }
+        public bool StatusBool { get; set; }
+        public int Status { get; set; }
     }
 }
