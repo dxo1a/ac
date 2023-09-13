@@ -15,9 +15,9 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="0.085*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="0.075*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -28,7 +28,7 @@
 
         <!--<CheckBox Name="ImgCB" IsChecked="False" Content="Эскиз" Grid.Column="1" Grid.Row="0" VerticalAlignment="Bottom" Margin="10 0 0 0" Checked="ImgCB_Checked" Unchecked="ImgCB_Unchecked" FontSize="14"/>-->
 
-        <DataGrid Name="OperationsDG" CanUserAddRows="False" Grid.Row="1" Grid.Column="1" Margin="5" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}" MouseDoubleClick="OperationsDG_MouseDoubleClick">
+        <DataGrid Name="OperationsDG" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5 0 5 0" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}" MouseDoubleClick="OperationsDG_MouseDoubleClick" SelectionUnit="FullRow">
             <DataGrid.Columns>
                 <DataGridTemplateColumn x:Name="ImageColumn" Header="Эскиз" Width="*" IsReadOnly="True" Visibility="Collapsed" MaxWidth="150" MinWidth="50">
                     <DataGridTemplateColumn.CellTemplate>
@@ -45,10 +45,17 @@
                 <!--<DataGridTextColumn Binding="{Binding WARN, Converter={StaticResource StatusFromBoolConverter}}" Header="Нарушения в СП" Width="*"/>-->
             </DataGrid.Columns>
         </DataGrid>
-        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Name="SpecProcessesBtn" Click="SpecProcessesBtn_Click" Width="250" Height="40" FontSize="16" Content="Спец. процессы" Margin="10 0"/>
-            <Button Name="MaterialsBtn" Click="MaterialsBtn_Click" Width="250" Height="40" FontSize="16" Content="Материалы" Margin="10 0"/>
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="6 0 10 0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button Name="SpecProcessesBtn" Click="SpecProcessesBtn_Click" Width="50" Height="50" BorderBrush="Transparent" ToolTip="Спец. процессы" Style="{StaticResource UpRoundedButtonStyle}">
+                    <Image Source="Resources/icons/misc/specProcesses1.ico" MaxWidth="34" MaxHeight="34"/>
+                </Button>
+                <Button Name="MaterialsBtn" Click="MaterialsBtn_Click" Width="50" Height="50" BorderBrush="Transparent" ToolTip="Материалы" Style="{StaticResource UpRoundedButtonStyle}" Background="Transparent">
+                    <Image Source="Resources/icons/misc/materials/materials3.ico" MaxWidth="34" MaxHeight="34"/>
+                </Button>
+            </StackPanel>
         </StackPanel>
+        
         
     </Grid>
 </Window>

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ac"
         xmlns:converters="clr-namespace:ac.Converters"
         mc:Ignorable="d"
-        Title="Главное окно" Height="800" Width="1200" MinHeight="150" MinWidth="250" Icon="Resources/ac.ico">
+        Title="Главное окно" Height="800" Width="1200" MinHeight="150" MinWidth="250" Icon="Resources/ac.ico" WindowStyle="None">
     <Window.Resources>
         <!--#region CONVERTERS-->
         <converters:StatusConverter x:Key="StatusConverter"/>
@@ -14,6 +14,11 @@
         <converters:BytesToBitmapImageConverter x:Key="BytesToBitmapImageConverter"/>
         <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
         <!--#endregion-->
+
+        <Style x:Key="WindowTitleStyle" TargetType="{x:Type Label}">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
     </Window.Resources>
     <Grid>
         <!--#region Definitions-->
@@ -38,7 +43,7 @@
                         <TextBlock Text="Сер. номер " HorizontalAlignment="Center" Grid.Column="1" FontSize="16" VerticalAlignment="Center"/>
                         <TextBox x:Name="SerialNumberTBX" MinWidth="200" HorizontalContentAlignment="Center" FontSize="16" Margin="0 0 -10 0" Padding="0 0 10 0"/>
                         <Button Name="FindPPBtn" Width="30" Height="30" Click="FindPPBtn_Click" Style="{StaticResource RoundedButtonStyle}">
-                            <Image Source="Resources/icons/find1.ico" Width="22" Height="22" Margin="2" ToolTip="Поиск по серийному номеру"/>
+                            <Image Source="Resources/icons/misc/find1.ico" Width="22" Height="22" Margin="2" ToolTip="Поиск по серийному номеру"/>
                         </Button>
                     </StackPanel>
                     <TextBlock x:Name="SNNotFoundTB" Grid.Column="1" Grid.Row="1" Text="Не найдено" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed" Margin="165 0 0 0" Foreground="#FF2F2F"/>
@@ -62,7 +67,7 @@
             <TextBox Name="DetailSearchTBX" Grid.Column="1" Width="0" TextAlignment="Center" HorizontalAlignment="Left" FontSize="16" VerticalAlignment="Bottom" Padding="0 0 15 0" KeyDown="DetailSearchTBX_KeyDown" Height="30" Style="{StaticResource ShowTextboxAnimation}" Margin="0 0 -10 0"/>
             <Button Name="DetailSearchBTN" Grid.Column="1" HorizontalAlignment="Left" Width="60" Height="30" VerticalAlignment="Bottom" Click="DetailSearchBTN_Click" Style="{StaticResource RoundedButtonStyle}" Content="Поиск" FontSize="16" Margin="0 0 10 0"/>
             <CheckBox x:Name="ImgCB" IsChecked="False" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Checked="ImgCB_Checked" Unchecked="ImgCB_Unchecked">
-                <Image Source="Resources/icons/img1.ico" MaxWidth="16" MaxHeight="16"/>
+                <Image Source="Resources/icons/misc/img/img1.ico" MaxWidth="16" MaxHeight="16"/>
                 <CheckBox.LayoutTransform>
                     <ScaleTransform ScaleX="1.25" ScaleY="1.25"/>
                 </CheckBox.LayoutTransform>

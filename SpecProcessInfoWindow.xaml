@@ -29,13 +29,13 @@
                                         <StackPanel Orientation="Horizontal">
                                             <StackPanel Orientation="Vertical">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <Image Source="Resources/icons/temp3.ico" Width="25" Height="25"/>
+                                                    <Image Source="Resources/icons/el/temp3.ico" Width="25" Height="25"/>
                                                     <TextBlock x:Name="WarnTempTBX" Text="{Binding Temp}" FontSize="16" Foreground="{Binding EL_TMP_RESULT_COLOR}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                             <StackPanel Orientation="Vertical">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <Image Source="Resources/icons/hum2.ico" Width="25" Height="25" Margin="5 0 2.5 0" HorizontalAlignment="Right"/>
+                                                    <Image Source="Resources/icons/el/hum2.ico" Width="25" Height="25" Margin="5 0 2.5 0" HorizontalAlignment="Right"/>
                                                     <TextBlock x:Name="HumTBX" Text="{Binding CurHum}" FontSize="16" Foreground="{Binding EL_HUM_RESULT_COLOR}"/>
                                                 </StackPanel>
                                             </StackPanel>
@@ -122,7 +122,7 @@
                 <TextBlock Text="Поиск: " FontSize="18"/>
                 <TextBox x:Name="SearchSPTBX" Width="200" KeyDown="SearchSPTBX_KeyDown" FontSize="18" TextAlignment="Center" Margin="0 0 -10 0"/>
                 <Button x:Name="SearchSPBtn" Height="Auto" Width="30" Style="{StaticResource RoundedButtonStyle}" Click="SearchSPBtn_Click">
-                    <Image Source="Resources/icons/find1.ico" Margin="2.5"/>
+                    <Image Source="Resources/icons/misc/find1.ico" Margin="2.5"/>
                 </Button>
             </StackPanel>
         </StackPanel>

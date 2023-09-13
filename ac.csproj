@@ -73,9 +73,6 @@
     </ApplicationDefinition>
     <Compile Include="Converters\BoolToColorConverter.cs" />
     <Compile Include="Converters\BytesToBitmapImageConverter.cs" />
-    <Compile Include="MaterialInfoWindow.xaml.cs">
-      <DependentUpon>MaterialInfoWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MaterialsWindow.xaml.cs">
       <DependentUpon>MaterialsWindow.xaml</DependentUpon>
     </Compile>
@@ -96,7 +93,7 @@
     <Compile Include="Converters\StatusFromBoolConverter.cs" />
     <Compile Include="TileView.cs" />
     <Compile Include="ViewModel.cs" />
-    <Page Include="MaterialInfoWindow.xaml">
+    <Page Include="CustomWindowStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -178,32 +175,42 @@
     <Resource Include="Resources\ac.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\icons\temp1.ico" />
-    <Resource Include="Resources\icons\temp2.ico" />
-    <Resource Include="Resources\icons\temp3.ico" />
+    <Resource Include="Resources\icons\el\temp1.ico" />
+    <Resource Include="Resources\icons\el\temp2.ico" />
+    <Resource Include="Resources\icons\el\temp3.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\icons\hum1.ico" />
-    <Resource Include="Resources\icons\hum2.ico" />
-    <Resource Include="Resources\icons\hum3.ico" />
+    <Resource Include="Resources\icons\el\hum1.ico" />
+    <Resource Include="Resources\icons\el\hum2.ico" />
+    <Resource Include="Resources\icons\el\hum3.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\icons\find1.ico" />
-    <Resource Include="Resources\icons\find2.ico" />
+    <Resource Include="Resources\icons\misc\find1.ico" />
+    <Resource Include="Resources\icons\misc\find2.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\icons\right_arrow.ico" />
-    <Resource Include="Resources\icons\right_arrow_double_1.ico" />
-    <Resource Include="Resources\icons\right_arrow_double_2.ico" />
+    <Resource Include="Resources\icons\misc\arrows\right_arrow.ico" />
+    <Resource Include="Resources\icons\misc\arrows\right_arrow_double_1.ico" />
+    <Resource Include="Resources\icons\misc\arrows\right_arrow_double_2.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Zavod.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\icons\img1.ico" />
-    <Resource Include="Resources\icons\img2.ico" />
-    <Resource Include="Resources\icons\img3.ico" />
-    <Resource Include="Resources\icons\img4.ico" />
+    <Resource Include="Resources\icons\misc\img\img1.ico" />
+    <Resource Include="Resources\icons\misc\img\img2.ico" />
+    <Resource Include="Resources\icons\misc\img\img3.ico" />
+    <Resource Include="Resources\icons\misc\img\img4.ico" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\icons\misc\materials\materials1.ico" />
+    <Resource Include="Resources\icons\misc\materials\materials2.ico" />
+    <Resource Include="Resources\icons\misc\materials\materials3.ico" />
+    <Resource Include="Resources\icons\misc\materials\materials4.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icons\misc\specProcesses1.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
