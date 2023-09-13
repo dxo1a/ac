@@ -57,16 +57,30 @@
         <!--#endregion-->
         
         <!--#region BOTTOM PANEL-->
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="5 0">
+        
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="10 0 0 0">
             <TextBox Name="DetailSearchTBX" Grid.Column="1" Width="0" TextAlignment="Center" HorizontalAlignment="Left" FontSize="16" VerticalAlignment="Bottom" Padding="0 0 15 0" KeyDown="DetailSearchTBX_KeyDown" Height="30" Style="{StaticResource ShowTextboxAnimation}" Margin="0 0 -10 0"/>
-            <Button Name="DetailSearchBTN" Grid.Column="1" HorizontalAlignment="Left" Width="60" Height="30" VerticalAlignment="Bottom" Click="DetailSearchBTN_Click" Style="{StaticResource RoundedButtonStyle}" Content="Поиск" FontSize="16"/>
+            <Button Name="DetailSearchBTN" Grid.Column="1" HorizontalAlignment="Left" Width="60" Height="30" VerticalAlignment="Bottom" Click="DetailSearchBTN_Click" Style="{StaticResource RoundedButtonStyle}" Content="Поиск" FontSize="16" Margin="0 0 10 0"/>
+            <CheckBox x:Name="ImgCB" IsChecked="False" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Checked="ImgCB_Checked" Unchecked="ImgCB_Unchecked">
+                <Image Source="Resources/icons/img1.ico" MaxWidth="16" MaxHeight="16"/>
+                <CheckBox.LayoutTransform>
+                    <ScaleTransform ScaleX="1.25" ScaleY="1.25"/>
+                </CheckBox.LayoutTransform>
+            </CheckBox>
         </StackPanel>
         <TextBlock Name="PPNameTB" Text="Наименование детали" Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Center" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
         <TextBlock Name="PPPrPTB" Text="ПрП: " Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Right" HorizontalAlignment="Right" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
         <!--#endregion-->
 
-        <DataGrid x:Name="DetailsDG" HeadersVisibility="None" BorderThickness="5" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5" CanUserDeleteRows="False" MouseDoubleClick="DetailsDG_MouseDoubleClick" Style="{StaticResource DataGridOwn}">
+        <DataGrid x:Name="DetailsDG" BorderThickness="5" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5" CanUserDeleteRows="False" MouseDoubleClick="DetailsDG_MouseDoubleClick" Style="{StaticResource DataGridOwn}">
             <DataGrid.Columns>
+                <DataGridTemplateColumn x:Name="ImageColumn" Header="Эскиз" Width="150" IsReadOnly="True" Visibility="Collapsed">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding Data, TargetNullValue={x:Null}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding Detail}" Header="Деталь" Width="*" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>

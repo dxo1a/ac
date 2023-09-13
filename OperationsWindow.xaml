@@ -37,7 +37,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding OperationNum}" Header="№" Width="*"/>
+                <DataGridTextColumn Binding="{Binding OperationNum}" Header="№" Width="*" MaxWidth="50"/>
                 <DataGridTextColumn Binding="{Binding OperationName}" Header="Операция" Width="*"/>
                 <DataGridTextColumn Binding="{Binding Executor}" Header="Исполнитель" Width="*"/>
                 <!--<DataGridTextColumn Binding="{Binding Price, StringFormat={}{0:N2}}" Header="Время (ед.)" Width="*"/>

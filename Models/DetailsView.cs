@@ -22,6 +22,7 @@ namespace ac.Models
         public DateTime? DateZ { get; set; }            //ДатаЗ (дата по заказу (когда нужно изготовить))
 
         public string ProductRes { get; set; }
+        public byte[] Data { get; set; }
 
         public string Detail
         {

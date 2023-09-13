@@ -73,6 +73,9 @@
     </ApplicationDefinition>
     <Compile Include="Converters\BoolToColorConverter.cs" />
     <Compile Include="Converters\BytesToBitmapImageConverter.cs" />
+    <Compile Include="MaterialInfoWindow.xaml.cs">
+      <DependentUpon>MaterialInfoWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MaterialsWindow.xaml.cs">
       <DependentUpon>MaterialsWindow.xaml</DependentUpon>
     </Compile>
@@ -93,6 +96,10 @@
     <Compile Include="Converters\StatusFromBoolConverter.cs" />
     <Compile Include="TileView.cs" />
     <Compile Include="ViewModel.cs" />
+    <Page Include="MaterialInfoWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MaterialsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -191,6 +198,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Zavod.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icons\img1.ico" />
+    <Resource Include="Resources\icons\img2.ico" />
+    <Resource Include="Resources\icons\img3.ico" />
+    <Resource Include="Resources\icons\img4.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

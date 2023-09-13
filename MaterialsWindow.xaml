@@ -7,10 +7,18 @@
         mc:Ignorable="d"
         Title="MaterialsWindow" Height="450" Width="800" Icon="Resources/ac.ico">
     <Grid>
-        <DataGrid Name="MaterialsDG" CanUserAddRows="False" Grid.Row="1" Grid.Column="1" Margin="5" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}">
+        <DataGrid Name="MaterialsDG" CanUserAddRows="False" Grid.Row="1" Grid.Column="1" Margin="5" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}" MouseDoubleClick="MaterialsDG_MouseDoubleClick">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding MaterialName}" Header="Материал" Width="*"/>
-                <DataGridTextColumn Binding="{Binding EditDTE, StringFormat='{}{0:dd.MM.yyyy HH:mm:ss}'}" Header="Дата изменения" Width="*"/>
+                <DataGridTextColumn Binding="{Binding PrintIDN}" Header="Обозначение" Width="*"/>
+                <DataGridTextColumn Binding="{Binding MatName}" Header="Наименование" Width="*"/>
+                <DataGridTextColumn Binding="{Binding EIZ}" Header="Ед. измерения" Width="*"/>
+                <DataGridTextColumn Binding="{Binding AmountOnWRHs, StringFormat=0.###}" Header="Количество" Width="*"/>
+                <DataGridTextColumn Binding="{Binding RezervOnWRHs, StringFormat=0.###}" Header="Зарезервировано" Width="*"/>
+                <DataGridTextColumn Binding="{Binding DeficitOnWRHs, StringFormat=0.###}" Header="Текущая потребность" Width="*"/>
+                <DataGridTextColumn Binding="{Binding WRH}" Header="Склад" Width="*"/>
+                <DataGridTextColumn Binding="{Binding PlanPotreb, StringFormat=0.###}" Header="Плановая потребность в КиМ" Width="*"/>
+                <DataGridTextColumn Binding="{Binding CurrentPotreb, StringFormat=0.###}" Header="Текущая потребность в КиМ" Width="*"/>
+                <DataGridTextColumn Binding="{Binding Norma, StringFormat=0.###}" Header="Норма расхода" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -30,13 +30,13 @@
                                             <StackPanel Orientation="Vertical">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Image Source="Resources/icons/temp3.ico" Width="25" Height="25"/>
-                                                    <TextBlock x:Name="WarnTempTBX" Text="{Binding Temp}" FontSize="16" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Aliased" Foreground="{Binding EL_TMP_RESULT_COLOR}"/>
+                                                    <TextBlock x:Name="WarnTempTBX" Text="{Binding Temp}" FontSize="16" Foreground="{Binding EL_TMP_RESULT_COLOR}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                             <StackPanel Orientation="Vertical">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Image Source="Resources/icons/hum2.ico" Width="25" Height="25" Margin="5 0 2.5 0" HorizontalAlignment="Right"/>
-                                                    <TextBlock x:Name="HumTBX" Text="{Binding CurHum}" FontSize="16" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Aliased" Foreground="{Binding EL_HUM_RESULT_COLOR}"/>
+                                                    <TextBlock x:Name="HumTBX" Text="{Binding CurHum}" FontSize="16" Foreground="{Binding EL_HUM_RESULT_COLOR}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </StackPanel>

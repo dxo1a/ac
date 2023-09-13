@@ -1,7 +1,10 @@
 ﻿using ac.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -30,12 +33,17 @@ namespace ac
 
             ViewModel = new ViewModel();
             DataContext = ViewModel;
+
+            //byte[] fileByte = Odb.db.Database.SqlQuery<byte[]>("SELECT Data FROM dsl_sp.dbo.CC_SUB_VIEW WHERE CARD_ID = 291").FirstOrDefault();
+            //SaveByteArrayToFileWithBinaryWriter(fileByte, "C:\\Users\\it01\\Documents\\pic.jpg");
+
         }
 
         private void updateGrid()
         {
             detailsView = Odb.db.Database.SqlQuery<DetailsView>("SELECT НомерД AS DetailNode, НазваниеД AS DetailName, Договор AS PP, ПрП AS PrP FROM [Cooperation].[dbo].[DetailsView] WHERE Договор=@numpp GROUP BY Договор, НомерД, НазваниеД, ПрП", new SqlParameter("numpp", PPTBX.Text)).ToList();
             DetailsDG.ItemsSource = detailsView;
+            UpdateImage(detailsView);
         }
 
         #region Поиск в таблице
@@ -147,5 +155,41 @@ namespace ac
             }
         }
         #endregion
+
+        public static void SaveByteArrayToFileWithBinaryWriter(byte[] data, string filePath)
+        {
+            var writer = new BinaryWriter(File.OpenWrite(filePath));
+            writer.Write(data);
+        }
+
+        private void UpdateImage(List<DetailsView> detail)
+        {
+            if (ImgCB.IsChecked.Value)
+            {
+                HashSet<string> DetNode = new HashSet<string>();
+                detailsView.ForEach(u => DetNode.Add(u.DetailNode));
+                foreach (string detnode in DetNode)
+                {
+                    List<DetailsView> det = detailsView.Where(u => u.DetailNode == detnode).ToList();
+                    if (det.Count == 0) continue;
+                    byte[] img = Odb.db.Database.SqlQuery<byte[]>("select Data from dsl_sp.dbo.DEV_IMAGES_V where PRT$$$MNF = @param1",
+                        new SqlParameter("@param1", detnode)).FirstOrDefault();
+                    if (img == null) continue;
+                    det.ForEach(u => u.Data = img);
+                }
+            }
+        }
+
+        private void ImgCB_Checked(object sender, RoutedEventArgs e)
+        {
+            ImageColumn.Visibility = Visibility.Visible;
+        }
+
+        private void ImgCB_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ImageColumn.Visibility = Visibility.Collapsed;
+        }
+        
+        //public static void SaveByteArrayToFileWithStaticMethod(byte[] data, string filePath) => File.WriteAllBytes(filePath, data);
     }
 }
