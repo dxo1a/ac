@@ -6,7 +6,18 @@
         xmlns:local="clr-namespace:ac"
         xmlns:converters="clr-namespace:ac.Converters"
         mc:Ignorable="d"
-        Title="Операции" Height="700" Width="1000" MinHeight="420" MinWidth="560" Icon="Resources/ac.ico">
+        Title="Операции" Height="700" Width="1000" MinHeight="420" MinWidth="560" Icon="Resources/ac.ico" WindowStyle="None"
+        xmlns:themes="clr-namespace:StyledWindow.WPF.Themes;assembly=StyledWindow.WPF"
+        Style="{StaticResource StyledWindow}"
+        themes:StyledWindow.LanguageButtonVisible="False"
+        themes:StyledWindow.ThemeButtonVisible="False"
+        themes:StyledWindow.ThemeToggleVisible="False"
+        themes:StyledWindow.TopmostButtonVisible="True">
+    <themes:StyledWindow.HeaderContent>
+        <Border Background="Gray" MaxHeight="35" Width="125" CornerRadius="0 0 10 10" Opacity="0.5">
+            <TextBlock Text='АО "Стекломаш"' VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Border>
+    </themes:StyledWindow.HeaderContent>
     <Window.Resources>
         <converters:StatusConverter x:Key="StatusConverter"/>
         <converters:StatusFromBoolConverter x:Key="StatusFromBoolConverter"/>
@@ -37,7 +48,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding OperationNum}" Header="№" Width="*" MaxWidth="50"/>
+                <DataGridTextColumn Binding="{Binding OperationNum}" Header="№" Width="55" CanUserResize="False"/>
                 <DataGridTextColumn Binding="{Binding OperationName}" Header="Операция" Width="*"/>
                 <DataGridTextColumn Binding="{Binding Executor}" Header="Исполнитель" Width="*"/>
                 <!--<DataGridTextColumn Binding="{Binding Price, StringFormat={}{0:N2}}" Header="Время (ед.)" Width="*"/>

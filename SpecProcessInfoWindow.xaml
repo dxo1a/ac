@@ -5,7 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ac"
         mc:Ignorable="d"
-        Title="Информация о спец. процессе" Height="800" Width="1200" Icon="Resources/ac.ico">
+        Title="Информация о спец. процессе" Height="800" Width="1200" Icon="Resources/ac.ico" WindowStyle="None"
+        xmlns:themes="clr-namespace:StyledWindow.WPF.Themes;assembly=StyledWindow.WPF"
+        Style="{StaticResource StyledWindow}"
+        themes:StyledWindow.LanguageButtonVisible="False"
+        themes:StyledWindow.ThemeButtonVisible="False"
+        themes:StyledWindow.ThemeToggleVisible="False"
+        themes:StyledWindow.TopmostButtonVisible="True">
+    <themes:StyledWindow.HeaderContent>
+        <Border Background="Gray" MaxHeight="35" Width="125" CornerRadius="0 0 10 10" Opacity="0.5">
+            <TextBlock Text='АО "Стекломаш"' VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Border>
+    </themes:StyledWindow.HeaderContent>
     <Window.Resources>
         <DropShadowEffect x:Key="shadForSeparator" BlurRadius="10" Direction="280" ShadowDepth="3" Color="Black" Opacity="1"/>
         <!--#region DATA TEMPLATE-->
@@ -119,9 +130,9 @@
         </ScrollViewer>
         <StackPanel Grid.Row="0" Margin="10 10 10 10" HorizontalAlignment="Center" VerticalAlignment="Bottom">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Поиск: " FontSize="18"/>
-                <TextBox x:Name="SearchSPTBX" Width="200" KeyDown="SearchSPTBX_KeyDown" FontSize="18" TextAlignment="Center" Margin="0 0 -10 0"/>
-                <Button x:Name="SearchSPBtn" Height="Auto" Width="30" Style="{StaticResource RoundedButtonStyle}" Click="SearchSPBtn_Click">
+                <TextBlock Text="Поиск: " FontSize="16"/>
+                <TextBox x:Name="SearchSPTBX" MinWidth="100" Width="200" MaxWidth="200" KeyDown="SearchSPTBX_KeyDown" FontSize="16" TextAlignment="Center" Margin="0 0 -10 0" Style="{StaticResource TBXStyle}" BorderBrush="LightGray"/>
+                <Button x:Name="SearchSPBtn" Height="Auto" Width="30" Style="{StaticResource RightRoundedButtonStyle}" Click="SearchSPBtn_Click">
                     <Image Source="Resources/icons/misc/find1.ico" Margin="2.5"/>
                 </Button>
             </StackPanel>

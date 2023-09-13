@@ -5,13 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ac"
         mc:Ignorable="d"
-        Title="MaterialsWindow" Height="450" Width="1200" Icon="Resources/ac.ico">
+        Title="MaterialsWindow" Height="450" Width="1200" Icon="Resources/ac.ico" WindowStyle="None"
+        xmlns:themes="clr-namespace:StyledWindow.WPF.Themes;assembly=StyledWindow.WPF"
+        Style="{StaticResource StyledWindow}"
+        themes:StyledWindow.LanguageButtonVisible="False"
+        themes:StyledWindow.ThemeButtonVisible="False"
+        themes:StyledWindow.ThemeToggleVisible="False"
+        themes:StyledWindow.TopmostButtonVisible="True">
+    <themes:StyledWindow.HeaderContent>
+        <Border Background="Gray" MaxHeight="35" Width="125" CornerRadius="0 0 10 10" Opacity="0.5">
+            <TextBlock Text='АО "Стекломаш"' VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Border>
+    </themes:StyledWindow.HeaderContent>
     <Grid>
         <DataGrid Name="MaterialsDG" CanUserAddRows="False" Grid.Row="1" Grid.Column="1" Margin="5" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding PrintIDN}" Header="Обозначение" Width="*"/>
                 <DataGridTextColumn Binding="{Binding MatName}" Header="Наименование" Width="*"/>
-                <DataGridTextColumn Binding="{Binding EIZ}" Header="ЕИЗ" Width="*" MaxWidth="40"/>
+                <DataGridTextColumn Binding="{Binding EIZ}" Header="ЕИЗ" Width="*" MaxWidth="65" CanUserResize="False"/>
                 <DataGridTextColumn Binding="{Binding AmountOnWRHs, StringFormat=0.###}" Header="Кол-во" Width="*"/>
                 <DataGridTextColumn Binding="{Binding RezervOnWRHs, StringFormat=0.###}" Header="Зарезервировано" Width="*"/>
                 <DataGridTextColumn Binding="{Binding DeficitOnWRHs, StringFormat=0.###}" Header="Тек. потребность" Width="*"/>
