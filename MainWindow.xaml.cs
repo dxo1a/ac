@@ -120,6 +120,37 @@ namespace ac
                 }
             }
         }
+        #region IMG
+
+        private void UpdateImage(List<DetailsView> detail)
+        {
+            if (ImgCB.IsChecked.Value)
+            {
+                HashSet<string> DetNode = new HashSet<string>();
+                detailsView.ForEach(u => DetNode.Add(u.DetailNode));
+                foreach (string detnode in DetNode)
+                {
+                    List<DetailsView> det = detailsView.Where(u => u.DetailNode == detnode).ToList();
+                    if (det.Count == 0) continue;
+                    byte[] img = Odb.db.Database.SqlQuery<byte[]>("select Data from dsl_sp.dbo.DEV_IMAGES_V where PRT$$$MNF = @param1",
+                        new SqlParameter("@param1", detnode)).FirstOrDefault();
+                    if (img == null) continue;
+                    det.ForEach(u => u.Data = img);
+                }
+            }
+        }
+
+        private void ImgCB_Checked(object sender, RoutedEventArgs e)
+        {
+            ImageColumn.Visibility = Visibility.Visible;
+        }
+
+        private void ImgCB_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ImageColumn.Visibility = Visibility.Collapsed;
+        }
+        #endregion
+
         #endregion
 
         #region Копирование ПП
@@ -161,35 +192,6 @@ namespace ac
             var writer = new BinaryWriter(File.OpenWrite(filePath));
             writer.Write(data);
         }
-
-        private void UpdateImage(List<DetailsView> detail)
-        {
-            if (ImgCB.IsChecked.Value)
-            {
-                HashSet<string> DetNode = new HashSet<string>();
-                detailsView.ForEach(u => DetNode.Add(u.DetailNode));
-                foreach (string detnode in DetNode)
-                {
-                    List<DetailsView> det = detailsView.Where(u => u.DetailNode == detnode).ToList();
-                    if (det.Count == 0) continue;
-                    byte[] img = Odb.db.Database.SqlQuery<byte[]>("select Data from dsl_sp.dbo.DEV_IMAGES_V where PRT$$$MNF = @param1",
-                        new SqlParameter("@param1", detnode)).FirstOrDefault();
-                    if (img == null) continue;
-                    det.ForEach(u => u.Data = img);
-                }
-            }
-        }
-
-        private void ImgCB_Checked(object sender, RoutedEventArgs e)
-        {
-            ImageColumn.Visibility = Visibility.Visible;
-        }
-
-        private void ImgCB_Unchecked(object sender, RoutedEventArgs e)
-        {
-            ImageColumn.Visibility = Visibility.Collapsed;
-        }
-        
         //public static void SaveByteArrayToFileWithStaticMethod(byte[] data, string filePath) => File.WriteAllBytes(filePath, data);
     }
 }

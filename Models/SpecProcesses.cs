@@ -20,9 +20,13 @@ namespace ac.Models
         public string TL_VALUE1 { get; set; }
         public string TL_VALUE2 { get; set; }
         public string TL_VALUE { get; set; }
+        public string TL_RESULT { get; set; }
+        public Brush TL_VALUE_COLOR { get; set; }
 
         public DateTime? T_START { get; set; }
         public DateTime? T_END { get; set; }
+        public string T_START_Converted { get; set; }
+        public string T_END_Converted { get; set; }
 
         public bool? EL_TMP_RESULT { get; set; }
         public Brush EL_TMP_RESULT_COLOR { get; set; }

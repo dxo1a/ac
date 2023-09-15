@@ -121,6 +121,7 @@
     </ApplicationDefinition>
     <Compile Include="Converters\BoolToColorConverter.cs" />
     <Compile Include="Converters\BytesToBitmapImageConverter.cs" />
+    <Compile Include="Converters\ELTypeConverter.cs" />
     <Compile Include="MaterialsWindow.xaml.cs">
       <DependentUpon>MaterialsWindow.xaml</DependentUpon>
     </Compile>

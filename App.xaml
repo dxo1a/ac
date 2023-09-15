@@ -21,6 +21,8 @@
             <converters:StatusFromBoolConverter x:Key="StatusFromBoolConverter"/>
             <converters:BytesToBitmapImageConverter x:Key="BytesToBitmapImageConverter"/>
             <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+            <converters:ELTypeConverter x:Key="ELTypeConverter"/>
+
 
             <DropShadowEffect x:Key="ShadowEffect" BlurRadius="15" Direction="310" ShadowDepth="8" Color="Black" Opacity="0.8"/>
             <DropShadowEffect x:Key="ShadowEffectDown" ShadowDepth="5" Direction="240" BlurRadius="10" Opacity="1" Color="Gray"/>

@@ -32,9 +32,9 @@
         <StackPanel Grid.Row="0" Margin="10 5 10 5" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Поиск: " FontSize="18" MaxHeight="30"/>
-                    <TextBox x:Name="SearchSPTBX" Width="200" KeyDown="SearchSPTBX_KeyDown" FontSize="18" TextAlignment="Center" Margin="0 0 -10 0" MaxHeight="30"/>
-                    <Button x:Name="SearchSPBtn" Height="Auto" Width="30" MaxHeight="30" Style="{StaticResource RoundedButtonStyle}" Click="SearchSPBtn_Click">
+                    <TextBlock Text="Поиск: " FontSize="16" MaxHeight="30"/>
+                    <TextBox x:Name="SearchSPTBX" Width="200" MaxWidth="220" KeyDown="SearchSPTBX_KeyDown" FontSize="16" TextAlignment="Center" Margin="0 0 -10 0" MaxHeight="25" Style="{StaticResource TBXStyle}" BorderBrush="LightGray"/>
+                    <Button x:Name="SearchSPBtn" Height="Auto" Width="25" MaxHeight="25" Style="{StaticResource RoundedButtonStyle}" Click="SearchSPBtn_Click">
                         <Image Source="Resources/icons/misc/find1.ico" Margin="2.5"/>
                     </Button>
                 </StackPanel>

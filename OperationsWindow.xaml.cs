@@ -59,8 +59,6 @@ namespace ac
                   OP_CON.CON_DESCR, 
                   USERS_DATA.USER_SFIO,
                   USERS_DATA.USER_FNAME, USERS_DATA.USER_LNAME, USERS_DATA.USER_MNAME,
-                  OP_TIME_EXP.T_START, 
-                  OP_TIME_EXP.T_END, 
                   OPS.OP_TYPE, 
                   OPS_TYPE.OP_TYPE_NAME, 
                   OP_CON_SET.OP_CON_SET_NAME 
@@ -85,7 +83,7 @@ namespace ac
                   LEFT JOIN OPS_TYPE ON OPS.OP_TYPE = OPS_TYPE.OP_TYPE_ID 
                   LEFT JOIN OP_CON_SET ON OP_CON_RES.OP_CON_SET_ID = OP_CON_SET.OP_CON_SET_ID
                 WHERE 
-                  NUM_PAR = @prp AND SP_SS.SS_ID = @ssid
+                  SP_SS.SS_ID = @ssid
                 ORDER BY 
                   SP_DES.OP_SEQ DESC
 

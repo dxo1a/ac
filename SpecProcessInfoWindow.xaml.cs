@@ -1,4 +1,5 @@
 ﻿using ac.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace ac
     public partial class SpecProcessInfoWindow : Window
     {
         List<SpecProcesses> specProcesses = new List<SpecProcesses>();
+        List<SpecProcesses> startDates = new List<SpecProcesses>();
 
         private DetailsView SelectedDetail { get; set; }
 
@@ -57,7 +59,9 @@ namespace ac
                   USERS_DATA.USER_SFIO,
                   USERS_DATA.USER_FNAME, USERS_DATA.USER_LNAME, USERS_DATA.USER_MNAME,
                   OP_TIME_EXP.T_START, 
-                  OP_TIME_EXP.T_END, 
+                  OP_TIME_EXP.T_END,
+                CONVERT(NVARCHAR(45), OP_TIME_EXP.T_START, 104) AS T_START_Converted,
+                  CONVERT(NVARCHAR(45), OP_TIME_EXP.T_END, 104) AS T_END_Converted,
                   OPS.OP_TYPE, 
                   OPS_TYPE.OP_TYPE_NAME, 
                   OP_CON_SET.OP_CON_SET_NAME 
@@ -82,12 +86,21 @@ namespace ac
                   LEFT JOIN OPS_TYPE ON OPS.OP_TYPE = OPS_TYPE.OP_TYPE_ID 
                   LEFT JOIN OP_CON_SET ON OP_CON_RES.OP_CON_SET_ID = OP_CON_SET.OP_CON_SET_ID
                 WHERE 
-                  NUM_PAR = @prp AND SP_SS.SS_ID = @ssid
+                  SP_SS.SS_ID = @ssid
                 ORDER BY 
-                  SP_DES.OP_SEQ DESC
+                  SP_DES.OP_SEQ
 
                 ", new SqlParameter("ssid", ss_id), new SqlParameter("prp", SelectedDetail.PrP)).ToList();
             SpecProcessesItemsControl.ItemsSource = specProcesses;
+
+            for (int i = 0; i < specProcesses.Count; i++)
+            {
+                if (specProcesses[i].T_START_Converted == specProcesses[i].T_END_Converted)
+                {
+                    specProcesses[i].T_END = null;
+                }
+            }
+
 
             #region Цвет для поля в зависимости от результата другого поля, учитывая DataTemplate
             for (int i = 0; i < specProcesses.Count; i++)
@@ -103,6 +116,19 @@ namespace ac
                     bool tmpResultValue = specProcesses[i].EL_HUM_RESULT.Value;
                     specProcesses[i].EL_HUM_RESULT_COLOR = tmpResultValue ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF56DA56")) : Brushes.Red;
                 }
+
+                if (specProcesses[i].TL_RESULT != null)
+                {
+                    if (specProcesses[i].TL_RESULT == "1")
+                    {
+                        Brush lightGreen = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF56DA56"));
+                        specProcesses[i].TL_VALUE_COLOR = lightGreen;
+                    }
+                    else
+                    {
+                        specProcesses[i].TL_VALUE_COLOR = Brushes.Red;
+                    }
+                }
             }
             #endregion
         }
@@ -115,7 +141,7 @@ namespace ac
                 SpecProcesses data = border.DataContext as SpecProcesses;
                 if (data != null)
                 {
-                    MessageBox.Show($"SelectedDetail PrP: {SelectedDetail.PrP}");
+                    MessageBox.Show($"SelectedDetail PrP: {SelectedDetail.PrP}; {ss_id}");
                 }
             }
         }
