@@ -82,7 +82,7 @@
                 </CheckBox.LayoutTransform>
             </CheckBox>
         </StackPanel>
-        <TextBlock Name="PPNameTB" Text="Наименование детали" Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Center" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
+        <TextBlock Name="PPNameTB" Text="Наименование детали" Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Center" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Bottom" Padding="5 0" Effect="{StaticResource shadForTextOnLight}"/>
         <TextBlock Name="PPPrPTB" Text="ПрП: " Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Right" HorizontalAlignment="Right" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
         <!--#endregion-->
 

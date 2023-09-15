@@ -17,9 +17,7 @@
 			<TextBlock Text='АО "Стекломаш"' VerticalAlignment="Center" HorizontalAlignment="Center"/>
 		</Border>
 	</themes:StyledWindow.HeaderContent>
-	<Window.Resources>
-        <DropShadowEffect x:Key="shadForText" BlurRadius="3" Direction="0" ShadowDepth="1" Color="Black"/>
-        <DropShadowEffect x:Key="shadForTextOnLight" BlurRadius="1" Direction="0" ShadowDepth="1" Color="Black"/>
+    <Window.Resources>
         <DropShadowEffect x:Key="shadForSeparator" BlurRadius="10" Direction="280" ShadowDepth="3" Color="Black" Opacity="1"/>
 		<!--#region DATA TEMPLATE-->
 		<DataTemplate x:Key="SpecialProcessTemplate">
