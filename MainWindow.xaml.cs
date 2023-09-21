@@ -120,6 +120,8 @@ namespace ac
                 }
             }
         }
+        #endregion
+
         #region IMG
 
         private void UpdateImage(List<DetailsView> detail)
@@ -151,8 +153,6 @@ namespace ac
         }
         #endregion
 
-        #endregion
-
         #region Копирование ПП
         private async void PPTBX_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -180,9 +180,17 @@ namespace ac
             SelectedDetail = (DetailsView)DetailsDG.SelectedItem;
             if (DetailsDG.SelectedItem is DetailsView selectedDetail)
             {
-                PPPrPTB.Text = "ПрП: " + SelectedDetail.PrP;
                 OperationsWindow operationsWindow = new OperationsWindow(SelectedDetail, SerialNumber, productNameAndStatus);
                 operationsWindow.Show();
+            }
+        }
+
+        private void DetailsDG_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            SelectedDetail = (DetailsView)DetailsDG.SelectedItem;
+            if (DetailsDG.SelectedItem is DetailsView selectedDetail)
+            {
+                PPPrPTB.Text = "ПрП: " + SelectedDetail.PrP;
             }
         }
         #endregion

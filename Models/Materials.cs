@@ -17,6 +17,9 @@ namespace ac.Models
         public double CurrentPotreb { get; set; }
         public double Norma { get; set; }
         public string WRH { get; set; }
+        public long rwc { get; set; }
+
+        public string DOC { get; set; }
 
         public int QTYPOT { get; set; }
 

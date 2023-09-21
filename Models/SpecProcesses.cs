@@ -25,8 +25,10 @@ namespace ac.Models
 
         public DateTime? T_START { get; set; }
         public DateTime? T_END { get; set; }
-        public string T_START_Converted { get; set; }
-        public string T_END_Converted { get; set; }
+        public string T_START_Date { get; set; }
+        public string T_END_Date { get; set; }
+        public string T_START_Time { get; set; }
+        public string T_END_Time { get; set; }
 
         public bool? EL_TMP_RESULT { get; set; }
         public Brush EL_TMP_RESULT_COLOR { get; set; }

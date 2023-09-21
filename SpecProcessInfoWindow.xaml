@@ -81,8 +81,18 @@
                                 </StackPanel>
                                 <Separator/>
                                 <StackPanel Orientation="Horizontal" Margin="15 0">
-                                    <TextBlock Name="TStartTB" Text="{Binding T_START, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" FontSize="15" Margin="10 0 10 0"/>
-                                    <TextBlock Name="TEndTB" Text="{Binding T_END, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" FontSize="15" Margin="10 0 10 0"/>
+                                    <StackPanel Orientation="Vertical" Margin="0 0 30 0">
+                                        <TextBlock Text="Начало" Foreground="Gray" FontSize="14" TextAlignment="Center"/>
+                                        <TextBlock Text="Конец" Foreground="Gray" FontSize="14" TextAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Margin="0 0 10 0">
+                                        <TextBlock Name="DStartTB" Text="{Binding T_START_Date}" FontSize="15"/>
+                                        <TextBlock Name="TEndTB" Text="{Binding T_END_Date}" FontSize="15"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Name="TStartTB" Text="{Binding T_START_Time, StringFormat={}{0:HH:mm}}" FontSize="15"/>
+                                        <TextBlock Name="DEndTB" Text="{Binding T_END_Time, StringFormat={}{0:HH:mm}}" FontSize="15"/>
+                                    </StackPanel>
                                 </StackPanel>
                                 <TextBlock Text="Пользователь" FontSize="16" Margin="10 10 0 0" FontWeight="SemiBold"/>
                                 <Separator Grid.Row="1"/>
@@ -136,8 +146,6 @@
                 </Button>
             </StackPanel>
         </StackPanel>
-
-
 
         <Border Grid.Row="0" VerticalAlignment="Bottom" Effect="{StaticResource ShadowEffectDown}" BorderBrush="#bcbcbc" BorderThickness="1" Width="Auto" Height="2" CornerRadius="10"/>
 		<Border Grid.Row="2" VerticalAlignment="Top" Effect="{StaticResource ShadowEffectUp}" BorderBrush="#bcbcbc" BorderThickness="1" Width="Auto" Height="2" CornerRadius="10"/>

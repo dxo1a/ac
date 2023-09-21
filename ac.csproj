@@ -122,9 +122,13 @@
     <Compile Include="Converters\BoolToColorConverter.cs" />
     <Compile Include="Converters\BytesToBitmapImageConverter.cs" />
     <Compile Include="Converters\ELTypeConverter.cs" />
+    <Compile Include="MaterialsTRN.xaml.cs">
+      <DependentUpon>MaterialsTRN.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MaterialsWindow.xaml.cs">
       <DependentUpon>MaterialsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\MaterialsTRNModel.cs" />
     <Compile Include="OperationsWindow.xaml.cs">
       <DependentUpon>OperationsWindow.xaml</DependentUpon>
     </Compile>
@@ -142,6 +146,10 @@
     <Compile Include="Converters\StatusFromBoolConverter.cs" />
     <Compile Include="TileView.cs" />
     <Compile Include="ViewModel.cs" />
+    <Page Include="MaterialsTRN.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MaterialsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

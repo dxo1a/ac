@@ -11,6 +11,7 @@ namespace ac
         List<Operations> OperationsList = new List<Operations>();
         List<SmenZadanie> SZList = new List<SmenZadanie>();
         List<SpecProcesses> SPList = new List<SpecProcesses>();
+        List<Materials> MaterialsList = new List<Materials>();
 
         private DetailsView SelectedDetail { get; set; }
         private Operations SelectedOperation { get; set; }
@@ -90,6 +91,36 @@ namespace ac
                 ", new SqlParameter("ssid", ss_id), new SqlParameter("prp", SelectedDetail.PrP)).ToList();
             if (SPList.Count <= 0)
                 SpecProcessesBtn.IsEnabled = false;
+
+            MaterialsList = Odb.db.Database.SqlQuery<Materials>(@"
+                SELECT
+                    pot.PRTIDN as PrintIDN,
+                    pot.NMP$$$NAM as MatName,
+                    eiz.NAENAM as EIZ,
+                    SUM(inv.QTY) as AmountOnWRHs,
+                    SUM(QTYMFC) as RezervOnWRHs,
+                    CASE
+                        WHEN (SUM(QTYMFC) - SUM(inv.QTY)) < 0 THEN 0
+                        ELSE (SUM(QTYMFC) - SUM(inv.QTY))
+                    END as DeficitOnWRHs,
+                    pot.QTYPOT as PlanPotreb,
+                    pot.QTYTQY as CurrentPotreb,
+                    QTYRQY as Norma,
+                    NAM as WRH,
+                    trn.DOC,
+                    pot.rwc
+                FROM SPRUT.OKP.dbo.OKP_POT as pot
+                INNER JOIN SPRUT.OKP.dbo.OKP_INV as inv on pot.PRTIDN = inv.PRTIDN
+                INNER JOIN SPRUT.OKP.dbo.OKP_NOM as nom on pot.PRTIDN = nom.PRT$$$IDN
+                INNER JOIN SPRUT.OKP.dbo.OKP_WRH as wrh on nom.WRH_IDN = wrh.WRH_IDN
+                INNER JOIN SPRUT.OKP.dbo.OKP_EIZ as eiz on inv.UOMPEIZ = eiz.UOMIDN
+                INNER JOIN SPRUT.OKP.dbo.OKP_TRN as trn on pot.TRN_ID = trn.TRN_ID
+                WHERE CPLNUM=@prp
+                GROUP BY pot.PRTIDN, pot.NMP$$$NAM, eiz.NAENAM, pot.QTYPOT, pot.QTYTQY, QTYRQY, NAM, trn.DOC, pot.rwc",
+                new SqlParameter("prp", SelectedDetail.PrP))
+                .ToList();
+            if (MaterialsList.Count <= 0)
+                MaterialsBtn.IsEnabled = false;
         }
 
         #region ImgCB
@@ -115,7 +146,7 @@ namespace ac
 
         private void MaterialsBtn_Click(object sender, RoutedEventArgs e)
         {
-            MaterialsWindow materialsWindow = new MaterialsWindow(SelectedDetail);
+            MaterialsWindow materialsWindow = new MaterialsWindow(SelectedDetail, MaterialsList);
             materialsWindow.ShowDialog();
         }
 

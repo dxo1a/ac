@@ -60,8 +60,10 @@ namespace ac
                   USERS_DATA.USER_FNAME, USERS_DATA.USER_LNAME, USERS_DATA.USER_MNAME,
                   OP_TIME_EXP.T_START, 
                   OP_TIME_EXP.T_END,
-                CONVERT(NVARCHAR(45), OP_TIME_EXP.T_START, 104) AS T_START_Converted,
-                  CONVERT(NVARCHAR(45), OP_TIME_EXP.T_END, 104) AS T_END_Converted,
+                  CONVERT(NVARCHAR(45), OP_TIME_EXP.T_START, 104) AS T_START_Date,
+                  CONVERT(NVARCHAR(45), OP_TIME_EXP.T_START, 108) AS T_START_Time,
+                  CONVERT(NVARCHAR(45), OP_TIME_EXP.T_END, 104) AS T_END_Date,
+                  CONVERT(NVARCHAR(45), OP_TIME_EXP.T_END, 108) AS T_END_Time,
                   OPS.OP_TYPE, 
                   OPS_TYPE.OP_TYPE_NAME, 
                   OP_CON_SET.OP_CON_SET_NAME 
@@ -91,16 +93,16 @@ namespace ac
                   SP_DES.OP_SEQ
 
                 ", new SqlParameter("ssid", ss_id), new SqlParameter("prp", SelectedDetail.PrP)).ToList();
-            SpecProcessesItemsControl.ItemsSource = specProcesses;
+            
 
             for (int i = 0; i < specProcesses.Count; i++)
             {
-                if (specProcesses[i].T_START_Converted == specProcesses[i].T_END_Converted)
+                if (specProcesses[i].T_START_Date == specProcesses[i].T_END_Date)
                 {
-                    specProcesses[i].T_END = null;
+                    specProcesses[i].T_END_Date = null;
                 }
             }
-
+            SpecProcessesItemsControl.ItemsSource = specProcesses;
 
             #region Цвет для поля в зависимости от результата другого поля, учитывая DataTemplate
             for (int i = 0; i < specProcesses.Count; i++)
