@@ -36,6 +36,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>ac.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ControlzEx, Version=4.0.0.0, Culture=neutral, PublicKeyToken=69f1c32f803d307e, processorArchitecture=MSIL">
       <HintPath>packages\ControlzEx.4.4.0\lib\net462\ControlzEx.dll</HintPath>
@@ -255,7 +258,9 @@
     <Resource Include="Resources\icons\misc\img\img3.ico" />
     <Resource Include="Resources\icons\misc\img\img4.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="ac.ico" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\icons\misc\materials\materials1.ico" />
     <Resource Include="Resources\icons\misc\materials\materials2.ico" />

@@ -91,7 +91,7 @@
                 <DataGridTemplateColumn x:Name="ImageColumn" Header="Эскиз" Width="150" MinWidth="150" IsReadOnly="True" Visibility="Collapsed">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Source="{Binding Data, Converter={StaticResource BytesToBitmapImageConverter}, TargetNullValue={x:Null}}"/>
+                            <Image Source="{Binding Data, Converter={StaticResource BytesToBitmapImageConverter}, TargetNullValue={x:Null}, IsAsync=True}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

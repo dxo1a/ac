@@ -137,15 +137,15 @@ namespace ac
 
         private void Border_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Border border = sender as Border;
-            if (border != null)
-            {
-                SpecProcesses data = border.DataContext as SpecProcesses;
-                if (data != null)
-                {
-                    MessageBox.Show($"SelectedDetail PrP: {SelectedDetail.PrP}; {ss_id}");
-                }
-            }
+            //Border border = sender as Border;
+            //if (border != null)
+            //{
+            //    SpecProcesses data = border.DataContext as SpecProcesses;
+            //    if (data != null)
+            //    {
+            //        MessageBox.Show($"SelectedDetail PrP: {SelectedDetail.PrP}; {ss_id}");
+            //    }
+            //}
         }
 
         #region Поиск

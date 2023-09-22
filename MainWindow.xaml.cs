@@ -41,9 +41,10 @@ namespace ac
 
         private void updateGrid()
         {
-            detailsView = Odb.db.Database.SqlQuery<DetailsView>("SELECT НомерД AS DetailNode, НазваниеД AS DetailName, Договор AS PP, ПрП AS PrP FROM [Cooperation].[dbo].[DetailsView] WHERE Договор=@numpp GROUP BY Договор, НомерД, НазваниеД, ПрП", new SqlParameter("numpp", PPTBX.Text)).ToList();
+            //detailsView = Odb.db.Database.SqlQuery<DetailsView>("SELECT НомерД AS DetailNode, НазваниеД AS DetailName, Договор AS PP, ПрП AS PrP FROM [Cooperation].[dbo].[DetailsView] WHERE Договор=@numpp GROUP BY Договор, НомерД, НазваниеД, ПрП", new SqlParameter("numpp", PPTBX.Text)).ToList();
+            detailsView = Odb.db.Database.SqlQuery<DetailsView>("SELECT НомерД AS DetailNode, НазваниеД AS DetailName, Договор AS PP, ПрП AS PrP, (SELECT TOP(1) Data FROM dsl_sp.dbo.DEV_IMAGES_V as img WHERE НомерД = img.PRT$$$MNF) as Data FROM [Cooperation].[dbo].[DetailsView] WHERE Договор=@numpp GROUP BY Договор, НомерД, НазваниеД, ПрП", new SqlParameter("numpp", PPTBX.Text)).ToList();
             DetailsDG.ItemsSource = detailsView;
-            UpdateImage(detailsView);
+            //UpdateImage(detailsView);
         }
 
         #region Поиск в таблице
@@ -123,7 +124,7 @@ namespace ac
         #endregion
 
         #region IMG
-
+        /*
         private void UpdateImage(List<DetailsView> detail)
         {
             if (ImgCB.IsChecked.Value)
@@ -141,6 +142,7 @@ namespace ac
                 }
             }
         }
+        */
 
         private void ImgCB_Checked(object sender, RoutedEventArgs e)
         {
