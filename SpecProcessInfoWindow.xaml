@@ -22,7 +22,7 @@
 		<!--#region DATA TEMPLATE-->
 		<DataTemplate x:Key="SpecialProcessTemplate">
             <UniformGrid Margin="0" Columns="1" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1">
-                <Border CornerRadius="10" Background="LightGray" Width="355" Height="330" BorderThickness="2" BorderBrush="Gray" HorizontalAlignment="Center" MouseLeftButtonDown="Border_MouseLeftButtonDown" Effect="{StaticResource ShadowEffect}">
+                <Border CornerRadius="10" Background="LightGray" Width="355" Height="330" BorderThickness="2" BorderBrush="Gray" HorizontalAlignment="Center" Effect="{StaticResource ShadowEffect}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="0.35*"/>
@@ -75,7 +75,7 @@
                                 </StackPanel.Style>-->
                                 <StackPanel Orientation="Horizontal" Margin="10 0">
                                     <TextBlock Text="Время" FontSize="16" Margin="0 0 2.5 0" FontWeight="SemiBold"/>
-                                    <TextBlock Name="TLTypeTB" Text="{Binding TL_TYPE, Converter={StaticResource ELTypeConverter}}" VerticalAlignment="Bottom" Foreground="Gray" FontSize="11"/>
+                                    <!--<TextBlock Name="TLTypeTB" Text="{Binding TL_TYPE, Converter={StaticResource ELTypeConverter}}" VerticalAlignment="Bottom" Foreground="Gray" FontSize="11"/>-->
                                     <TextBlock Text="=" Margin="5 0" VerticalAlignment="Center"/>
                                     <TextBlock Name="TLValueTB" Text="{Binding TL_VALUE}" FontSize="16" ToolTip="Фактическое значение" Foreground="{Binding TL_VALUE_COLOR}" Effect="{StaticResource shadForTextOnLight}"/>
                                 </StackPanel>

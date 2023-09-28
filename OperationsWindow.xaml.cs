@@ -43,30 +43,13 @@ namespace ac
         {
             if (SPList.Count > 0)
             {
-                SpecProcessInfoWindow specProcessInfoWindow = new SpecProcessInfoWindow(SelectedDetail, SerialNumber, SelectedOperation);
+                SpecProcessInfoWindow specProcessInfoWindow = new SpecProcessInfoWindow(SelectedDetail, SerialNumber, SelectedOperation, SPList);
                 specProcessInfoWindow.Show();
             }
         }
 
-        private void OperationsDG_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            /*SelectedOperation = (Operations)OperationsDG.SelectedItem;
-            if (OperationsDG.SelectedItem is Operations selectedOperation)
-            {
-                SZList = Odb.db.Database.SqlQuery<SmenZadanie>("SELECT DISTINCT id_Tabel, DTE, Cost, FIO, NUM, Detail, OrderNum, OperationNum, Operation, Status AS StatusBool, Count, DEP$$$DEP AS DEP, WCR$$$WCR AS WCR, SHIFT, Product FROM [Zarplats].[dbo].[SmenZadView] WHERE Operation=@operationname AND OperationNum=@operationnum AND Product=@productname AND NUM=@prp", new SqlParameter("operationname", SelectedOperation.OperationName), new SqlParameter("operationnum", SelectedOperation.OperationNum), new SqlParameter("productname", ProductName.ProductWithSpace), new SqlParameter("@prp", SelectedDetail.PrP)).ToList();
-                if (SZList.Count > 0)
-                {
-                    SmenZadanieWindow smenZadanieWindow = new SmenZadanieWindow(SelectedOperation, ProductName, SelectedDetail);
-                    smenZadanieWindow.Show();
-                }
-            }*/
-
-
-        }
-
         private void MaterialsBTN_Click(object sender, RoutedEventArgs e)
         {
-            //открывать материалы, использованные в этой операции
             SelectedOperation = (Operations)OperationsDG.SelectedItem;
             if (OperationsDG.SelectedItem is Operations selectedOperation)
             {
@@ -97,9 +80,9 @@ namespace ac
 
         private void ButtonsCheck()
         {
+            #region список спец. процессов (SPList)
             SPList = Odb.db.Database.SqlQuery<SpecProcesses>(
                @"
-
                 SELECT DISTINCT
                   SP_SS.NUM_NOM,
                   SP_DES.OP_SEQ, 
@@ -131,11 +114,14 @@ namespace ac
                   CONVERT(NVARCHAR(45), OP_TIME_EXP.T_END, 108) AS T_END_Time,
                   OPS.OP_TYPE, 
                   OPS_TYPE.OP_TYPE_NAME, 
-                  OP_CON_SET.OP_CON_SET_NAME 
+                  OP_CON_SET.OP_CON_SET_NAME
                 FROM 
-                  SP_SS 
+                  SP_SS
+                  LEFT JOIN sprut.okp.dbo.okp_toz as toz on SP_SS.NUM_PAR = toz.NUM collate Cyrillic_General_100_CI_AI
+                  LEFT JOIN sprut.okp.dbo.okp_tho as tho on toz.TOP$$$KTO = tho.IDN
                   LEFT JOIN SP_DES ON SP_SS.SP_ID = SP_DES.SP_ID 
-                  LEFT JOIN OPS ON SP_DES.OP_ID = OPS.OP_ID 
+                  LEFT JOIN OPS ON SP_DES.OP_ID = OPS.OP_ID
+                  INNER JOIN SerialNumber.dbo.OPandSP as sp on tho.NAME = sp.Operation and OPS.OP_NAME = sp.SpecProcess collate Cyrillic_General_100_CI_AI
                   LEFT JOIN OP_EL ON OPS.OP_EL_ID = OP_EL.EL_ID 
                   LEFT JOIN OP_ENV_RES ON SP_SS.SS_ID = OP_ENV_RES.SS_ID 
                   AND SP_DES.OP_SEQ = OP_ENV_RES.OP_SEQ 
@@ -152,17 +138,19 @@ namespace ac
                   AND SP_DES.OP_SEQ = OP_TIME_EXP.OP_SEQ 
                   LEFT JOIN OPS_TYPE ON OPS.OP_TYPE = OPS_TYPE.OP_TYPE_ID 
                   LEFT JOIN OP_CON_SET ON OP_CON_RES.OP_CON_SET_ID = OP_CON_SET.OP_CON_SET_ID
-                  LEFT JOIN Cooperation.dbo.DetailsView as dv on SP_SS.NUM_PP = dv.Договор collate Cyrillic_General_100_CI_AI
                 WHERE 
-                  SP_SS.SS_ID = @ssid and dv.Операция=@operation and dv.НомерО=@nop
+	                toz.NUM=@prp and tho.NAME = @operation
                 ORDER BY 
                   SP_DES.OP_SEQ
 
-                ", new SqlParameter("ssid", ss_id), new SqlParameter("operation", SelectedOperation.OperationName), new SqlParameter("nop", SelectedOperation.OperationNum)).ToList();
+                ", new SqlParameter("prp", SelectedDetail.PrP), new SqlParameter("operation", SelectedOperation.OperationName), new SqlParameter("nop", SelectedOperation.OperationNum)).ToList();
+            #endregion
+            #region список смен. заданий (SZList)
             SZList = Odb.db.Database.SqlQuery<SmenZadanie>("SELECT DISTINCT id_Tabel, DTE, Cost, FIO, NUM, Detail, OrderNum, OperationNum, Operation, Status AS StatusBool, Count, DEP$$$DEP AS DEP, WCR$$$WCR AS WCR, SHIFT, Product FROM [Zarplats].[dbo].[SmenZadView] WHERE Operation=@operationname AND OperationNum=@operationnum AND Product=@productname AND NUM=@prp", new SqlParameter("operationname", SelectedOperation.OperationName), new SqlParameter("operationnum", SelectedOperation.OperationNum), new SqlParameter("productname", ProductName.ProductWithSpace), new SqlParameter("@prp", SelectedDetail.PrP)).ToList();
-            #region список материалов
+            #endregion
+            #region список материалов (MTList)
             MTList = Odb.db.Database.SqlQuery<Materials>(@"
-                select distinct p.NMP$$$NAM as MatName, trn.EIZ_RASH as EIZ, w.NAM as WRH
+                select distinct p.NMP$$$NAM as MatName, trn.EIZ_RASH as EIZ, w.NAM as WRH, trn.DOC
                 from SPRUT.OKP.dbo.OKP_TRNDOC as doc
                 left join SPRUT.OKP.dbo.OKP_TRN as trn on doc.DOC = trn.DOC
                 left join SPRUT.OKP.dbo.OKP_OBJLINKS l on l.S_Type = 6 and l.S_ID = trn.TRN_ID
@@ -177,6 +165,7 @@ namespace ac
                 .ToList();
             #endregion
 
+            #region проверка на пустые списки
             if (SZList.Count > 0)
                 SmenZadaniaBTN.IsEnabled = true;
             else
@@ -191,6 +180,8 @@ namespace ac
                 MaterialsBtn.IsEnabled = true;
             else
                 MaterialsBtn.IsEnabled = false;
+            #endregion
+
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }

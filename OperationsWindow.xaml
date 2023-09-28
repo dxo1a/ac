@@ -38,7 +38,7 @@
             <ColumnDefinition Width="20"/>
         </Grid.ColumnDefinitions>
 
-        <DataGrid Name="OperationsDG" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5 0 5 0" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}" MouseDoubleClick="OperationsDG_MouseDoubleClick" SelectionUnit="FullRow" SelectionChanged="OperationsDG_SelectionChanged">
+        <DataGrid Name="OperationsDG" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5 0 5 0" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}" SelectionUnit="FullRow" SelectionChanged="OperationsDG_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="opNum" Binding="{Binding OperationNum}" Header="№" Width="55" CanUserResize="False"/>
                 <DataGridTextColumn Binding="{Binding OperationName}" Header="Операция" Width="*"/>
@@ -60,7 +60,7 @@
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="1">
             <Button Name="OPSPCatalogBtn" Click="OPSPCatalogBtn_Click" Width="50" Height="50" BorderBrush="Transparent" ToolTip="Спец. процессы" Style="{StaticResource UpRoundedButtonStyle}" IsEnabled="True">
-                <Image Source="Resources/icons/misc/specProcesses1.ico" MaxWidth="34" MaxHeight="34"/>
+                <Image Source="Resources/icons/misc/catalogue.ico" MaxWidth="34" MaxHeight="34" ToolTip="Справочник &quot;Спец. процессы&quot;"/>
             </Button>
         </StackPanel>
 

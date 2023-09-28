@@ -306,11 +306,5 @@ namespace ac
             writer.Write(data);
         }
         public static void SaveByteArrayToFileWithStaticMethod(byte[] data, string filePath) => File.WriteAllBytes(filePath, data);*/
-
-        private void OPSPCatalogBtn_Click(object sender, RoutedEventArgs e)
-        {
-            OPSPCatalogWindow oPSPCatalogWindow = new OPSPCatalogWindow();
-            oPSPCatalogWindow.Show();
-        }
     }
 }

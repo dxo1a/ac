@@ -1,4 +1,5 @@
 ﻿using ac.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace ac
 
             #region список материалов
             MaterialsList = Odb.db.Database.SqlQuery<Materials>(@"
-                select distinct p.NMP$$$NAM as MatName, trn.EIZ_RASH as EIZ, w.NAM as WRH
+                select distinct p.NMP$$$NAM as MatName, trn.EIZ_RASH as EIZ, w.NAM as WRH, trn.DOC, p.rwc
                 from SPRUT.OKP.dbo.OKP_TRNDOC as doc
                 left join SPRUT.OKP.dbo.OKP_TRN as trn on doc.DOC = trn.DOC
                 left join SPRUT.OKP.dbo.OKP_OBJLINKS l on l.S_Type = 6 and l.S_ID = trn.TRN_ID
@@ -78,14 +79,17 @@ namespace ac
                     WHERE pot.rwc=@potrwc AND trn.DOC=@doc AND DEV_SN IS NOT NULL
                 ",
                 new SqlParameter("potrwc", SelectedMaterial.rwc), new SqlParameter("doc", SelectedMaterial.DOC)).ToList();
-                MessageBox.Show($"POTRWC: {SelectedMaterial.rwc}");
+                MessageBox.Show($"POTRWC: {SelectedMaterial.rwc}, DOC: {SelectedMaterial.DOC}");
 
                 if (trns.Count > 0)
                 {
                     MaterialsTRN materialsTRN = new MaterialsTRN(SelectedMaterial, prp, trns);
                     materialsTRN.Show();
                 }
-
+                else
+                {
+                    Console.WriteLine("Где информация о поставке?");
+                }
             }
         }
     }

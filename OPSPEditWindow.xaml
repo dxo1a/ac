@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ac"
         mc:Ignorable="d"
-        Title="OPSPEditWindow" Height="300" Width="600" WindowStyle="None"
+        Title="Редактрирование записи &quot;Справочник &apos;Специальные процессы&apos;&quot;" Height="300" Width="600" WindowStyle="None"
         xmlns:themes="clr-namespace:StyledWindow.WPF.Themes;assembly=StyledWindow.WPF" xmlns:components="clr-namespace:StyledWindow.WPF.Components;assembly=StyledWindow.WPF"
         Style="{StaticResource StyledWindow}"
         themes:StyledWindow.LanguageButtonVisible="False"

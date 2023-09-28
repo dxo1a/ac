@@ -87,11 +87,6 @@
                     <ScaleTransform ScaleX="1.25" ScaleY="1.25"/>
                 </CheckBox.LayoutTransform>
             </CheckBox>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="1">
-                <Button Name="OPSPCatalogBtn" Click="OPSPCatalogBtn_Click" Width="50" Height="50" BorderBrush="Transparent" ToolTip="Спец. процессы" Style="{StaticResource UpRoundedButtonStyle}" IsEnabled="True">
-                    <Image Source="Resources/icons/misc/specProcesses1.ico" MaxWidth="34" MaxHeight="34"/>
-                </Button>
-            </StackPanel>
         </StackPanel>
 
         <TextBlock Name="PPNameTB" Text="Наименование изделия" Grid.Row="1" Grid.Column="1" FontSize="18" TextAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Bottom" Padding="5 0" Effect="{StaticResource shadForTextOnLight}" ToolTip="Зелёное готово&#x0a;Тёмное не готово"/>
