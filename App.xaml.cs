@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using StyledWindow.WPF.Commands;
+﻿using StyledWindow.WPF.Commands;
+using System.Windows;
 
 namespace ac
 {

@@ -13,17 +13,35 @@ namespace ac
 
         private DetailsView SelectedDetail { get; set; }
         private Materials SelectedMaterial { get; set; }
+        private Operations SelectedOperation { get; set; }
 
         string prp;
 
-        public MaterialsWindow(DetailsView selectedDetail, List<Materials> materialsList)
+        public MaterialsWindow(DetailsView selectedDetail, Operations selectedOperation)
         {
             InitializeComponent();
 
             SelectedDetail = selectedDetail;
-            MaterialsList = materialsList;
+            SelectedOperation = selectedOperation;
 
             this.Title = SelectedDetail.Detail + " | Материалы";
+
+            #region список материалов
+            MaterialsList = Odb.db.Database.SqlQuery<Materials>(@"
+                select distinct p.NMP$$$NAM as MatName, trn.EIZ_RASH as EIZ, w.NAM as WRH
+                from SPRUT.OKP.dbo.OKP_TRNDOC as doc
+                left join SPRUT.OKP.dbo.OKP_TRN as trn on doc.DOC = trn.DOC
+                left join SPRUT.OKP.dbo.OKP_OBJLINKS l on l.S_Type = 6 and l.S_ID = trn.TRN_ID
+                left join SPRUT.OKP.dbo.OKP_SReserv r on l.M_Type = 200 and l.M_ID = r.ID
+                left join SPRUT.OKP.dbo.OKP_POT p on r.ID = p.TRN_ID
+                left join SPRUT.OKP.dbo.OKP_TOZ t on p.Rwc_toz = t.rwc
+                LEFT JOIN SPRUT.OKP.dbo.OKP_THO as tho on t.TOP$$$KTO = tho.IDN
+                LEFT JOIN SPRUT.OKP.dbo.OKP_WRH as w on doc.WRH = w.WRH_IDN
+                LEFT JOIN Cooperation.dbo.DetailsView as dv on t.PPPNUM = dv.Договор
+                WHERE t.PRT$$$MNF=@detnode and t.PPPNUM=@numpp and t.NUM=@prp and dv.НомерО=@nop and dv.Операция=@operation",
+                new SqlParameter("detnode", SelectedDetail.DetailNode), new SqlParameter("numpp", SelectedDetail.PP), new SqlParameter("prp", SelectedDetail.PrP), new SqlParameter("nop", SelectedOperation.OperationNum), new SqlParameter("operation", SelectedOperation.OperationName))
+                .ToList();
+            #endregion
 
             MaterialsDG.ItemsSource = MaterialsList;
             prp = SelectedDetail.PrP;
@@ -60,13 +78,14 @@ namespace ac
                     WHERE pot.rwc=@potrwc AND trn.DOC=@doc AND DEV_SN IS NOT NULL
                 ",
                 new SqlParameter("potrwc", SelectedMaterial.rwc), new SqlParameter("doc", SelectedMaterial.DOC)).ToList();
+                MessageBox.Show($"POTRWC: {SelectedMaterial.rwc}");
 
                 if (trns.Count > 0)
                 {
                     MaterialsTRN materialsTRN = new MaterialsTRN(SelectedMaterial, prp, trns);
                     materialsTRN.Show();
                 }
-                
+
             }
         }
     }

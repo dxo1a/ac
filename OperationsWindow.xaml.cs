@@ -1,8 +1,10 @@
 ﻿using ac.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace ac
 {
@@ -11,31 +13,92 @@ namespace ac
         List<Operations> OperationsList = new List<Operations>();
         List<SmenZadanie> SZList = new List<SmenZadanie>();
         List<SpecProcesses> SPList = new List<SpecProcesses>();
-        List<Materials> MaterialsList = new List<Materials>();
+        List<Materials> MTList = new List<Materials>();
+        List<DetailsView> DetailsList = new List<DetailsView>();
 
         private DetailsView SelectedDetail { get; set; }
         private Operations SelectedOperation { get; set; }
         private DetailsView ProductName { get; set; }
 
         public string SerialNumber;
+        int ss_id;
 
         public OperationsWindow(DetailsView selectedDetail, string serialNumber, DetailsView productName)
         {
             InitializeComponent();
-            
+
             SelectedDetail = selectedDetail;
             SerialNumber = serialNumber;
             ProductName = productName;
 
-            OperationsList = Odb.db.Database.SqlQuery<Operations>("SELECT Договор AS PP, НомерД AS DetailNode, Операция AS OperationName, НомерО AS OperationNum, Исполнитель AS Executor, Цена AS Price, Стоимость AS Cost FROM Cooperation.dbo.DetailsView WHERE НомерД=@detnode AND Договор=@numpp AND ПрП=@prp GROUP BY Договор, Операция, НомерО, Исполнитель, Цена, Стоимость, Количество, Статус, НомерД", new SqlParameter("detnode", SelectedDetail.DetailNode), new SqlParameter("numpp", SelectedDetail.PP), new SqlParameter("prp", SelectedDetail.PrP)).ToList();
+            OperationsList = Odb.db.Database.SqlQuery<Operations>("select distinct toz.NOP as OperationNum, tho.NAME as OperationName, toz.WCR$$$WCR + ' -  ' + wcr.NMC$$$NAM as Executor from SPRUT.OKP.dbo.OKP_TOZ as toz LEFT JOIN SPRUT.OKP.dbo.OKP_THO as tho on toz.TOP$$$KTO = tho.IDN LEFT JOIN SPRUT.OKP.dbo.OKP_WCR as wcr on toz.WCR$$$WCR = wcr.WCR$$$IDN WHERE toz.PRT$$$MNF=@detnode and toz.PPPNUM=@numpp and toz.NUM=@prp", new SqlParameter("detnode", SelectedDetail.DetailNode), new SqlParameter("numpp", SelectedDetail.PP), new SqlParameter("prp", SelectedDetail.PrP)).ToList();
             OperationsDG.ItemsSource = OperationsList;
 
             this.Title = SelectedDetail.Detail;
 
+            ss_id = Odb.db.Database.SqlQuery<int>("SELECT SS_DEV_NUM.SS_ID FROM SP_SS LEFT JOIN SS_DEV_NUM ON SP_SS.SS_ID = SS_DEV_NUM.SS_ID WHERE DEV_SN=@devsn", new SqlParameter("devsn", SerialNumber)).SingleOrDefault();
+        }
 
-            int ss_id = Odb.db.Database.SqlQuery<int>("SELECT SS_DEV_NUM.SS_ID FROM SP_SS LEFT JOIN SS_DEV_NUM ON SP_SS.SS_ID = SS_DEV_NUM.SS_ID WHERE DEV_SN=@devsn", new SqlParameter("devsn", SerialNumber)).SingleOrDefault();
+        private void SpecProcessesBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (SPList.Count > 0)
+            {
+                SpecProcessInfoWindow specProcessInfoWindow = new SpecProcessInfoWindow(SelectedDetail, SerialNumber, SelectedOperation);
+                specProcessInfoWindow.Show();
+            }
+        }
+
+        private void OperationsDG_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            /*SelectedOperation = (Operations)OperationsDG.SelectedItem;
+            if (OperationsDG.SelectedItem is Operations selectedOperation)
+            {
+                SZList = Odb.db.Database.SqlQuery<SmenZadanie>("SELECT DISTINCT id_Tabel, DTE, Cost, FIO, NUM, Detail, OrderNum, OperationNum, Operation, Status AS StatusBool, Count, DEP$$$DEP AS DEP, WCR$$$WCR AS WCR, SHIFT, Product FROM [Zarplats].[dbo].[SmenZadView] WHERE Operation=@operationname AND OperationNum=@operationnum AND Product=@productname AND NUM=@prp", new SqlParameter("operationname", SelectedOperation.OperationName), new SqlParameter("operationnum", SelectedOperation.OperationNum), new SqlParameter("productname", ProductName.ProductWithSpace), new SqlParameter("@prp", SelectedDetail.PrP)).ToList();
+                if (SZList.Count > 0)
+                {
+                    SmenZadanieWindow smenZadanieWindow = new SmenZadanieWindow(SelectedOperation, ProductName, SelectedDetail);
+                    smenZadanieWindow.Show();
+                }
+            }*/
+
+
+        }
+
+        private void MaterialsBTN_Click(object sender, RoutedEventArgs e)
+        {
+            //открывать материалы, использованные в этой операции
+            SelectedOperation = (Operations)OperationsDG.SelectedItem;
+            if (OperationsDG.SelectedItem is Operations selectedOperation)
+            {
+                MaterialsWindow materialsWindow = new MaterialsWindow(SelectedDetail, SelectedOperation);
+                materialsWindow.ShowDialog();
+            }
+        }
+
+        private void SmenZadaniaBTN_Click(object sender, RoutedEventArgs e)
+        {
+            SelectedOperation = (Operations)OperationsDG.SelectedItem;
+            if (OperationsDG.SelectedItem is Operations selectedOperation)
+            {
+                SZList = Odb.db.Database.SqlQuery<SmenZadanie>("SELECT DISTINCT id_Tabel, DTE, Cost, FIO, NUM, Detail, OrderNum, OperationNum, Operation, Status AS StatusBool, Count, DEP$$$DEP AS DEP, WCR$$$WCR AS WCR, SHIFT, Product FROM [Zarplats].[dbo].[SmenZadView] WHERE Operation=@operationname AND OperationNum=@operationnum AND Product=@productname AND NUM=@prp", new SqlParameter("operationname", SelectedOperation.OperationName), new SqlParameter("operationnum", SelectedOperation.OperationNum), new SqlParameter("productname", ProductName.ProductWithSpace), new SqlParameter("@prp", SelectedDetail.PrP)).ToList();
+                if (SZList.Count > 0)
+                {
+                    SmenZadanieWindow smenZadanieWindow = new SmenZadanieWindow(SelectedOperation, ProductName, SelectedDetail);
+                    smenZadanieWindow.Show();
+                }
+            }
+        }
+
+        private void OperationsDG_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SelectedOperation = (Operations)OperationsDG.SelectedItem;
+            ButtonsCheck();
+        }
+
+        private void ButtonsCheck()
+        {
             SPList = Odb.db.Database.SqlQuery<SpecProcesses>(
-                @"
+               @"
 
                 SELECT DISTINCT
                   SP_SS.NUM_NOM,
@@ -60,6 +123,12 @@ namespace ac
                   OP_CON.CON_DESCR, 
                   USERS_DATA.USER_SFIO,
                   USERS_DATA.USER_FNAME, USERS_DATA.USER_LNAME, USERS_DATA.USER_MNAME,
+                  OP_TIME_EXP.T_START, 
+                  OP_TIME_EXP.T_END,
+                  CONVERT(NVARCHAR(45), OP_TIME_EXP.T_START, 104) AS T_START_Date,
+                  CONVERT(NVARCHAR(45), OP_TIME_EXP.T_START, 108) AS T_START_Time,
+                  CONVERT(NVARCHAR(45), OP_TIME_EXP.T_END, 104) AS T_END_Date,
+                  CONVERT(NVARCHAR(45), OP_TIME_EXP.T_END, 108) AS T_END_Time,
                   OPS.OP_TYPE, 
                   OPS_TYPE.OP_TYPE_NAME, 
                   OP_CON_SET.OP_CON_SET_NAME 
@@ -83,85 +152,53 @@ namespace ac
                   AND SP_DES.OP_SEQ = OP_TIME_EXP.OP_SEQ 
                   LEFT JOIN OPS_TYPE ON OPS.OP_TYPE = OPS_TYPE.OP_TYPE_ID 
                   LEFT JOIN OP_CON_SET ON OP_CON_RES.OP_CON_SET_ID = OP_CON_SET.OP_CON_SET_ID
+                  LEFT JOIN Cooperation.dbo.DetailsView as dv on SP_SS.NUM_PP = dv.Договор collate Cyrillic_General_100_CI_AI
                 WHERE 
-                  SP_SS.SS_ID = @ssid
+                  SP_SS.SS_ID = @ssid and dv.Операция=@operation and dv.НомерО=@nop
                 ORDER BY 
-                  SP_DES.OP_SEQ DESC
+                  SP_DES.OP_SEQ
 
-                ", new SqlParameter("ssid", ss_id), new SqlParameter("prp", SelectedDetail.PrP)).ToList();
-            if (SPList.Count <= 0)
+                ", new SqlParameter("ssid", ss_id), new SqlParameter("operation", SelectedOperation.OperationName), new SqlParameter("nop", SelectedOperation.OperationNum)).ToList();
+            SZList = Odb.db.Database.SqlQuery<SmenZadanie>("SELECT DISTINCT id_Tabel, DTE, Cost, FIO, NUM, Detail, OrderNum, OperationNum, Operation, Status AS StatusBool, Count, DEP$$$DEP AS DEP, WCR$$$WCR AS WCR, SHIFT, Product FROM [Zarplats].[dbo].[SmenZadView] WHERE Operation=@operationname AND OperationNum=@operationnum AND Product=@productname AND NUM=@prp", new SqlParameter("operationname", SelectedOperation.OperationName), new SqlParameter("operationnum", SelectedOperation.OperationNum), new SqlParameter("productname", ProductName.ProductWithSpace), new SqlParameter("@prp", SelectedDetail.PrP)).ToList();
+            #region список материалов
+            MTList = Odb.db.Database.SqlQuery<Materials>(@"
+                select distinct p.NMP$$$NAM as MatName, trn.EIZ_RASH as EIZ, w.NAM as WRH
+                from SPRUT.OKP.dbo.OKP_TRNDOC as doc
+                left join SPRUT.OKP.dbo.OKP_TRN as trn on doc.DOC = trn.DOC
+                left join SPRUT.OKP.dbo.OKP_OBJLINKS l on l.S_Type = 6 and l.S_ID = trn.TRN_ID
+                left join SPRUT.OKP.dbo.OKP_SReserv r on l.M_Type = 200 and l.M_ID = r.ID
+                left join SPRUT.OKP.dbo.OKP_POT p on r.ID = p.TRN_ID
+                left join SPRUT.OKP.dbo.OKP_TOZ t on p.Rwc_toz = t.rwc
+                LEFT JOIN SPRUT.OKP.dbo.OKP_THO as tho on t.TOP$$$KTO = tho.IDN
+                LEFT JOIN SPRUT.OKP.dbo.OKP_WRH as w on doc.WRH = w.WRH_IDN
+                LEFT JOIN Cooperation.dbo.DetailsView as dv on t.PPPNUM = dv.Договор
+                WHERE t.PRT$$$MNF=@detnode and t.PPPNUM=@numpp and t.NUM=@prp and dv.НомерО=@nop and dv.Операция=@operation",
+                new SqlParameter("detnode", SelectedDetail.DetailNode), new SqlParameter("numpp", SelectedDetail.PP), new SqlParameter("prp", SelectedDetail.PrP), new SqlParameter("nop", SelectedOperation.OperationNum), new SqlParameter("operation", SelectedOperation.OperationName))
+                .ToList();
+            #endregion
+
+            if (SZList.Count > 0)
+                SmenZadaniaBTN.IsEnabled = true;
+            else
+                SmenZadaniaBTN.IsEnabled = false;
+
+            if (SPList.Count > 0)
+                SpecProcessesBtn.IsEnabled = true;
+            else
                 SpecProcessesBtn.IsEnabled = false;
 
-            MaterialsList = Odb.db.Database.SqlQuery<Materials>(@"
-                SELECT
-                    pot.PRTIDN as PrintIDN,
-                    pot.NMP$$$NAM as MatName,
-                    eiz.NAENAM as EIZ,
-                    SUM(inv.QTY) as AmountOnWRHs,
-                    SUM(QTYMFC) as RezervOnWRHs,
-                    CASE
-                        WHEN (SUM(QTYMFC) - SUM(inv.QTY)) < 0 THEN 0
-                        ELSE (SUM(QTYMFC) - SUM(inv.QTY))
-                    END as DeficitOnWRHs,
-                    pot.QTYPOT as PlanPotreb,
-                    pot.QTYTQY as CurrentPotreb,
-                    QTYRQY as Norma,
-                    NAM as WRH,
-                    trn.DOC,
-                    pot.rwc
-                FROM SPRUT.OKP.dbo.OKP_POT as pot
-                INNER JOIN SPRUT.OKP.dbo.OKP_INV as inv on pot.PRTIDN = inv.PRTIDN
-                INNER JOIN SPRUT.OKP.dbo.OKP_NOM as nom on pot.PRTIDN = nom.PRT$$$IDN
-                INNER JOIN SPRUT.OKP.dbo.OKP_WRH as wrh on nom.WRH_IDN = wrh.WRH_IDN
-                INNER JOIN SPRUT.OKP.dbo.OKP_EIZ as eiz on inv.UOMPEIZ = eiz.UOMIDN
-                INNER JOIN SPRUT.OKP.dbo.OKP_TRN as trn on pot.TRN_ID = trn.TRN_ID
-                WHERE CPLNUM=@prp
-                GROUP BY pot.PRTIDN, pot.NMP$$$NAM, eiz.NAENAM, pot.QTYPOT, pot.QTYTQY, QTYRQY, NAM, trn.DOC, pot.rwc",
-                new SqlParameter("prp", SelectedDetail.PrP))
-                .ToList();
-            if (MaterialsList.Count <= 0)
+            if (MTList.Count > 0)
+                MaterialsBtn.IsEnabled = true;
+            else
                 MaterialsBtn.IsEnabled = false;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
-        #region ImgCB
-        private void ImgCB_Checked(object sender, RoutedEventArgs e)
+        private void OPSPCatalogBtn_Click(object sender, RoutedEventArgs e)
         {
-            ImageColumn.Visibility = Visibility.Visible;
-        }
-
-        private void ImgCB_Unchecked(object sender, RoutedEventArgs e)
-        {
-            ImageColumn.Visibility = Visibility.Collapsed;
-        }
-        #endregion
-
-        private void SpecProcessesBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (SPList.Count > 0)
-            {
-                SpecProcessInfoWindow specProcessInfoWindow = new SpecProcessInfoWindow(SelectedDetail, SerialNumber);
-                specProcessInfoWindow.Show();
-            }
-        }
-
-        private void MaterialsBtn_Click(object sender, RoutedEventArgs e)
-        {
-            MaterialsWindow materialsWindow = new MaterialsWindow(SelectedDetail, MaterialsList);
-            materialsWindow.ShowDialog();
-        }
-
-        private void OperationsDG_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            SelectedOperation = (Operations)OperationsDG.SelectedItem;
-            if (OperationsDG.SelectedItem is Operations selectedOperation)
-            {
-                SZList = Odb.db.Database.SqlQuery<SmenZadanie>("SELECT DISTINCT id_Tabel, DTE, Cost, FIO, NUM, Detail, OrderNum, OperationNum, Operation, Status AS StatusBool, Count, DEP$$$DEP AS DEP, WCR$$$WCR AS WCR, SHIFT, Product FROM [Zarplats].[dbo].[SmenZadView] WHERE Operation=@operationname AND OperationNum=@operationnum AND Product=@productname AND NUM=@prp", new SqlParameter("operationname", SelectedOperation.OperationName), new SqlParameter("operationnum", SelectedOperation.OperationNum), new SqlParameter("productname", ProductName.ProductWithSpace), new SqlParameter("@prp", SelectedDetail.PrP)).ToList();
-                if (SZList.Count > 0)
-                {
-                    SmenZadanieWindow smenZadanieWindow = new SmenZadanieWindow(SelectedOperation, ProductName, SelectedDetail);
-                    smenZadanieWindow.Show();
-                }
-            }
+            OPSPCatalogWindow oPSPCatalogWindow = new OPSPCatalogWindow();
+            oPSPCatalogWindow.Show();
         }
     }
 }

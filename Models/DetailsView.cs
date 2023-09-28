@@ -11,6 +11,8 @@ namespace ac.Models
         public int RSTS { get; set; }                   //RSTS  (статус плановой позиции)
         public string WCR { get; set; }                 //WCR (рабочий центр)
         public string PrP { get; set; }                 //ПрП (производственная партия)
+        public int NOP { get; set; }                    //НомерО (номер операции)
+        public string OperationName { get; set; }       //Операция
 
         public string ProductName { get; set; }         //Изделие
         public string ProductNum { get; set; }          //НомерИ (номер изделия)

@@ -1,10 +1,8 @@
 ﻿using ac.Models;
-using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace ac
@@ -18,15 +16,17 @@ namespace ac
         List<SpecProcesses> startDates = new List<SpecProcesses>();
 
         private DetailsView SelectedDetail { get; set; }
+        private Operations SelectedOperation { get; set; }
 
         private int ss_id;
         public string SerialNumber;
 
-        public SpecProcessInfoWindow(DetailsView selectedDetail, string serialNumber)
+        public SpecProcessInfoWindow(DetailsView selectedDetail, string serialNumber, Operations selectedOperation)
         {
             InitializeComponent();
             SelectedDetail = selectedDetail;
             SerialNumber = serialNumber;
+            SelectedOperation = selectedOperation;
 
             this.Title = SelectedDetail.Detail + " | Спец. процесс";
 
@@ -87,13 +87,14 @@ namespace ac
                   AND SP_DES.OP_SEQ = OP_TIME_EXP.OP_SEQ 
                   LEFT JOIN OPS_TYPE ON OPS.OP_TYPE = OPS_TYPE.OP_TYPE_ID 
                   LEFT JOIN OP_CON_SET ON OP_CON_RES.OP_CON_SET_ID = OP_CON_SET.OP_CON_SET_ID
+                  LEFT JOIN Cooperation.dbo.DetailsView as dv on SP_SS.NUM_PP = dv.Договор collate Cyrillic_General_100_CI_AI
                 WHERE 
-                  SP_SS.SS_ID = @ssid
+                  SP_SS.SS_ID = @ssid and dv.Операция=@operation and dv.НомерО=@nop
                 ORDER BY 
                   SP_DES.OP_SEQ
 
-                ", new SqlParameter("ssid", ss_id), new SqlParameter("prp", SelectedDetail.PrP)).ToList();
-            
+                ", new SqlParameter("ssid", ss_id), new SqlParameter("operation", SelectedOperation.OperationName), new SqlParameter("nop", SelectedOperation.OperationNum)).ToList();
+
 
             for (int i = 0; i < specProcesses.Count; i++)
             {

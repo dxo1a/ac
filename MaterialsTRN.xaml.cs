@@ -1,6 +1,5 @@
 ﻿using ac.Models;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Windows;
 
@@ -19,8 +18,9 @@ namespace ac
             InitializeComponent();
             SelectedMaterial = selectedMaterial;
             TrnsList = trns;
-            
-            DocTB.Text = $"IDN {TrnsList.First().IDN}";
+
+            DocTB.Text = $"DOC {SelectedMaterial.DOC}";
+            //DocTB.Text = $"IDN {TrnsList.First().IDN}";
             TRNDG.IsHitTestVisible = false;
             TRNDG.ItemsSource = TrnsList;
             SNDG.ItemsSource = TrnsList;

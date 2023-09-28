@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 
 namespace ac
 {
@@ -17,6 +17,7 @@ namespace ac
     {
         #region Переменные
         List<DetailsView> detailsView = new List<DetailsView>();
+        List<DetailsView> detailsViewWithOP = new List<DetailsView>();
 
         DetailsView SelectedDetail { get; set; }
         public ViewModel ViewModel { get; set; }
@@ -34,18 +35,80 @@ namespace ac
             ViewModel = new ViewModel();
             DataContext = ViewModel;
 
-            //byte[] fileByte = Odb.db.Database.SqlQuery<byte[]>("SELECT Data FROM dsl_sp.dbo.CC_SUB_VIEW WHERE CARD_ID = 291").FirstOrDefault();
-            //SaveByteArrayToFileWithBinaryWriter(fileByte, "C:\\Users\\it01\\Documents\\pic.jpg");
+            /*byte[] fileByte = Odb.db.Database.SqlQuery<byte[]>("SELECT Data FROM dsl_sp.dbo.CC_SUB_VIEW WHERE CARD_ID = 291").FirstOrDefault();
+            SaveByteArrayToFileWithBinaryWriter(fileByte, "C:\\Users\\it01\\Documents\\pic.jpg");*/
 
         }
 
-        private void updateGrid()
+        #region Асинхронная загрузка деталей
+        private async void UpdateGrid()
         {
-            //detailsView = Odb.db.Database.SqlQuery<DetailsView>("SELECT НомерД AS DetailNode, НазваниеД AS DetailName, Договор AS PP, ПрП AS PrP FROM [Cooperation].[dbo].[DetailsView] WHERE Договор=@numpp GROUP BY Договор, НомерД, НазваниеД, ПрП", new SqlParameter("numpp", PPTBX.Text)).ToList();
-            detailsView = Odb.db.Database.SqlQuery<DetailsView>("SELECT НомерД AS DetailNode, НазваниеД AS DetailName, Договор AS PP, ПрП AS PrP, (SELECT TOP(1) Data FROM dsl_sp.dbo.DEV_IMAGES_V as img WHERE НомерД = img.PRT$$$MNF) as Data FROM [Cooperation].[dbo].[DetailsView] WHERE Договор=@numpp GROUP BY Договор, НомерД, НазваниеД, ПрП", new SqlParameter("numpp", PPTBX.Text)).ToList();
-            DetailsDG.ItemsSource = detailsView;
-            //UpdateImage(detailsView);
+            try
+            {
+                PBDetailsDG.Value = 0;
+                DetailsDG.ItemsSource = new List<DetailsView>();
+                DisableActions();
+                await PrintDetails();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Произошла ошибка: " + ex.Message);
+            }
+            finally
+            {
+                EnableActions();
+            }
         }
+
+        async Task PrintDetails()
+        {
+            Console.WriteLine("-----Загрузка деталей началась-----");
+            detailsView = await GetDetailsAsync();
+            Console.WriteLine("-----Загрузка деталей закончена----");
+
+            Dispatcher.Invoke(() => { DetailsDG.ItemsSource = detailsView; });
+        }
+
+        async Task<List<DetailsView>> GetDetailsAsync()
+        {
+            List<DetailsView> details = new List<DetailsView>();
+            string numpp = PPTBX.Text;
+
+            using (SqlConnection connection = new SqlConnection(Odb.db.Database.Connection.ConnectionString))
+            {
+                connection.Open();
+                SqlCommand cmd = new SqlCommand("SELECT НомерД AS DetailNode, НазваниеД AS DetailName, Договор AS PP, ПрП AS PrP, (SELECT TOP(1) Data FROM dsl_sp.dbo.DEV_IMAGES_V as img WHERE НомерД = img.PRT$$$MNF) as Data FROM [Cooperation].[dbo].[DetailsView] WHERE Договор='" + numpp + "' GROUP BY Договор, НомерД, НазваниеД, ПрП", connection);
+                var reader = await cmd.ExecuteReaderAsync();
+                while (reader.Read())
+                {
+                    DetailsView detail = new DetailsView()
+                    {
+                        DetailNode = reader.GetString(0),
+                        DetailName = reader.GetString(1),
+                        PP = reader.GetString(2),
+                        PrP = reader.GetString(3),
+                        Data = reader.IsDBNull(4) ? new byte[0] : (byte[])reader["Data"]
+                    };
+                    details.Add(detail);
+                }
+                connection.Close();
+            }
+            #region progressBar
+            int totalItems = details.Count;
+            int processedItems = 0;
+            foreach (DetailsView detail in details)
+            {
+                processedItems++;
+                PBDetailsDG.Value = (double)processedItems / totalItems * 100;
+                await Task.Delay(1);
+            }
+            #endregion
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            return details;
+        }
+        #endregion
 
         #region Поиск в таблице
         private void DetailSearchBTN_Click(object sender, RoutedEventArgs e)
@@ -86,7 +149,7 @@ namespace ac
             else
             {
                 // 1 - из dsl_sp
-                string numppFromNumser = Odb.db.Database.SqlQuery<string>("SELECT NUM_PP FROM SP_SS LEFT JOIN SS_DEV_NUM ON SP_SS.SS_ID = SS_DEV_NUM.SS_ID WHERE DEV_SN=@numser", new SqlParameter("numser", SerialNumberTBX.Text)).SingleOrDefault();
+                string numppFromNumser = Odb.db.Database.SqlQuery<string>("SELECT DISTINCT SP_SS.NUM_PP FROM SP_SS LEFT JOIN SS_DEV_NUM as devnum on SP_SS.SS_ID = devnum.SS_ID INNER JOIN CC_SUB_VIEW as subview on devnum.DEV_SN = subview.CC_SN WHERE subview.CC_ZN=@numser OR devnum.DEV_SN=@numser", new SqlParameter("numser", SerialNumberTBX.Text)).SingleOrDefault();
 
                 if (!string.IsNullOrEmpty(numppFromNumser))
                 {
@@ -102,8 +165,8 @@ namespace ac
                         PPNameTB.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF56DA56"));
                     }
                     #endregion
-                    
-                    updateGrid();
+
+                    UpdateGrid();
 
                 }
                 else
@@ -197,11 +260,57 @@ namespace ac
         }
         #endregion
 
-        public static void SaveByteArrayToFileWithBinaryWriter(byte[] data, string filePath)
+        #region Поиск и контроль элементов
+        public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj == null) yield return (T)Enumerable.Empty<T>();
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            {
+                DependencyObject ithChild = VisualTreeHelper.GetChild(depObj, i);
+                if (ithChild == null) continue;
+                if (ithChild is T t) yield return t;
+                foreach (T childOfChild in FindVisualChildren<T>(ithChild)) yield return childOfChild;
+            }
+        }
+
+        private void DisableActions()
+        {
+            foreach (Button btn in FindVisualChildren<Button>(this))
+            {
+                btn.IsEnabled = false;
+            }
+            foreach (TextBox tbx in FindVisualChildren<TextBox>(this))
+            {
+                tbx.IsEnabled = false;
+            }
+            ImgCB.IsEnabled = false;
+        }
+
+        private void EnableActions()
+        {
+            foreach (Button btn in FindVisualChildren<Button>(this))
+            {
+                btn.IsEnabled = true;
+            }
+            foreach (TextBox tbx in FindVisualChildren<TextBox>(this))
+            {
+                tbx.IsEnabled = true;
+            }
+            ImgCB.IsEnabled = true;
+        }
+        #endregion
+
+        /*public static void SaveByteArrayToFileWithBinaryWriter(byte[] data, string filePath)
         {
             var writer = new BinaryWriter(File.OpenWrite(filePath));
             writer.Write(data);
         }
-        //public static void SaveByteArrayToFileWithStaticMethod(byte[] data, string filePath) => File.WriteAllBytes(filePath, data);
+        public static void SaveByteArrayToFileWithStaticMethod(byte[] data, string filePath) => File.WriteAllBytes(filePath, data);*/
+
+        private void OPSPCatalogBtn_Click(object sender, RoutedEventArgs e)
+        {
+            OPSPCatalogWindow oPSPCatalogWindow = new OPSPCatalogWindow();
+            oPSPCatalogWindow.Show();
+        }
     }
 }

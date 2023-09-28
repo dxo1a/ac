@@ -10,9 +10,9 @@ namespace ac
     {
         List<SmenZadanie> SZList = new List<SmenZadanie>();
 
-        private Operations SelectedOperation {  get; set; }
-        private DetailsView SelectedDetail {  get; set; }
-        private DetailsView ProductName {  get; set; }
+        private Operations SelectedOperation { get; set; }
+        private DetailsView SelectedDetail { get; set; }
+        private DetailsView ProductName { get; set; }
 
         public SmenZadanieWindow(Operations selectedOperation, DetailsView prodName, DetailsView selectedDetail)
         {

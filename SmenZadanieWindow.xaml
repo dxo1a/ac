@@ -44,20 +44,20 @@
 
         <DataGrid x:Name="SmenZadanieDG" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="1" Grid.Column="1" Margin="5" CanUserDeleteRows="False" Style="{StaticResource DataGridOwn}">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding OrderNum}" Header="№ заказа" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding OrderNum}" Header="№ заказа" Width="110" IsReadOnly="True"/>
                 <!--<DataGridTextColumn Binding="{Binding Product}" Header="Изделие" Width="*" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding Detail}" Header="Деталь" Width="*" IsReadOnly="True"/>-->
-                <DataGridTextColumn Binding="{Binding Count}" Header="Количество" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding Count}" Header="Кол-во" Width="80" IsReadOnly="True"/>
                 <!--<DataGridTextColumn Binding="{Binding NUM}" Header="NUM" Width="*" IsReadOnly="True"/>-->
                 <DataGridTextColumn Binding="{Binding Operation}" Header="Операция" Width="*" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding OperationNum}" Header="№" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding OperationNum}" Header="№" Width="50" IsReadOnly="True"/>
                 <!--<DataGridTextColumn Binding="{Binding StatusBool, Converter={StaticResource StatusFromBoolConverter}}" Header="Статус" Width="*" IsReadOnly="True"/>-->
-                <DataGridTextColumn Binding="{Binding Cost}" Header="Время" Width="*" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding DEP}" Header="Цех" Width="*" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding WCR}" Header="Рабочий центр" Width="*" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding SHIFT}" Header="Смена" Width="*" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding FIO}" Header="ФИО" Width="*" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding DTE, StringFormat='{}{0:dd.MM.yyyy}'}" Header="Дата" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding Cost, StringFormat=0.##}" Header="Время" Width="75" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding DEP}" Header="Цех" Width="65" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding WCR}" Header="Рабочий центр" Width="130" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding SHIFT}" Header="Смена" Width="75" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding Person}" Header="Сотрудник" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding DTE, StringFormat='{}{0:dd.MM.yyyy}'}" Header="Дата" Width="105" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding StatusBool, Converter={StaticResource StatusFromBoolConverter}}" MaxWidth="25" IsReadOnly="True" Foreground="Transparent" CellStyle="{StaticResource ReadyCell}"/>
             </DataGrid.Columns>
         </DataGrid>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Web.UI.WebControls;
-
-namespace ac.Models
+﻿namespace ac.Models
 {
     public class Materials
     {

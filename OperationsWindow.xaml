@@ -9,6 +9,7 @@
         Title="Операции" Height="700" Width="1000" MinHeight="420" MinWidth="560" Icon="Resources/ac.ico" WindowStyle="None"
         xmlns:themes="clr-namespace:StyledWindow.WPF.Themes;assembly=StyledWindow.WPF"
         Style="{StaticResource StyledWindow}"
+        themes:StyledWindow.LanguageContent="{x:Null}"
         themes:StyledWindow.LanguageButtonVisible="False"
         themes:StyledWindow.ThemeButtonVisible="False"
         themes:StyledWindow.ThemeToggleVisible="False"
@@ -37,36 +38,32 @@
             <ColumnDefinition Width="20"/>
         </Grid.ColumnDefinitions>
 
-        <!--<CheckBox Name="ImgCB" IsChecked="False" Content="Эскиз" Grid.Column="1" Grid.Row="0" VerticalAlignment="Bottom" Margin="10 0 0 0" Checked="ImgCB_Checked" Unchecked="ImgCB_Unchecked" FontSize="14"/>-->
-
-        <DataGrid Name="OperationsDG" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5 0 5 0" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}" MouseDoubleClick="OperationsDG_MouseDoubleClick" SelectionUnit="FullRow">
+        <DataGrid Name="OperationsDG" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5 0 5 0" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}" MouseDoubleClick="OperationsDG_MouseDoubleClick" SelectionUnit="FullRow" SelectionChanged="OperationsDG_SelectionChanged">
             <DataGrid.Columns>
-                <DataGridTemplateColumn x:Name="ImageColumn" Header="Эскиз" Width="*" IsReadOnly="True" Visibility="Collapsed" MaxWidth="150" MinWidth="50">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Source="{Binding Data, Converter={StaticResource BytesToBitmapImageConverter}, TargetNullValue={x:Null}}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding OperationNum}" Header="№" Width="55" CanUserResize="False"/>
+                <DataGridTextColumn x:Name="opNum" Binding="{Binding OperationNum}" Header="№" Width="55" CanUserResize="False"/>
                 <DataGridTextColumn Binding="{Binding OperationName}" Header="Операция" Width="*"/>
                 <DataGridTextColumn Binding="{Binding Executor}" Header="Исполнитель" Width="*"/>
-                <!--<DataGridTextColumn Binding="{Binding Price, StringFormat={}{0:N2}}" Header="Время (ед.)" Width="*"/>
-                <DataGridTextColumn Binding="{Binding Cost, StringFormat={}{0:N2}}" Header="Время (комплект)" Width="*"/>-->
-                <!--<DataGridTextColumn Binding="{Binding WARN, Converter={StaticResource StatusFromBoolConverter}}" Header="Нарушения в СП" Width="*"/>-->
             </DataGrid.Columns>
         </DataGrid>
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="6 0 10 0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <Button Name="SpecProcessesBtn" Click="SpecProcessesBtn_Click" Width="50" Height="50" BorderBrush="Transparent" ToolTip="Спец. процессы" Style="{StaticResource UpRoundedButtonStyle}">
+                <Button Name="SpecProcessesBtn" Click="SpecProcessesBtn_Click" Width="50" Height="50" BorderBrush="Transparent" ToolTip="Спец. процессы" Style="{StaticResource UpRoundedButtonStyle}" IsEnabled="False">
                     <Image Source="Resources/icons/misc/specProcesses1.ico" MaxWidth="34" MaxHeight="34"/>
                 </Button>
-                <Button Name="MaterialsBtn" Click="MaterialsBtn_Click" Width="50" Height="50" BorderBrush="Transparent" ToolTip="Материалы" Style="{StaticResource UpRoundedButtonStyle}" Background="Transparent">
+                <Button Name="MaterialsBtn" Click="MaterialsBTN_Click" Width="50" Height="50" BorderBrush="Transparent" ToolTip="Материалы" Style="{StaticResource UpRoundedButtonStyle}" Background="Transparent" IsEnabled="False">
                     <Image Source="Resources/icons/misc/materials/materials3.ico" MaxWidth="34" MaxHeight="34"/>
+                </Button>
+                <Button Name="SmenZadaniaBTN" Click="SmenZadaniaBTN_Click" Width="50" Height="50" BorderBrush="Transparent" ToolTip="Сменные задания" Style="{StaticResource UpRoundedButtonStyle}" IsEnabled="False">
+                    <Image Source="Resources/icons/misc/smenzadania1.ico" MaxWidth="34" MaxHeight="34"/>
                 </Button>
             </StackPanel>
         </StackPanel>
-        
-        
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="1">
+            <Button Name="OPSPCatalogBtn" Click="OPSPCatalogBtn_Click" Width="50" Height="50" BorderBrush="Transparent" ToolTip="Спец. процессы" Style="{StaticResource UpRoundedButtonStyle}" IsEnabled="True">
+                <Image Source="Resources/icons/misc/specProcesses1.ico" MaxWidth="34" MaxHeight="34"/>
+            </Button>
+        </StackPanel>
+
+
     </Grid>
 </Window>

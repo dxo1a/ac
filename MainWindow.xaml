@@ -29,6 +29,12 @@
             <Setter Property="FontSize" Value="16" />
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
+        <Style x:Key="PB" TargetType="ProgressBar">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Foreground" Value="LightGray"/>
+        </Style>
     </Window.Resources>
     <Grid>
         <!--#region Definitions-->
@@ -62,7 +68,7 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
                     <TextBlock Text="Плановая позиция " HorizontalAlignment="Center" Grid.Column="1" FontSize="16" Margin="10 0 0 0" VerticalAlignment="Center"/>
                     <StackPanel MinWidth="200">
-                        <TextBox x:Name="PPTBX" Text="0000000000" HorizontalContentAlignment="Center" MouseDoubleClick="PPTBX_MouseDoubleClick" IsReadOnly="True" BorderThickness="0" FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Background="Transparent"/>
+                        <TextBox x:Name="PPTBX" Text="0000000000" HorizontalContentAlignment="Center" MouseDoubleClick="PPTBX_MouseDoubleClick" IsReadOnly="True" BorderThickness="0" FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Background="Transparent" ToolTip="Двойной клик для копирования"/>
                     </StackPanel>
                 </StackPanel>
                 <TextBlock x:Name="CopyNotificationTB" Grid.Column="1" Grid.Row="1" Text="Скопировано" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="Collapsed" Margin="152.5 0 0 0" Style="{StaticResource MaterialDesignHelperTextBlock}"/>
@@ -71,19 +77,25 @@
         <!--#endregion-->
         
         <!--#region BOTTOM PANEL-->
-        
+
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="5 0 0 0">
-            <TextBox Name="DetailSearchTBX" Grid.Column="1" Width="0" MaxWidth="220" TextAlignment="Center" HorizontalAlignment="Left" FontSize="16" VerticalAlignment="Bottom" KeyDown="DetailSearchTBX_KeyDown" Height="30" Style="{StaticResource ShowTextboxAnimation}" Margin="0 0 -10 0" BorderBrush="LightGray"/>
-            <Button Name="DetailSearchBTN" Grid.Column="1" HorizontalAlignment="Left" Width="60" Height="30" VerticalAlignment="Bottom" Click="DetailSearchBTN_Click" Style="{StaticResource RightRoundedButtonStyle}" Content="Поиск" FontSize="16" Margin="0 0 10 0" ToolTip="Нажмите ENTER для подтверждения"/>
-            <CheckBox x:Name="ImgCB" IsChecked="False" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Checked="ImgCB_Checked" Unchecked="ImgCB_Unchecked">
+            <TextBox Name="DetailSearchTBX" Grid.Column="1" Width="0" MaxWidth="150" TextAlignment="Center" HorizontalAlignment="Left" FontSize="16" VerticalAlignment="Bottom" KeyDown="DetailSearchTBX_KeyDown" Height="30" Style="{StaticResource ShowTextboxAnimation}" Margin="0 0 -10 0" BorderBrush="LightGray" ToolTip="Нажмите ENTER для подтверждения"/>
+            <Button Name="DetailSearchBTN" Grid.Column="1" HorizontalAlignment="Left" Width="60" Height="30" VerticalAlignment="Bottom" Click="DetailSearchBTN_Click" Style="{StaticResource RightRoundedButtonStyle}" Content="Поиск" FontSize="16" Margin="0 0 10 0" ToolTip="Показать поле поиска"/>
+            <CheckBox x:Name="ImgCB" IsChecked="False" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Checked="ImgCB_Checked" Unchecked="ImgCB_Unchecked" Margin="0 5 0 0">
                 <Image Source="Resources/icons/misc/img/img1.ico" MaxWidth="16" MaxHeight="16"/>
                 <CheckBox.LayoutTransform>
                     <ScaleTransform ScaleX="1.25" ScaleY="1.25"/>
                 </CheckBox.LayoutTransform>
             </CheckBox>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="1">
+                <Button Name="OPSPCatalogBtn" Click="OPSPCatalogBtn_Click" Width="50" Height="50" BorderBrush="Transparent" ToolTip="Спец. процессы" Style="{StaticResource UpRoundedButtonStyle}" IsEnabled="True">
+                    <Image Source="Resources/icons/misc/specProcesses1.ico" MaxWidth="34" MaxHeight="34"/>
+                </Button>
+            </StackPanel>
         </StackPanel>
-        <TextBlock Name="PPNameTB" Text="Наименование детали" Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Center" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Bottom" Padding="5 0" Effect="{StaticResource shadForTextOnLight}"/>
-        <TextBlock Name="PPPrPTB" Text="ПрП: " Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Right" HorizontalAlignment="Right" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
+
+        <TextBlock Name="PPNameTB" Text="Наименование изделия" Grid.Row="1" Grid.Column="1" FontSize="18" TextAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Bottom" Padding="5 0" Effect="{StaticResource shadForTextOnLight}" ToolTip="Зелёное готово&#x0a;Тёмное не готово"/>
+        <TextBlock Name="PPPrPTB" Text="ПрП: 0000000000" Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Right" HorizontalAlignment="Right" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
         <!--#endregion-->
 
         <DataGrid x:Name="DetailsDG" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5" CanUserDeleteRows="False" MouseDoubleClick="DetailsDG_MouseDoubleClick" SelectionChanged="DetailsDG_SelectionChanged" Style="{StaticResource DataGridOwn}">
@@ -98,5 +110,10 @@
                 <DataGridTextColumn Binding="{Binding Detail}" Header="Деталь" Width="*" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
+        <StackPanel Name="SPPB" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Visible">
+            <ProgressBar Name="PBDetailsDG" Minimum="0" Maximum="100" Value="0" Style="{StaticResource PB}" Margin="5 -5 5 0" Height="35"/>
+            <!--<TextBlock Text="{Binding ElementName=PBDetailsDG, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 -20 0 0"/>-->
+        </StackPanel>
+        
     </Grid>
 </Window>

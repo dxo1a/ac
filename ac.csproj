@@ -132,6 +132,7 @@
       <DependentUpon>MaterialsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\MaterialsTRNModel.cs" />
+    <Compile Include="Models\OPSPModel.cs" />
     <Compile Include="OperationsWindow.xaml.cs">
       <DependentUpon>OperationsWindow.xaml</DependentUpon>
     </Compile>
@@ -139,6 +140,15 @@
     <Compile Include="Models\SmenZadanie.cs" />
     <Compile Include="Models\Sp.cs" />
     <Compile Include="Models\SpecProcesses.cs" />
+    <Compile Include="OPSPAddWindow.xaml.cs">
+      <DependentUpon>OPSPAddWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OPSPCatalogWindow.xaml.cs">
+      <DependentUpon>OPSPCatalogWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OPSPEditWindow.xaml.cs">
+      <DependentUpon>OPSPEditWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SmenZadanieWindow.xaml.cs">
       <DependentUpon>SmenZadanieWindow.xaml</DependentUpon>
     </Compile>
@@ -174,6 +184,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="OPSPAddWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OPSPCatalogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OPSPEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -269,6 +291,17 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\icons\misc\specProcesses1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icons\misc\smenzadania1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icons\misc\add.ico" />
+    <Resource Include="Resources\icons\misc\edit.ico" />
+    <Resource Include="Resources\icons\misc\remove.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icons\misc\refresh.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" />

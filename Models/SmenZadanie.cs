@@ -4,6 +4,7 @@ namespace ac.Models
 {
     public class SmenZadanie
     {
+        public string id_Tabel { get; set; }
         public string OrderNum { get; set; }
         public string Product { get; set; }
         public string Detail { get; set; }
@@ -34,6 +35,14 @@ namespace ac.Models
             get
             {
                 return OrderNum + " " + Product + "" + Detail + " " + Convert.ToString(Count) + " " + Operation + " " + Convert.ToString(OperationNum) + " " + Convert.ToString(Cost) + " " + DEP + " " + WCR + " " + (int)SHIFT + FIO;
+            }
+        }
+
+        public string Person
+        {
+            get
+            {
+                return $"({id_Tabel}) {FIO}";
             }
         }
     }
