@@ -53,7 +53,7 @@ namespace ac
             SelectedOperation = (Operations)OperationsDG.SelectedItem;
             if (OperationsDG.SelectedItem is Operations selectedOperation)
             {
-                MaterialsWindow materialsWindow = new MaterialsWindow(SelectedDetail, SelectedOperation);
+                MaterialsWindow materialsWindow = new MaterialsWindow(SelectedDetail, SelectedOperation, MTList);
                 materialsWindow.ShowDialog();
             }
         }
@@ -150,7 +150,7 @@ namespace ac
             #endregion
             #region список материалов (MTList)
             MTList = Odb.db.Database.SqlQuery<Materials>(@"
-                select distinct p.NMP$$$NAM as MatName, trn.EIZ_RASH as EIZ, w.NAM as WRH, trn.DOC
+                select distinct p.NMP$$$NAM as MatName, trn.EIZ_RASH as EIZ, w.NAM as WRH, trn.DOC, p.rwc
                 from SPRUT.OKP.dbo.OKP_TRNDOC as doc
                 left join SPRUT.OKP.dbo.OKP_TRN as trn on doc.DOC = trn.DOC
                 left join SPRUT.OKP.dbo.OKP_OBJLINKS l on l.S_Type = 6 and l.S_ID = trn.TRN_ID
@@ -159,9 +159,8 @@ namespace ac
                 left join SPRUT.OKP.dbo.OKP_TOZ t on p.Rwc_toz = t.rwc
                 LEFT JOIN SPRUT.OKP.dbo.OKP_THO as tho on t.TOP$$$KTO = tho.IDN
                 LEFT JOIN SPRUT.OKP.dbo.OKP_WRH as w on doc.WRH = w.WRH_IDN
-                LEFT JOIN Cooperation.dbo.DetailsView as dv on t.PPPNUM = dv.Договор
-                WHERE t.PRT$$$MNF=@detnode and t.PPPNUM=@numpp and t.NUM=@prp and dv.НомерО=@nop and dv.Операция=@operation",
-                new SqlParameter("detnode", SelectedDetail.DetailNode), new SqlParameter("numpp", SelectedDetail.PP), new SqlParameter("prp", SelectedDetail.PrP), new SqlParameter("nop", SelectedOperation.OperationNum), new SqlParameter("operation", SelectedOperation.OperationName))
+                WHERE t.NUM=@prp and t.NOP=@nop and tho.NAME=@operation",
+                new SqlParameter("prp", SelectedDetail.PrP), new SqlParameter("nop", SelectedOperation.OperationNum), new SqlParameter("operation", SelectedOperation.OperationName))
                 .ToList();
             #endregion
 

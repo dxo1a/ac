@@ -37,13 +37,12 @@
         </StackPanel>
         <DataGrid Name="TRNDG" CanUserAddRows="False" Grid.Row="1" Grid.Column="1" Margin="5" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}" VerticalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Detail}" Header="Деталь" Width="*"/>
                 <DataGridTextColumn Binding="{Binding Material}" Header="Материал" Width="*"/>
                 <DataGridTextColumn Binding="{Binding PRTIDN}" Header="Обозначение" Width="*" MaxWidth="130"/>
-                <DataGridTextColumn Binding="{Binding QTY}" Header="Кол-во" Width="*" MaxWidth="80" CanUserResize="False"/>
+                <DataGridTextColumn Binding="{Binding QTY}" Header="Кол-во (?)" Width="*" MaxWidth="80" CanUserResize="False"/>
                 <DataGridTextColumn Binding="{Binding EIZ}" Header="ЕИЗ" Width="*" MaxWidth="60" CanUserResize="False"/>
                 <DataGridTextColumn Binding="{Binding WRH}" Header="Склад" Width="*"/>
-                <DataGridTextColumn Binding="{Binding DTA, StringFormat='{}{0:dd.MM.yyyy HH:mm:ss}'}" Header="Дата" Width="*"/>
+                <DataGridTextColumn Binding="{Binding DTAPostav, StringFormat='{}{0:dd.MM.yyyy HH:mm:ss}'}" Header="Дата" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
         <DataGrid Name="SNDG" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}">

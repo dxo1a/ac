@@ -11,6 +11,7 @@ namespace ac
     {
         List<Materials> MaterialsList = new List<Materials>();
         List<MaterialsTRNModel> trns = new List<MaterialsTRNModel>();
+        List<MaterialsTRNModel> serialNumbers = new List<MaterialsTRNModel>();
 
         private DetailsView SelectedDetail { get; set; }
         private Materials SelectedMaterial { get; set; }
@@ -18,31 +19,15 @@ namespace ac
 
         string prp;
 
-        public MaterialsWindow(DetailsView selectedDetail, Operations selectedOperation)
+        public MaterialsWindow(DetailsView selectedDetail, Operations selectedOperation, List<Materials> materialsList)
         {
             InitializeComponent();
 
             SelectedDetail = selectedDetail;
             SelectedOperation = selectedOperation;
+            MaterialsList = materialsList;
 
             this.Title = SelectedDetail.Detail + " | Материалы";
-
-            #region список материалов
-            MaterialsList = Odb.db.Database.SqlQuery<Materials>(@"
-                select distinct p.NMP$$$NAM as MatName, trn.EIZ_RASH as EIZ, w.NAM as WRH, trn.DOC, p.rwc
-                from SPRUT.OKP.dbo.OKP_TRNDOC as doc
-                left join SPRUT.OKP.dbo.OKP_TRN as trn on doc.DOC = trn.DOC
-                left join SPRUT.OKP.dbo.OKP_OBJLINKS l on l.S_Type = 6 and l.S_ID = trn.TRN_ID
-                left join SPRUT.OKP.dbo.OKP_SReserv r on l.M_Type = 200 and l.M_ID = r.ID
-                left join SPRUT.OKP.dbo.OKP_POT p on r.ID = p.TRN_ID
-                left join SPRUT.OKP.dbo.OKP_TOZ t on p.Rwc_toz = t.rwc
-                LEFT JOIN SPRUT.OKP.dbo.OKP_THO as tho on t.TOP$$$KTO = tho.IDN
-                LEFT JOIN SPRUT.OKP.dbo.OKP_WRH as w on doc.WRH = w.WRH_IDN
-                LEFT JOIN Cooperation.dbo.DetailsView as dv on t.PPPNUM = dv.Договор
-                WHERE t.PRT$$$MNF=@detnode and t.PPPNUM=@numpp and t.NUM=@prp and dv.НомерО=@nop and dv.Операция=@operation",
-                new SqlParameter("detnode", SelectedDetail.DetailNode), new SqlParameter("numpp", SelectedDetail.PP), new SqlParameter("prp", SelectedDetail.PrP), new SqlParameter("nop", SelectedOperation.OperationNum), new SqlParameter("operation", SelectedOperation.OperationName))
-                .ToList();
-            #endregion
 
             MaterialsDG.ItemsSource = MaterialsList;
             prp = SelectedDetail.PrP;
@@ -53,37 +38,39 @@ namespace ac
             SelectedMaterial = (Materials)MaterialsDG.SelectedItem;
             if (MaterialsDG.SelectedItem is Materials selectedMaterial)
             {
+                serialNumbers = Odb.db.Database.SqlQuery<MaterialsTRNModel>(@"
+                    select distinct DEV_SN as SN
+                    from SPRUT.OKP.dbo.OKP_TRNDOC as doc
+                    left join SPRUT.OKP.dbo.OKP_TRN as trn on doc.DOC = trn.DOC
+                    left join SPRUT.OKP.dbo.OKP_OBJLINKS l on l.S_Type = 6 and l.S_ID = trn.TRN_ID
+                    left join SPRUT.OKP.dbo.OKP_SReserv r on l.M_Type = 200 and l.M_ID = r.ID
+                    left join SPRUT.OKP.dbo.OKP_POT p on r.ID = p.TRN_ID
+                    INNER JOIN dsl_sp.dbo.SP_SS as spss on p.PPPNUM = spss.NUM_PP collate Cyrillic_General_CI_AS
+                    INNER JOIN dsl_sp.dbo.SS_DEV_NUM as devnum on spss.SS_ID = devnum.SS_ID
+                    where doc.DOC = @doc and p.rwc = @potrwc AND DEV_SN IS NOT NULL
+                ", new SqlParameter("potrwc", SelectedMaterial.rwc), new SqlParameter("doc", SelectedMaterial.DOC)).ToList();
+
                 trns = Odb.db.Database.SqlQuery<MaterialsTRNModel>(
                     @"
-                    SELECT DISTINCT
-                     toz.PRT$$$MNF as Detail,
-                     pot.PRTIDN as PRTIDN,
-                     pot.NMP$$$NAM as Material,
-                     sbj.QTY,
-                     EIZ_RASH as EIZ,
-                     wrh.NAM as WRH,
-                     DEV_SN as SN,
-                     IDN,
-                     trndoc.DTA
-                    FROM SPRUT.OKP.dbo.okp_toz as toz
-                    INNER JOIN SPRUT.OKP.dbo.okp_pot as pot on toz.rwc = pot.Rwc_toz
-                    INNER JOIN SPRUT.OKP.dbo.okp_uop as uop on toz.rwc = uop.Rwc_toz
-                    INNER JOIN dsl_sp.dbo.SP_SS as spss on pot.PPPNUM = spss.NUM_PP collate Cyrillic_General_CI_AS
+                    select distinct p.NMP$$$NAM as Material, p.PRTIDN as PRTIDN, w.NAM as WRH, EIZ_RASH as EIZ, IDN, doc.DTA as DTAPostav
+                    from SPRUT.OKP.dbo.OKP_TRNDOC as doc
+                    left join SPRUT.OKP.dbo.OKP_TRN as trn on doc.DOC = trn.DOC
+                    left join SPRUT.OKP.dbo.OKP_OBJLINKS l on l.S_Type = 6 and l.S_ID = trn.TRN_ID
+                    left join SPRUT.OKP.dbo.OKP_SReserv r on l.M_Type = 200 and l.M_ID = r.ID
+                    left join SPRUT.OKP.dbo.OKP_POT p on r.ID = p.TRN_ID
+                    INNER JOIN SPRUT.OKP.dbo.OKP_WRH as w on trn.WRH_IDN = w.WRH_IDN
+                    INNER JOIN dsl_sp.dbo.SP_SS as spss on p.PPPNUM = spss.NUM_PP collate Cyrillic_General_CI_AS
                     INNER JOIN dsl_sp.dbo.SS_DEV_NUM as devnum on spss.SS_ID = devnum.SS_ID
-                    INNER JOIN SPRUT.OKP.dbo.OKP_TRN as trn on pot.TRN_ID = trn.TRN_ID
-                    INNER JOIN SPRUT.OKP.dbo.OKP_TRNDOC as trndoc on trn.DOC_ID = trndoc.ID
-                    INNER JOIN SPRUT.OKP.dbo.OKP_WRH as wrh on trn.WRH_IDN = wrh.WRH_IDN
                     INNER JOIN SPRUT.OKP.dbo.OKP_WRH_SUBJECTS as sbj on trn.SUB_ID = sbj.ID
                     INNER JOIN SPRUT.OKP.dbo.OKP_UKIM as ukim on sbj.S_ID = ukim.ID
-                    LEFT JOIN SPRUT.OKP.dbo.OKP_UOPKIMNUMS as ukn on ukn.UOP_ID = uop.ID
-                    WHERE pot.rwc=@potrwc AND trn.DOC=@doc AND DEV_SN IS NOT NULL
+                    where doc.DOC = @doc and p.rwc = @potrwc AND DEV_SN IS NOT NULL
                 ",
                 new SqlParameter("potrwc", SelectedMaterial.rwc), new SqlParameter("doc", SelectedMaterial.DOC)).ToList();
-                MessageBox.Show($"POTRWC: {SelectedMaterial.rwc}, DOC: {SelectedMaterial.DOC}");
+                MessageBox.Show($"RWC: {SelectedMaterial.rwc}, DOC: {SelectedMaterial.DOC}");
 
                 if (trns.Count > 0)
                 {
-                    MaterialsTRN materialsTRN = new MaterialsTRN(SelectedMaterial, prp, trns);
+                    MaterialsTRN materialsTRN = new MaterialsTRN(trns, serialNumbers);
                     materialsTRN.Show();
                 }
                 else

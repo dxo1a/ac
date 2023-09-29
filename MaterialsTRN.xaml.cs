@@ -8,22 +8,21 @@ namespace ac
     public partial class MaterialsTRN : Window
     {
         List<MaterialsTRNModel> TrnsList = new List<MaterialsTRNModel>();
+        List<MaterialsTRNModel> SerialNumbers = new List<MaterialsTRNModel>();
 
         Materials SelectedMaterial { get; set; }
 
         //string PRP { get; set; }
 
-        public MaterialsTRN(Materials selectedMaterial, string prp, List<MaterialsTRNModel> trns)
+        public MaterialsTRN(List<MaterialsTRNModel> trnsList, List<MaterialsTRNModel> serialNumbers)
         {
             InitializeComponent();
-            SelectedMaterial = selectedMaterial;
-            TrnsList = trns;
+            TrnsList = trnsList;
+            SerialNumbers = serialNumbers;
 
-            DocTB.Text = $"DOC {SelectedMaterial.DOC}";
-            //DocTB.Text = $"IDN {TrnsList.First().IDN}";
             TRNDG.IsHitTestVisible = false;
             TRNDG.ItemsSource = TrnsList;
-            SNDG.ItemsSource = TrnsList;
+            SNDG.ItemsSource = SerialNumbers;
 
             this.Title = TrnsList.First().Material + " | Поставка";
         }

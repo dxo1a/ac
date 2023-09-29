@@ -56,7 +56,7 @@
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
                         <TextBlock Text="Сер. номер " HorizontalAlignment="Center" Grid.Column="1" FontSize="16" VerticalAlignment="Center"/>
-                        <TextBox x:Name="SerialNumberTBX" MaxLength="22" MinWidth="200" MaxWidth="230" Margin="0 0 -10 0" HorizontalContentAlignment="Center" FontSize="16" Padding="5 5 15 0" Style="{StaticResource TBXStyle}" BorderBrush="LightGray"/>
+                        <TextBox x:Name="SerialNumberTBX" MaxLength="22" MinWidth="200" MaxWidth="230" Margin="0 0 -10 0" HorizontalContentAlignment="Center" FontSize="16" Padding="5 5 15 0" Style="{StaticResource TBXStyle}" BorderBrush="LightGray" KeyDown="SerialNumberTBX_KeyDown"/>
                         <Button Name="FindPPBtn" Width="30" Height="30" Click="FindPPBtn_Click" Style="{StaticResource RightRoundedButtonStyle}">
                             <Image Source="Resources/icons/misc/find1.ico" Width="22" Height="22" Margin="2" ToolTip="Поиск по серийному номеру"/>
                         </Button>

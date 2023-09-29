@@ -136,7 +136,20 @@ namespace ac
         #endregion
 
         #region Поиск деталей
-        private async void FindPPBtn_Click(object sender, RoutedEventArgs e)
+        private  void FindPPBtn_Click(object sender, RoutedEventArgs e)
+        {
+            SearchDetailsInDB();
+        }
+
+        private void SerialNumberTBX_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                SearchDetailsInDB();
+            }
+        }
+
+        private async void SearchDetailsInDB()
         {
             if (string.IsNullOrEmpty(SerialNumberTBX.Text))
             {
@@ -298,6 +311,8 @@ namespace ac
             }
             ImgCB.IsEnabled = true;
         }
+
+        
         #endregion
 
         /*public static void SaveByteArrayToFileWithBinaryWriter(byte[] data, string filePath)
