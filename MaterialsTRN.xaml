@@ -21,6 +21,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition Height="0.165*"/>
+            <RowDefinition Height="0.1*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="0.025*"/>
             <RowDefinition Height="10"/>
@@ -30,13 +31,14 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="20"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="3" Margin="20 0" VerticalAlignment="Center" Grid.Column="1">
+        <StackPanel Grid.Row="4" Margin="20 0" VerticalAlignment="Center" Grid.Column="1">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Name="DocTB" Text="PN19092023_0000011702" FontSize="14"/>
             </StackPanel>
         </StackPanel>
         <DataGrid Name="TRNDG" CanUserAddRows="False" Grid.Row="1" Grid.Column="1" Margin="5" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}" VerticalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
             <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding DOC}" Header="Поставка" Width="*"/>
                 <DataGridTextColumn Binding="{Binding Material}" Header="Материал" Width="*"/>
                 <DataGridTextColumn Binding="{Binding PRTIDN}" Header="Обозначение" Width="*" MaxWidth="130"/>
                 <DataGridTextColumn Binding="{Binding QTY}" Header="Кол-во (?)" Width="*" MaxWidth="80" CanUserResize="False"/>
@@ -45,9 +47,20 @@
                 <DataGridTextColumn Binding="{Binding DTAPostav, StringFormat='{}{0:dd.MM.yyyy HH:mm:ss}'}" Header="Дата" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
-        <DataGrid Name="SNDG" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}">
+        <StackPanel Grid.Row="2" Grid.Column="1" Margin="10 10 10 0" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Поиск: " FontSize="16"/>
+                <TextBox x:Name="SearchSNTBX" MinWidth="100" Width="200" MaxWidth="200" KeyDown="SearchSNTBX_KeyDown" FontSize="16" TextAlignment="Center" Margin="0 0 -10 0" Style="{StaticResource TBXStyle}" BorderBrush="LightGray"/>
+                <Button x:Name="SearchSPBtn" Height="Auto" Width="30" Style="{StaticResource RightRoundedButtonStyle}" Click="SearchSPBtn_Click">
+                    <Image Source="Resources/icons/misc/find1.ico" Margin="2.5"/>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+        <DataGrid Name="SNDG" CanUserAddRows="False" Grid.Row="3" Grid.Column="1" Margin="5" CanUserDeleteRows="False" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" Style="{StaticResource DataGridOwn}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding SN}" Header="Серийный номер" Width="*"/>
+                <DataGridTextColumn Binding="{Binding Product}" Header="Изделие" Width="*"/>
+                <DataGridTextColumn Binding="{Binding PP}" Header="ПП" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
