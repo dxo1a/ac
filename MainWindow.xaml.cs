@@ -17,9 +17,10 @@ namespace ac
     {
         #region Переменные
         List<DetailsView> detailsView = new List<DetailsView>();
-        List<DetailsView> detailsViewWithOP = new List<DetailsView>();
+        List<SerialNumbersModel> SerialNumbersList = new List<SerialNumbersModel>();
 
         DetailsView SelectedDetail { get; set; }
+        SerialNumbersModel SelectedSerialNumber { get; set; }
         public ViewModel ViewModel { get; set; }
         DetailsView productNameAndStatus { get; set; }
 
@@ -34,6 +35,9 @@ namespace ac
 
             ViewModel = new ViewModel();
             DataContext = ViewModel;
+
+            SerialNumbersList = Odb.db.Database.SqlQuery<SerialNumbersModel>("select DEV_SN, CC_ZN from SS_DEV_NUM as a left join CC_SUB_VIEW as b on a.DEV_SN = b.CC_SN where DEV_SN IS NOT NULL").ToList();
+            SerialNumbersLB.ItemsSource = SerialNumbersList;
 
             /*byte[] fileByte = Odb.db.Database.SqlQuery<byte[]>("SELECT Data FROM dsl_sp.dbo.CC_SUB_VIEW WHERE CARD_ID = 291").FirstOrDefault();
             SaveByteArrayToFileWithBinaryWriter(fileByte, "C:\\Users\\it01\\Documents\\pic.jpg");*/
@@ -91,6 +95,23 @@ namespace ac
                     };
                     details.Add(detail);
                 }
+                if (details.Count <= 0)
+                {
+                    cmd = new SqlCommand("SELECT НомерД AS DetailNode, НазваниеД AS DetailName, Договор AS PP, ПрП AS PrP, (SELECT TOP(1) Data FROM dsl_sp.dbo.DEV_IMAGES_V as img WHERE НомерД = img.PRT$$$MNF) as Data FROM SerialNumber.[dbo].ARHDetailsView WHERE Договор='" + numpp + "' GROUP BY Договор, НомерД, НазваниеД, ПрП", connection);
+                    reader = await cmd.ExecuteReaderAsync();
+                    while (reader.Read())
+                    {
+                        DetailsView detail = new DetailsView()
+                        {
+                            DetailNode = reader.GetString(0),
+                            DetailName = reader.GetString(1),
+                            PP = reader.GetString(2),
+                            PrP = reader.GetString(3),
+                            Data = reader.IsDBNull(4) ? new byte[0] : (byte[])reader["Data"]
+                        };
+                        details.Add(detail);
+                    }
+                }
                 connection.Close();
             }
             #region progressBar
@@ -130,7 +151,7 @@ namespace ac
             string txt = DetailSearchTBX.Text;
             if (txt.Length == 0)
                 details = detailsView;
-            details = detailsView.Where(u => u.Detail.ToLower().Contains(txt.ToLower())).ToList();
+            details = detailsView.Where(u => u.DetailToString.ToLower().Contains(txt.ToLower())).ToList();
             DetailsDG.ItemsSource = details;
         }
         #endregion
@@ -162,7 +183,7 @@ namespace ac
             else
             {
                 // 1 - из dsl_sp
-                string numppFromNumser = Odb.db.Database.SqlQuery<string>("SELECT DISTINCT SP_SS.NUM_PP FROM SP_SS LEFT JOIN SS_DEV_NUM as devnum on SP_SS.SS_ID = devnum.SS_ID INNER JOIN CC_SUB_VIEW as subview on devnum.DEV_SN = subview.CC_SN WHERE subview.CC_ZN=@numser OR devnum.DEV_SN=@numser", new SqlParameter("numser", SerialNumberTBX.Text)).SingleOrDefault();
+                string numppFromNumser = Odb.db.Database.SqlQuery<string>("SELECT DISTINCT SP_SS.NUM_PP FROM SP_SS LEFT JOIN SS_DEV_NUM as devnum on SP_SS.SS_ID = devnum.SS_ID LEFT JOIN CC_SUB_VIEW as subview on devnum.DEV_SN = subview.CC_SN WHERE subview.CC_ZN=@numser OR devnum.DEV_SN=@numser", new SqlParameter("numser", SerialNumberTBX.Text)).SingleOrDefault();
 
                 if (!string.IsNullOrEmpty(numppFromNumser))
                 {
@@ -170,17 +191,36 @@ namespace ac
                     SerialNumber = SerialNumberTBX.Text;
 
                     productNameAndStatus = Odb.db.Database.SqlQuery<DetailsView>("SELECT TOP (1) НомерИ AS ProductNum, Изделие AS ProductName, RSTS FROM [Cooperation].[dbo].[DetailsView] WHERE Договор=@numpp", new SqlParameter("numpp", numppFromNumser)).SingleOrDefault();
-                    PPNameTB.Text = productNameAndStatus.Product;
-
-                    #region Цвет в зависимости от статуса
-                    if (productNameAndStatus.RSTS == 4)
+                    if (productNameAndStatus == null)
                     {
-                        PPNameTB.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF56DA56"));
+                        productNameAndStatus = Odb.db.Database.SqlQuery<DetailsView>("SELECT TOP (1) НомерИ AS ProductNum, Изделие AS ProductName, RSTS FROM SerialNumber.[dbo].ARHDetailsView WHERE Договор=@numpp", new SqlParameter("numpp", numppFromNumser)).SingleOrDefault();
+                        if (productNameAndStatus != null)
+                        {
+                            PPNameTB.Text = productNameAndStatus.Product;
+                            #region Цвет в зависимости от статуса
+                            if (productNameAndStatus.RSTS == 4)
+                            {
+                                PPNameTB.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF56DA56"));
+                            }
+                            #endregion
+                            UpdateGrid();
+                        }
+                        else
+                        {
+                            MessageBox.Show("[Детали] Информация не найдена.");
+                        }
                     }
-                    #endregion
-
-                    UpdateGrid();
-
+                    else
+                    {
+                        PPNameTB.Text = productNameAndStatus.Product;
+                        #region Цвет в зависимости от статуса
+                        if (productNameAndStatus.RSTS == 4)
+                        {
+                            PPNameTB.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF56DA56"));
+                        }
+                        #endregion
+                        UpdateGrid();
+                    }
                 }
                 else
                 {
@@ -273,6 +313,12 @@ namespace ac
         }
         #endregion
 
+        private void OPSPCatalogBtn_Click(object sender, RoutedEventArgs e)
+        {
+            OPSPCatalogWindow oPSPCatalogWindow = new OPSPCatalogWindow();
+            oPSPCatalogWindow.Show();
+        }
+
         #region Поиск и контроль элементов
         public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
         {
@@ -312,7 +358,43 @@ namespace ac
             ImgCB.IsEnabled = true;
         }
 
-        
+        private void SerialNumbersLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SelectedSerialNumber = (SerialNumbersModel)SerialNumbersLB.SelectedItem;
+            if (SelectedSerialNumber != null)
+            {
+                SerialNumberTBX.Text = SelectedSerialNumber.FullSerialNumber;
+            }
+        }
+
+        private void SerialNumberTBX_GotFocus(object sender, RoutedEventArgs e)
+        {
+            SerialNumbersLB.Visibility = Visibility.Visible;
+        }
+
+        private void SerialNumberTBX_LostFocus(object sender, RoutedEventArgs e)
+        {
+            SerialNumbersLB.Visibility = Visibility.Collapsed;
+        }
+
+        private void SerialNumberTBX_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            
+            string txt = SerialNumberTBX.Text;
+            if (txt == null || txt == "")
+            {
+                SerialNumbersLB.Visibility = Visibility.Collapsed;
+                SerialNumbersLB.ItemsSource = SerialNumbersList;
+            }
+            else
+            {
+                SerialNumbersLB.Visibility = Visibility.Visible;
+                SerialNumbersLB.ItemsSource = SerialNumbersList.Where(u => u.FullSerialNumber.ToLower().Contains(txt.ToLower())).ToList();
+            }
+                
+        }
+
+
         #endregion
 
         /*public static void SaveByteArrayToFileWithBinaryWriter(byte[] data, string filePath)

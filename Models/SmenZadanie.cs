@@ -8,7 +8,7 @@ namespace ac.Models
         public string OrderNum { get; set; }
         public string Product { get; set; }
         public string Detail { get; set; }
-        public double Count { get; set; }
+        public double? Count { get; set; }
         public string NUM { get; set; }
         public string Operation { get; set; }
         public int OperationNum { get; set; }

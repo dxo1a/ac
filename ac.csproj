@@ -133,6 +133,7 @@
     </Compile>
     <Compile Include="Models\MaterialsTRNModel.cs" />
     <Compile Include="Models\OPSPModel.cs" />
+    <Compile Include="Models\SerialNumbersModel.cs" />
     <Compile Include="OperationsWindow.xaml.cs">
       <DependentUpon>OperationsWindow.xaml</DependentUpon>
     </Compile>

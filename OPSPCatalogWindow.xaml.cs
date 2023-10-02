@@ -45,6 +45,7 @@ namespace ac
             {
                 Odb.db.Database.ExecuteSqlCommand("delete from SerialNumber.dbo.OPSP_Link where ID_Operation=@operationID and ID_SpecProcess=@specprocessID", new SqlParameter("operationID", SelectedOPSP.ID_Operation), new SqlParameter("specprocessID", SelectedOPSP.ID_SpecProcess));
                 UpdateGrid();
+                var dialogResult = MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo);
             }
         }
 

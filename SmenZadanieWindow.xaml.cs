@@ -14,7 +14,7 @@ namespace ac
         private DetailsView SelectedDetail { get; set; }
         private DetailsView ProductName { get; set; }
 
-        public SmenZadanieWindow(Operations selectedOperation, DetailsView prodName, DetailsView selectedDetail)
+        public SmenZadanieWindow(Operations selectedOperation, DetailsView prodName, DetailsView selectedDetail, List<SmenZadanie> szList)
         {
             InitializeComponent();
             SelectedOperation = selectedOperation;
@@ -25,7 +25,7 @@ namespace ac
 
             //MessageBox.Show($"Operation: {SelectedOperation.OperationName} | OperationNum: {SelectedOperation.OperationNum} | Product: {ProductName.ProductWithSpace} | PrP: {SelectedDetail.PrP}");
 
-            SZList = Odb.db.Database.SqlQuery<SmenZadanie>("SELECT DISTINCT id_Tabel, DTE, Cost, FIO, NUM, Detail, OrderNum, OperationNum, Operation, Status AS StatusBool, Count, DEP$$$DEP AS DEP, WCR$$$WCR AS WCR, SHIFT, Product FROM [Zarplats].[dbo].[SmenZadView] WHERE Operation=@operationname AND OperationNum=@operationnum AND Product=@productname AND NUM=@prp", new SqlParameter("operationname", SelectedOperation.OperationName), new SqlParameter("operationnum", SelectedOperation.OperationNum), new SqlParameter("productname", ProductName.ProductWithSpace), new SqlParameter("@prp", SelectedDetail.PrP)).ToList();
+            SZList = szList;
             SmenZadanieDG.ItemsSource = SZList;
         }
 

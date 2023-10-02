@@ -49,5 +49,13 @@ namespace ac.Models
                 return ProductNum + " " + ProductName;
             }
         }
+
+        public string DetailToString
+        {
+            get
+            {
+                return DetailNode + " " + DetailName + " " + PrP;
+            }
+        }
     }
 }

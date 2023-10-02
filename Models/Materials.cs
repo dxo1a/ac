@@ -18,7 +18,7 @@
 
         public string DOC { get; set; }
 
-        public int QTYPOT { get; set; }
+        public double GetFromWRH { get; set; }
 
         //public double AmOnWRHs
         //{

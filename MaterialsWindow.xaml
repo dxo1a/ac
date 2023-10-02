@@ -25,7 +25,7 @@
                 <!--<DataGridTextColumn Binding="{Binding AmountOnWRHs, StringFormat=0.###}" Header="Кол-во" Width="*"/>
                 <DataGridTextColumn Binding="{Binding RezervOnWRHs, StringFormat=0.###}" Header="Зарезервировано" Width="*"/>
                 <DataGridTextColumn Binding="{Binding DeficitOnWRHs, StringFormat=0.###}" Header="Тек. потребность" Width="*"/>-->
-                <DataGridTextColumn  Header="Потрачено (?)"/>
+                <DataGridTextColumn Binding="{Binding GetFromWRH}" Header="Выдано"/>
                 <DataGridTextColumn Binding="{Binding WRH}" Header="Склад" Width="*"/>
                 
                 <!--<DataGridTextColumn Binding="{Binding PlanPotreb, StringFormat=0.###}" Header="План. потреб. (КиМ)" Width="*"/>

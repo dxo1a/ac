@@ -92,7 +92,6 @@ namespace ac
             if (SelectedOperation != null)
             {
                 OperationsTB.Text = SelectedOperation.ToString();
-                MessageBox.Show($"OP ID: {SelectedOperation.SID_Operation}");
             }
         }
 
@@ -102,7 +101,6 @@ namespace ac
             if (SelectedSpecProcess != null)
             {
                 SpecProcessesTB.Text = SelectedSpecProcess.ToString();
-                MessageBox.Show($"SP ID: {SelectedSpecProcess.SID_SpecProcess}");
             }
         }
 
