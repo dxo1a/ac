@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ac"
         mc:Ignorable="d"
-        Title="Добавление записи &quot;Справочник &apos;Специальные процессы&apos;&quot;" Height="300" Width="600" WindowStyle="None"
+        Title="Добавление записи &quot;Справочник &apos;Специальные процессы&apos;&quot;" Height="400" Width="700" WindowStyle="None"
         xmlns:themes="clr-namespace:StyledWindow.WPF.Themes;assembly=StyledWindow.WPF" xmlns:components="clr-namespace:StyledWindow.WPF.Components;assembly=StyledWindow.WPF"
         Style="{StaticResource StyledWindow}"
         themes:StyledWindow.LanguageButtonVisible="False"
@@ -29,10 +29,14 @@
                 <TextBox Name="OperationsTB" GotFocus="OperationsTB_GotFocus" LostFocus="OperationsTB_LostFocus" TextChanged="OperationsTB_TextChanged" Width="auto" Height="25" Style="{StaticResource TBXStyle}"/>
                 <ListBox Name="OperationsLB" SelectionChanged="OperationsLB_SelectionChanged" SelectionMode="Single" Visibility="Collapsed" Width="auto" Height="auto" MaxHeight="160"   />
             </StackPanel>
-            <StackPanel MinWidth="200" MaxWidth="350" VerticalAlignment="Center" Margin="5 0 0 20">
+            <StackPanel MinWidth="200" MaxWidth="400" VerticalAlignment="Center" Margin="5 0 0 20">
                 <TextBlock Text="Спец. процесс" FontSize="16" FontWeight="SemiBold"/>
-                <TextBox Name="SpecProcessesTB" GotFocus="SpecProcessesTB_GotFocus" LostFocus="SpecProcessesTB_LostFocus" TextChanged="SpecProcessesTB_TextChanged" Width="auto" Height="25" Style="{StaticResource TBXStyle}"/>
-                <ListBox Name="SpecProcessesLB" SelectionChanged="SpecProcessesLB_SelectionChanged" SelectionMode="Extended" Visibility="Collapsed" Height="auto" MaxHeight="160" Width="auto"/>
+                <TextBox Name="SpecProcessesTB" GotFocus="SpecProcessesTB_GotFocus" Width="auto" Height="auto" MaxHeight="75" Style="{StaticResource TBXStyle}" TextWrapping="Wrap"/>
+                
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <ListView Name="SpecProcessesLB" SelectionChanged="SpecProcessesLB_SelectionChanged" SelectionMode="Multiple" Visibility="Collapsed" Height="auto" MaxHeight="130" MinHeight="100" MaxWidth="450" Width="auto"/>
+                    <Button Name="CollapseSpecProcessesLBBtn" Height="15" Content="↑" FontSize="12" Style="{x:Null}" BorderBrush="Transparent" Click="CollapseSpecProcessesLBBtn_Click" Visibility="Collapsed"/>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
         <Button Name="AddBtn" Click="AddBtn_Click" Width="150" Height="40" Grid.Row="1" Grid.Column="1" Content="Добавить" VerticalAlignment="Bottom" Margin="0 10 0 10" Style="{StaticResource RoundedButtonStyle}"/>

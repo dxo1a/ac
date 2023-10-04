@@ -20,10 +20,14 @@ namespace ac
     {
         List<Operation> operationsList = new List<Operation>();
         List<SpecProcess> specprocessesList = new List<SpecProcess>();
+        List<SpecProcess> specProcessesFromOperation = new List<SpecProcess>();
+        List<SpecProcess> selectedSpecProcesses = new List<SpecProcess>();
 
         Operation SelectedOperation { get; set; }
         SpecProcess SelectedSpecProcess { get; set; }
         OPSPModel SelectedOPSP { get; set; }
+
+        int operationID, specprocessID;
 
         public OPSPEditWindow(Operation selectedOperation, SpecProcess selectedSpecProcess, OPSPModel selectedOPSB)
         {
@@ -32,6 +36,8 @@ namespace ac
             SelectedOperation = selectedOperation;
             SelectedSpecProcess = selectedSpecProcess;
             SelectedOPSP = selectedOPSB;
+
+            specProcessesFromOperation = Odb.db.Database.SqlQuery<SpecProcess>("select distinct ID_SpecProcess as SID_SpecProcess, SpecProcess as SSpecProcess from SerialNumber.dbo.OPandSP where Operation=@operation", new SqlParameter("operation", SelectedOperation.SOperation)).ToList();
 
             operationsList = Odb.db.Database.SqlQuery<Operation>("select distinct ID_Operation as SID_Operation, Operation as SOperation from SerialNumber.dbo.OP").ToList();
             specprocessesList = Odb.db.Database.SqlQuery<SpecProcess>("select distinct ID_SpecProcess as SID_SpecProcess, SpecProcess as SSpecProcess from SerialNumber.dbo.SP").ToList();
@@ -42,13 +48,48 @@ namespace ac
             OperationsTB.Text = SelectedOperation.SOperation;
 
             SpecProcessesLB.SelectedItem = SelectedSpecProcess;
-            SpecProcessesTB.Text = SelectedSpecProcess.SSpecProcess;
+            SpecProcessesTB.Text = string.Join(", ", specProcessesFromOperation.Select(sp => sp.SSpecProcess));
         }
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
-            Odb.db.Database.ExecuteSqlCommand("update SerialNumber.dbo.OPSP_Link set ID_Operation=@operationID, ID_SpecProcess=@specprocessID where ID=@opspID", new SqlParameter("operationID", SelectedOperation.SID_Operation), new SqlParameter("specprocessID", SelectedSpecProcess.SID_SpecProcess), new SqlParameter("opspID", SelectedOPSP.ID));
-            MessageBox.Show("Запись обновлена.", "Обновление", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (SelectedOperation != null && selectedSpecProcesses.Count > 0)
+            {
+                using (SqlConnection connection = new SqlConnection(Odb.db.Database.Connection.ConnectionString))
+                {
+                    connection.Open();
+
+                    string queryDelete = "DELETE FROM SerialNumber.dbo.OPSP_Link WHERE ID_Operation=@operationID";
+                    using (SqlCommand command = new SqlCommand(queryDelete, connection))
+                    {
+                        command.Parameters.AddWithValue("@operationID", SelectedOperation.SID_Operation);
+                        command.ExecuteNonQuery();
+                    }
+
+                    connection.Close();
+                }
+
+                if (SelectedOperation != null && SpecProcessesLB.SelectedItems.Count > 0)
+                {
+                    operationID = SelectedOperation.SID_Operation;
+                    MessageBox.Show($"{operationID}");
+                    foreach (SpecProcess selectedSpecProcess in SpecProcessesLB.SelectedItems)
+                    {
+                        specprocessID = selectedSpecProcess.SID_SpecProcess;
+                        Odb.db.Database.ExecuteSqlCommand("INSERT INTO SerialNumber.dbo.OPSP_Link(ID_Operation, ID_SpecProcess) VALUES (@operationID, @specprocessID)", new SqlParameter("operationID", operationID), new SqlParameter("specprocessID", specprocessID));
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Выберите операцию и хотя бы один специальный процесс.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+                MessageBox.Show("Записи обновлены.", "Обновление", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("Выберите операцию и хотя бы один специальный процесс.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void OperationsTB_GotFocus(object sender, RoutedEventArgs e)
@@ -66,7 +107,7 @@ namespace ac
         private void SpecProcessesTB_GotFocus(object sender, RoutedEventArgs e)
         {
             SpecProcessesLB.Visibility = Visibility.Visible;
-            SaveBtn.Visibility = Visibility.Hidden;
+            SaveBtn.Visibility = Visibility.Visible;
         }
 
         private void SpecProcessesTB_LostFocus(object sender, RoutedEventArgs e)
@@ -97,11 +138,13 @@ namespace ac
 
         private void SpecProcessesLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SelectedSpecProcess = (SpecProcess)SpecProcessesLB.SelectedItem;
-            if (SelectedSpecProcess != null)
+            selectedSpecProcesses.Clear();
+            foreach (SpecProcess selectedSpecProcess in SpecProcessesLB.SelectedItems)
             {
-                SpecProcessesTB.Text = SelectedSpecProcess.ToString();
+                selectedSpecProcesses.Add(selectedSpecProcess);
             }
+
+            SpecProcessesTB.Text = string.Join(", ", selectedSpecProcesses.Select(specProcess => specProcess.ToString()));
         }
 
         private void SpecProcessesTB_TextChanged(object sender, TextChangedEventArgs e)
@@ -113,6 +156,11 @@ namespace ac
             }
             else
                 SpecProcessesLB.ItemsSource = specprocessesList.Where(u => u.SSpecProcess.ToLower().Contains(txt.ToLower())).ToList();
+        }
+
+        private void CollapseSpecProcessesLBBtn_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

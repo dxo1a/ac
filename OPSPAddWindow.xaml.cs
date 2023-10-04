@@ -20,6 +20,7 @@ namespace ac
     {
         List<Operation> operationsList = new List<Operation>();
         List<SpecProcess> specprocessesList = new List<SpecProcess>();
+        List<SpecProcess> selectedSpecProcesses = new List<SpecProcess>();
 
         Operation SelectedOperation { get; set; }
         SpecProcess SelectedSpecProcess { get; set; }
@@ -50,7 +51,8 @@ namespace ac
         private void SpecProcessesTB_GotFocus(object sender, RoutedEventArgs e)
         {
             SpecProcessesLB.Visibility = Visibility.Visible;
-            AddBtn.Visibility = Visibility.Hidden;
+            AddBtn.Visibility = Visibility.Visible;
+            CollapseSpecProcessesLBBtn.Visibility = Visibility.Visible;
         }
 
         private void SpecProcessesTB_LostFocus(object sender, RoutedEventArgs e)
@@ -79,15 +81,6 @@ namespace ac
             }
         }
 
-        private void SpecProcessesLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            SelectedSpecProcess = (SpecProcess)SpecProcessesLB.SelectedItem;
-            if (SelectedSpecProcess != null)
-            {
-                SpecProcessesTB.Text = SelectedSpecProcess.ToString();
-            }
-        }
-
         private void SpecProcessesTB_TextChanged(object sender, TextChangedEventArgs e)
         {
             string txt = SpecProcessesTB.Text;
@@ -101,15 +94,43 @@ namespace ac
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-            operationID = SelectedOperation.SID_Operation;
-            specprocessID = SelectedSpecProcess.SID_SpecProcess;
-            AddOPSP();
+            if (SelectedOperation != null && SpecProcessesLB.SelectedItems.Count > 0)
+            {
+                operationID = SelectedOperation.SID_Operation;
+                foreach (SpecProcess selectedSpecProcess in SpecProcessesLB.SelectedItems)
+                {
+                    specprocessID = selectedSpecProcess.SID_SpecProcess;
+                    AddOPSP(operationID, specprocessID);
+                }
+                MessageBox.Show("Запись создана.", "Создание", MessageBoxButton.OK, MessageBoxImage.Information);
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Выберите операцию и хотя бы один специальный процесс.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        public void AddOPSP()
+        private void SpecProcessesLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Odb.db.Database.ExecuteSqlCommand("INSERT INTO SerialNumber.dbo.OPSP_Link(ID_Operation, ID_SpecProcess) VALUES (@operationID, @specprocessID)", new SqlParameter("operationID", operationID), new SqlParameter("specprocessID", specprocessID));
-            MessageBox.Show("Запись создана.", "Создание", MessageBoxButton.OK, MessageBoxImage.Information);
+            selectedSpecProcesses.Clear();
+            foreach (SpecProcess selectedSpecProcess in SpecProcessesLB.SelectedItems)
+            {
+                selectedSpecProcesses.Add(selectedSpecProcess);
+            }
+
+            SpecProcessesTB.Text = string.Join(", ", selectedSpecProcesses.Select(specProcess => specProcess.ToString()));
+        }
+
+        private void CollapseSpecProcessesLBBtn_Click(object sender, RoutedEventArgs e)
+        {
+            SpecProcessesLB.Visibility = Visibility.Collapsed;
+            CollapseSpecProcessesLBBtn.Visibility = Visibility.Collapsed;
+        }
+
+        public void AddOPSP(int operationID, int selectedSpecProcessID)
+        {
+            Odb.db.Database.ExecuteSqlCommand("INSERT INTO SerialNumber.dbo.OPSP_Link(ID_Operation, ID_SpecProcess) VALUES (@operationID, @specprocessID)", new SqlParameter("operationID", operationID), new SqlParameter("specprocessID", specprocessID));    
         }
     }
 }

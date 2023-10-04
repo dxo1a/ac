@@ -48,10 +48,22 @@
                 </Button>
             </StackPanel>
         </StackPanel>
-        <DataGrid x:Name="OPSPDG" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="2" Grid.Column="1" Margin="5 0" CanUserDeleteRows="False" Style="{StaticResource DataGridOwn}" SelectionChanged="OPSPDG_SelectionChanged">
+        <DataGrid x:Name="OPSPDG" AutoGenerateColumns="False" Grid.Row="2" Grid.Column="1" Margin="5 0" CanUserDeleteRows="False" IsReadOnly="True" Style="{StaticResource DataGridOwn}" SelectionChanged="OPSPDG_SelectionChanged" EnableRowVirtualization="True" EnableColumnVirtualization="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Operation}" Header="Операция" Width="*" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding SpecProcess}" Header="Спец. процесс" Width="*" IsReadOnly="True"/>
+                <DataGridTemplateColumn Header="Спец. процессы" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ItemsControl ItemsSource="{Binding SpecProcesses}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding SSpecProcess}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

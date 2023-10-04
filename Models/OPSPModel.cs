@@ -13,6 +13,7 @@ namespace ac.Models
         public int ID_SpecProcess { get; set; }
         public string Operation { get; set; }
         public string SpecProcess { get; set; }
+        public List<SpecProcess> SpecProcesses { get; set; }
         public override string ToString()
         {
             return Operation;

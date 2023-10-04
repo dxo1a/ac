@@ -22,6 +22,7 @@ namespace ac
         List<OPSPModel> opspList = new List<OPSPModel>();
         List<Operation> operationsList = new List<Operation>();
         List<SpecProcess> specprocessesList = new List<SpecProcess>();
+        List<OPSPModel> groupedData = new List<OPSPModel>();
 
         OPSPModel SelectedOPSP { get; set; }
         SpecProcess SelectedOPSPtoSpecProcess { get; set; }
@@ -43,9 +44,12 @@ namespace ac
         {
             if (OPSPDG.SelectedItem is OPSPModel)
             {
-                Odb.db.Database.ExecuteSqlCommand("delete from SerialNumber.dbo.OPSP_Link where ID_Operation=@operationID and ID_SpecProcess=@specprocessID", new SqlParameter("operationID", SelectedOPSP.ID_Operation), new SqlParameter("specprocessID", SelectedOPSP.ID_SpecProcess));
-                UpdateGrid();
-                var dialogResult = MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo);
+                var dialogResult = MessageBox.Show("Удалить операцию?.", "Создание", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (dialogResult == MessageBoxResult.Yes)
+                {
+                    Odb.db.Database.ExecuteSqlCommand("delete from SerialNumber.dbo.OPSP_Link where ID_Operation=@operationID", new SqlParameter("operationID", SelectedOPSP.ID_Operation));
+                    UpdateGrid();
+                }
             }
         }
 
@@ -60,46 +64,32 @@ namespace ac
 
         private void OPSPDG_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (OPSPDG.SelectedItem is OPSPModel)
+            if (OPSPDG.SelectedItem is OPSPModel selectedOPSP)
             {
+                SelectedOPSPtoOperation = new Operation
+                {
+                    SID_Operation = selectedOPSP.ID_Operation,
+                    SOperation = selectedOPSP.Operation
+                };
+
+                SelectedOPSPtoSpecProcess = new SpecProcess
+                {
+                    SID_SpecProcess = selectedOPSP.ID_SpecProcess,
+                    SSpecProcess = selectedOPSP.SpecProcess
+                };
+
+                SelectedOPSP = selectedOPSP;
                 OPSPEditBtn.IsEnabled = true;
                 OPSPRemoveBtn.IsEnabled = true;
             }
             else
             {
+                SelectedOPSPtoOperation = null;
+                SelectedOPSPtoSpecProcess = null;
+                SelectedOPSP = null;
                 OPSPEditBtn.IsEnabled = false;
                 OPSPRemoveBtn.IsEnabled = false;
             }
-
-            #region Convert SelectedOPSP to Operation
-            SelectedOPSPtoOperation = new Operation();
-            OPSPModel selectedOPSPfO = (OPSPModel)OPSPDG.SelectedItem;
-            if (selectedOPSPfO != null)
-            {
-                Operation operationSelectedOPSP = new Operation
-                {
-                    SOperation = selectedOPSPfO.Operation,
-                    SID_Operation = selectedOPSPfO.ID_Operation
-                };
-                SelectedOPSPtoOperation = operationSelectedOPSP;
-            }
-            #endregion
-
-            #region Convert SelectedOPSP to SpecProcess
-            SelectedOPSPtoSpecProcess = new SpecProcess();
-            OPSPModel selectedOPSPfP = (OPSPModel)OPSPDG.SelectedItem;
-            if (selectedOPSPfP != null)
-            {
-                SpecProcess specprocessSelectedOPSP = new SpecProcess
-                {
-                    SSpecProcess = selectedOPSPfP.SpecProcess,
-                    SID_SpecProcess = selectedOPSPfP.ID_SpecProcess
-                };
-                SelectedOPSPtoSpecProcess = specprocessSelectedOPSP;
-            }
-            #endregion
-
-            SelectedOPSP = (OPSPModel)OPSPDG.SelectedItem;
         }
 
         private void OPSPRefreshBtn_Click(object sender, RoutedEventArgs e)
@@ -110,7 +100,21 @@ namespace ac
         void UpdateGrid()
         {
             opspList = Odb.db.Database.SqlQuery<OPSPModel>("select distinct ID, a.ID_Operation, b.Operation, a.ID_SpecProcess, c.SpecProcess from SerialNumber.dbo.OPSP_Link as a left join SerialNumber.dbo.OP as b on a.ID_Operation = b.ID_Operation left join SerialNumber.dbo.SP as c on a.ID_SpecProcess = c.ID_SpecProcess").ToList();
-            OPSPDG.ItemsSource = opspList;
+
+            groupedData = opspList.GroupBy(link => link.Operation)
+                           .Select(group => new OPSPModel
+                           {
+                               ID_Operation = group.First().ID_Operation,
+                               Operation = group.Key,
+                               SpecProcesses = group.Select(link => new SpecProcess
+                               {
+                                   SID_SpecProcess = link.ID_SpecProcess,
+                                   SSpecProcess = link.SpecProcess
+                               }).ToList()
+                           })
+                           .ToList();
+
+            OPSPDG.ItemsSource = groupedData;
         }
 
         private void SearchBtn_Click(object sender, RoutedEventArgs e)
@@ -128,14 +132,36 @@ namespace ac
             List<OPSPModel> opsp = new List<OPSPModel>();
             string txt = SearchTBX.Text;
             if (txt.Length == 0)
-                opsp = opspList;
-            opsp = opspList.Where(u => u.OPSPFull.ToLower().Contains(txt.ToLower())).ToList();
+                opsp = groupedData;
+            opsp = groupedData.Where(u => u.OPSPFull.ToLower().Contains(txt.ToLower())).ToList();
             OPSPDG.ItemsSource = opsp;
         }
 
         private void ClearBtn_Click(object sender, RoutedEventArgs e)
         {
             SearchTBX.Clear();
+        }
+
+        private void Expander_Expanded(object sender, RoutedEventArgs e)
+        {
+            for (var vis = sender as Visual; vis != null; vis = VisualTreeHelper.GetParent(vis) as Visual)
+                if (vis is DataGridRow)
+                {
+                    var row = (DataGridRow)vis;
+                    row.DetailsVisibility = row.DetailsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+                    break;
+                }
+        }
+
+        private void Expander_Collapsed(object sender, RoutedEventArgs e)
+        {
+            for (var vis = sender as Visual; vis != null; vis = VisualTreeHelper.GetParent(vis) as Visual)
+                if (vis is DataGridRow)
+                {
+                    var row = (DataGridRow)vis;
+                    row.DetailsVisibility = row.DetailsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+                    break;
+                }
         }
     }
 }

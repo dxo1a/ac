@@ -40,13 +40,7 @@ namespace ac
             ViewModel = new ViewModel();
             DataContext = ViewModel;
 
-            //ProductList = Odb.db.Database.SqlQuery<ProductModel>("select distinct dv.Изделие, dv.НомерИ, DEV_SN, CC_ZN from SS_DEV_NUM as devnum left join SP_SS as spss on devnum.SS_ID = spss.SS_ID left join Cooperation.dbo.DetailsView as dv on spss.NUM_PP = dv.Договор collate Cyrillic_General_100_CI_AI LEFT JOIN CC_SUB_VIEW as subview on devnum.DEV_SN = subview.CC_SN WHERE DEV_SN is not null and dv.Изделие is not null and dv.НомерИ is not null order by CC_ZN desc").ToList();
-            //ProductLB.ItemsSource = ProductList;
             LoadProducts();
-
-            /*byte[] fileByte = Odb.db.Database.SqlQuery<byte[]>("SELECT Data FROM dsl_sp.dbo.CC_SUB_VIEW WHERE CARD_ID = 291").FirstOrDefault();
-            SaveByteArrayToFileWithBinaryWriter(fileByte, "C:\\Users\\it01\\Documents\\pic.jpg");*/
-
         }
 
         #region Details
@@ -394,19 +388,10 @@ namespace ac
         }
         #endregion
 
-
         #region Поиск в таблице
         private void DetailSearchBTN_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.IsDetailSearchVisible = !ViewModel.IsDetailSearchVisible;
-        }
-
-        private void DetailSearchTBX_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == System.Windows.Input.Key.Enter)
-            {
-                searchInDG();
-            }
         }
 
         private void searchInDG()
@@ -417,6 +402,11 @@ namespace ac
                 details = detailsView;
             details = detailsView.Where(u => u.DetailToString.ToLower().Contains(txt.ToLower())).ToList();
             DetailsDG.ItemsSource = details;
+        }
+
+        private void DetailSearchTBX_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            searchInDG();
         }
         #endregion
 
@@ -621,11 +611,16 @@ namespace ac
             oPSPCatalogWindow.Show();
         }
 
-        /*public static void SaveByteArrayToFileWithBinaryWriter(byte[] data, string filePath)
+        /*#region для вывода файла из бд
+        byte[] fileByte = Odb.db.Database.SqlQuery<byte[]>("SELECT Data FROM dsl_sp.dbo.CC_SUB_VIEW WHERE CARD_ID = 291").FirstOrDefault();
+        SaveByteArrayToFileWithBinaryWriter(fileByte, "C:\\Users\\it01\\Documents\\pic.jpg");
+
+        public static void SaveByteArrayToFileWithBinaryWriter(byte[] data, string filePath)
         {
             var writer = new BinaryWriter(File.OpenWrite(filePath));
             writer.Write(data);
         }
+        //либо
         public static void SaveByteArrayToFileWithStaticMethod(byte[] data, string filePath) => File.WriteAllBytes(filePath, data);*/
     }
 }
