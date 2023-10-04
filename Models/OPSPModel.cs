@@ -17,6 +17,14 @@ namespace ac.Models
         {
             return Operation;
         }
+
+        public string OPSPFull
+        {
+            get
+            {
+                return $"{Operation}{SpecProcess}";
+            }
+        }
     }
 
     public class Operation

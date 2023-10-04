@@ -12,7 +12,7 @@ namespace ac.Models
         public string CC_ZN { get; set; }
         public override string ToString()
         {
-            if (CC_ZN == null)
+            if (CC_ZN == null || CC_ZN == "")
             {
                 return DEV_SN;
             }
@@ -26,7 +26,7 @@ namespace ac.Models
         {
             get
             {
-                if (CC_ZN == null)
+                if (CC_ZN == null || CC_ZN == "")
                 {
                     return DEV_SN;
                 }

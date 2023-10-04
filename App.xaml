@@ -15,6 +15,8 @@
                 <ResourceDictionary Source="pack://application:,,,/StyledWindow.WPF;component/Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            
+
             <!--DataGrid用のスタイル-->
 
             <converters:StatusConverter x:Key="StatusConverter"/>
@@ -30,6 +32,17 @@
             <DropShadowEffect x:Key="shadForText" BlurRadius="3" Direction="0" ShadowDepth="1" Color="Black"/>
             <DropShadowEffect x:Key="shadForTextOnLight" BlurRadius="1" Direction="0" ShadowDepth="1" Color="Black"/>
             <BlurEffect x:Key="BlurEffect" Radius="10" KernelType="Gaussian"/>
+
+            <Style x:Key="ClearButton" TargetType="Button">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="LightGray"/>
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="False">
+                        <Setter Property="Background" Value="Transparent"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
 
             <Style TargetType="DataGridCell" x:Key="ReadyCell">
                 <Setter Property="BorderThickness" Value="0"/>
@@ -144,6 +157,8 @@
                 </Setter>
             </Style>
 
+            
+
             <Style x:Key="UpRoundedButtonStyle" TargetType="Button">
                 <Setter Property="Template">
                     <Setter.Value>
@@ -182,13 +197,13 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="ButtonBorder" Property="Background" Value="LightGray" />
+                                    <Setter TargetName="ButtonBorder" Property="Background" Value="#cacaca" />
                                     <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#FF4C4C4C" />
                                     <Setter TargetName="ButtonBorder" Property="BorderThickness" Value="0" />
                                     <Setter TargetName="ButtonBorder" Property="Cursor" Value="Hand" />
                                 </Trigger>
                                 <Trigger Property="IsMouseOver" Value="False">
-                                    <Setter TargetName="ButtonBorder" Property="Background" Value="Transparent" />
+                                    <Setter TargetName="ButtonBorder" Property="Background" Value="LightGray" />
                                     <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#FF4C4C4C" />
                                     <Setter TargetName="ButtonBorder" Property="BorderThickness" Value="0" />
                                 </Trigger>
@@ -232,7 +247,7 @@
             </Style>
 
             <Style x:Key="TBXStyle" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
-                <Setter Property="Padding" Value="5 5 15 0"/>
+                <Setter Property="Padding" Value="5 5 35 0"/>
             </Style>
 
             <Style TargetType="TextBox">
@@ -288,7 +303,8 @@
                 </Setter>
                 <!--<Setter Property="Effect" Value="{StaticResource ShadowEffectSeparator}"/>-->
             </Style>
-
+    
+            <!--#region ScrollBar-->
             <SolidColorBrush x:Key="StandardBorderBrush" Color="#888" />
             <SolidColorBrush x:Key="StandardBackgroundBrush" Color="Black" />
             <SolidColorBrush x:Key="HoverBorderBrush" Color="#DDD" />
@@ -466,6 +482,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            <!--#endregion-->
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -112,5 +112,30 @@ namespace ac
             opspList = Odb.db.Database.SqlQuery<OPSPModel>("select distinct ID, a.ID_Operation, b.Operation, a.ID_SpecProcess, c.SpecProcess from SerialNumber.dbo.OPSP_Link as a left join SerialNumber.dbo.OP as b on a.ID_Operation = b.ID_Operation left join SerialNumber.dbo.SP as c on a.ID_SpecProcess = c.ID_SpecProcess").ToList();
             OPSPDG.ItemsSource = opspList;
         }
+
+        private void SearchBtn_Click(object sender, RoutedEventArgs e)
+        {
+            search();
+        }
+
+        private void SearchTBX_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            search();
+        }
+
+        private void search()
+        {
+            List<OPSPModel> opsp = new List<OPSPModel>();
+            string txt = SearchTBX.Text;
+            if (txt.Length == 0)
+                opsp = opspList;
+            opsp = opspList.Where(u => u.OPSPFull.ToLower().Contains(txt.ToLower())).ToList();
+            OPSPDG.ItemsSource = opsp;
+        }
+
+        private void ClearBtn_Click(object sender, RoutedEventArgs e)
+        {
+            SearchTBX.Clear();
+        }
     }
 }

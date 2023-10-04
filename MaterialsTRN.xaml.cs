@@ -26,8 +26,6 @@ namespace ac
             TRNDG.ItemsSource = TrnsList;
             SNDG.ItemsSource = SNList;
 
-            
-
             this.Title = TrnsList.First().Material + " | Поставка";
         }
 
@@ -43,18 +41,6 @@ namespace ac
         }
 
         #region Поиск
-        private void SearchSNTBX_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == System.Windows.Input.Key.Enter)
-            {
-                search();
-            }
-        }
-
-        private void SearchSPBtn_Click(object sender, RoutedEventArgs e)
-        {
-            search();
-        }
 
         private void search()
         {
@@ -62,9 +48,19 @@ namespace ac
             string txt = SearchSNTBX.Text;
             if (txt.Length == 0)
                 mtm = SNList;
-            mtm = SNList.Where(u => u.SNListToString.ToLower().Contains(txt.Substring(2).ToLower())).ToList();
+            mtm = SNList.Where(u => u.SNListToString.ToLower().Contains(txt.ToLower())).ToList();
             SNDG.ItemsSource = mtm;
         }
         #endregion
+
+        private void ClearBtn_Click(object sender, RoutedEventArgs e)
+        {
+            SearchSNTBX.Clear();
+        }
+
+        private void SearchSNTBX_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            search();
+        }
     }
 }

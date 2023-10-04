@@ -35,6 +35,10 @@
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="Foreground" Value="LightGray"/>
         </Style>
+        <Storyboard x:Key="AppearDisappearStoryboard">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:1.5" />
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" BeginTime="0:0:1.5" Duration="0:0:1.5" />
+        </Storyboard>
     </Window.Resources>
     <Grid>
         <!--#region Definitions-->
@@ -56,18 +60,25 @@
                 <Image Source="Resources/icons/misc/catalogue.ico" MaxWidth="30" MaxHeight="30" ToolTip="Справочник &quot;Спец. процессы&quot;"/>
             </Button>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top" Panel.ZIndex="2" Grid.Row="0">
+        <StackPanel Name="SNSP" Orientation="Horizontal" Grid.Column="1" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Top" Panel.ZIndex="2" Grid.Row="0" Visibility="Collapsed">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 10 0 0">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                        <Button Name="BackToProductBtn" Width="25" Height="25" Style="{StaticResource RoundedButtonStyle}" Margin="0 0 10 0" Click="BackToProductBtn_Click" VerticalAlignment="Top">
+                            <Image Source="Resources/icons/misc/arrows/right_arrow_2.ico" Width="22" Height="22" Margin="2 2 2 2" ToolTip="Изделия" RenderTransformOrigin="0.5,0.5">
+                                <Image.RenderTransform>
+                                    <ScaleTransform ScaleX="-1"/>
+                                </Image.RenderTransform>
+                            </Image>
+                        </Button>
                         <TextBlock Text="Сер. номер " HorizontalAlignment="Center" Grid.Column="1" FontSize="16" VerticalAlignment="Top"/>
                         <StackPanel Orientation="Vertical">
-                            <TextBox x:Name="SerialNumberTBX" MinWidth="250" MaxWidth="230" Margin="0 4.5 -10 0" HorizontalContentAlignment="Center" FontSize="16" Padding="5 5 15 0" Style="{StaticResource TBXStyle}" BorderBrush="LightGray" KeyDown="SerialNumberTBX_KeyDown" GotFocus="SerialNumberTBX_GotFocus" LostFocus="SerialNumberTBX_LostFocus" TextChanged="SerialNumberTBX_TextChanged"/>
-                            <ListBox Name="SerialNumbersLB" SelectionChanged="SerialNumbersLB_SelectionChanged" SelectionMode="Single" Visibility="Collapsed" MaxWidth="250" Width="auto" Height="55" MaxHeight="55" Background="LightGray"/>
+                            <TextBox x:Name="SerialNumberTBX" MinWidth="260" MaxWidth="300" Margin="0 0 0 0" HorizontalContentAlignment="Center" FontSize="16" Padding="5 5 40 0" Style="{StaticResource TBXStyle}" BorderBrush="LightGray" GotFocus="SerialNumberTBX_GotFocus" LostFocus="SerialNumberTBX_LostFocus" TextChanged="SerialNumberTBX_TextChanged"/>
+                            <Button x:Name="ClearSNBtn" Width="30" Height="30" HorizontalAlignment="Right" Margin="0 -30 5 0" Style="{StaticResource ClearButton}"  BorderBrush="Transparent" BorderThickness="0" Click="ClearSNBtn_Click">
+                                <Image Source="Resources/icons/misc/cross_1.ico" MaxWidth="30" MaxHeight="30" ToolTip="Очистить" Opacity="0.5"/>
+                            </Button>
+                            <ListBox Name="SerialNumbersLB" SelectionChanged="SerialNumbersLB_SelectionChanged" SelectionMode="Single" Visibility="Collapsed" MaxWidth="250" Width="auto" Height="auto" MaxHeight="155" Background="LightGray" Panel.ZIndex="2" Grid.RowSpan="3"/>
                         </StackPanel>
-                        <Button Name="FindPPBtn" Width="30" Height="30" Click="FindPPBtn_Click" Style="{StaticResource RightRoundedButtonStyle}" VerticalAlignment="Top">
-                            <Image Source="Resources/icons/misc/find1.ico" Width="22" Height="22" Margin="2" ToolTip="Поиск по серийному номеру"/>
-                        </Button>
                     </StackPanel>
                     <TextBlock x:Name="SNNotFoundTB" Grid.Column="1" Grid.Row="1" Text="Не найдено" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed" Margin="165 0 0 0" Foreground="#FF2F2F" Style="{StaticResource MaterialDesignHelperTextBlock}"/>
                 </StackPanel>
@@ -82,6 +93,25 @@
                 <TextBlock x:Name="CopyNotificationTB" Grid.Column="1" Grid.Row="1" Text="Скопировано" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="Collapsed" Margin="152.5 0 0 0" Style="{StaticResource MaterialDesignHelperTextBlock}"/>
             </StackPanel>
         </StackPanel>
+
+        <StackPanel Name="ProductSP" Orientation="Horizontal" Grid.Column="1" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Top" Panel.ZIndex="2" Grid.Row="0" Visibility="Visible">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 10 0 0">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5">
+                        <TextBlock Text="Изделие " HorizontalAlignment="Center" Grid.Column="1" FontSize="16" VerticalAlignment="Top"/>
+                        <StackPanel Orientation="Vertical">
+                            <TextBox x:Name="ProductTBX" MinWidth="250" MaxWidth="500" Margin="0 4.5 0 0" HorizontalContentAlignment="Center" FontSize="16" Padding="5 5 40 0" Style="{StaticResource TBXStyle}" BorderBrush="LightGray" KeyDown="ProductTBX_KeyDown" GotFocus="ProductTBX_GotFocus" LostFocus="ProductTBX_LostFocus" TextChanged="ProductTBX_TextChanged"/>
+                            <Button x:Name="ClearProductBtn" Width="30" Height="30" HorizontalAlignment="Right" Margin="0 -30 5 0" BorderThickness="0" Click="ClearProductBtn_Click" Style="{StaticResource ClearButton}">
+                                <Image Source="Resources/icons/misc/cross_1.ico" MaxWidth="30" MaxHeight="30" ToolTip="Очистить" Opacity="0.5"/>
+                            </Button>
+                            <ListBox Name="ProductLB" SelectionChanged="ProductLB_SelectionChanged" SelectionMode="Single" Visibility="Collapsed" MaxWidth="500" Width="auto" Height="auto" MaxHeight="155" Background="LightGray" Panel.ZIndex="2" Grid.RowSpan="3" />
+                            <TextBlock x:Name="PDNotFoundTB" Text="Серийные номера не найдены" HorizontalAlignment="Center" Visibility="Visible" Opacity="0" Margin="0 5 0 0" Foreground="#FF2F2F" Style="{StaticResource MaterialDesignHelperTextBlock}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
         <!--#endregion-->
         
         <!--#region BOTTOM PANEL-->
@@ -97,7 +127,11 @@
             </CheckBox>
         </StackPanel>
 
-        <TextBlock Name="PPNameTB" Text="Наименование изделия" Grid.Row="1" Grid.Column="1" FontSize="18" TextAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Bottom" Padding="5 0" Effect="{StaticResource shadForTextOnLight}" ToolTip="Зелёное готово&#x0a;Тёмное не готово"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center">
+            <TextBlock Name="PPNameTB" Text="Наименование изделия" FontSize="18" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Bottom" Padding="5 0" Effect="{StaticResource shadForTextOnLight}" ToolTip="Зелёное готово&#x0a;Тёмное не готово"/>
+            <!--<Button x:Name="SNListForProductBTN" Width="25" Height="25" Grid.Row="1" Grid.Column="1" Content="SN" Style="{StaticResource RoundedButtonStyle}" VerticalAlignment="Bottom" ToolTip="Серийные номера по изделию" Click="SNListForProductBTN_Click"/>-->
+        </StackPanel>
+        
         <TextBlock Name="PPPrPTB" Text="ПрП: 0000000000" Grid.Row="1" Grid.Column="1" MinWidth="220" TextAlignment="Right" HorizontalAlignment="Right" FontSize="18" VerticalAlignment="Bottom" Padding="5 0"/>
         <!--#endregion-->
 
@@ -113,9 +147,11 @@
                 <DataGridTextColumn Binding="{Binding Detail}" Header="Деталь" Width="*" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-        <StackPanel Name="SPPB" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Visible">
+        <StackPanel Name="SPPB" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" Visibility="Visible" Height="35" Opacity="0.25" Margin="5 -5 5 0">
             <ProgressBar Name="PBDetailsDG" Minimum="0" Maximum="100" Value="0" Style="{StaticResource PB}" Margin="5 -5 5 0" Height="35"/>
-            <!--<TextBlock Text="{Binding ElementName=PBDetailsDG, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 -20 0 0"/>-->
+        </StackPanel>
+        <StackPanel Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="20">
+            <TextBlock Name="PBTBX" Text="{Binding ElementName=PBDetailsDG, Path=Value, StringFormat={}{0:0}}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0" FontSize="15"/>
         </StackPanel>
         
     </Grid>

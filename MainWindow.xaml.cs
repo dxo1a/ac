@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
@@ -18,13 +19,16 @@ namespace ac
         #region Переменные
         List<DetailsView> detailsView = new List<DetailsView>();
         List<SerialNumbersModel> SerialNumbersList = new List<SerialNumbersModel>();
+        List<SerialNumbersModel> SerialNumbersForDetailList = new List<SerialNumbersModel>();
+        List<ProductModel> ProductList = new List<ProductModel>();
 
         DetailsView SelectedDetail { get; set; }
         SerialNumbersModel SelectedSerialNumber { get; set; }
+        ProductModel SelectedProduct { get; set; }
         public ViewModel ViewModel { get; set; }
         DetailsView productNameAndStatus { get; set; }
 
-        public string SerialNumber;
+        public string SerialNumber, numpp, product, productnum;
         #endregion
 
         public MainWindow()
@@ -36,22 +40,27 @@ namespace ac
             ViewModel = new ViewModel();
             DataContext = ViewModel;
 
-            SerialNumbersList = Odb.db.Database.SqlQuery<SerialNumbersModel>("select DEV_SN, CC_ZN from SS_DEV_NUM as a left join CC_SUB_VIEW as b on a.DEV_SN = b.CC_SN where DEV_SN IS NOT NULL").ToList();
-            SerialNumbersLB.ItemsSource = SerialNumbersList;
+            //ProductList = Odb.db.Database.SqlQuery<ProductModel>("select distinct dv.Изделие, dv.НомерИ, DEV_SN, CC_ZN from SS_DEV_NUM as devnum left join SP_SS as spss on devnum.SS_ID = spss.SS_ID left join Cooperation.dbo.DetailsView as dv on spss.NUM_PP = dv.Договор collate Cyrillic_General_100_CI_AI LEFT JOIN CC_SUB_VIEW as subview on devnum.DEV_SN = subview.CC_SN WHERE DEV_SN is not null and dv.Изделие is not null and dv.НомерИ is not null order by CC_ZN desc").ToList();
+            //ProductLB.ItemsSource = ProductList;
+            LoadProducts();
 
             /*byte[] fileByte = Odb.db.Database.SqlQuery<byte[]>("SELECT Data FROM dsl_sp.dbo.CC_SUB_VIEW WHERE CARD_ID = 291").FirstOrDefault();
             SaveByteArrayToFileWithBinaryWriter(fileByte, "C:\\Users\\it01\\Documents\\pic.jpg");*/
 
         }
 
+        #region Details
         #region Асинхронная загрузка деталей
         private async void UpdateGrid()
         {
             try
             {
                 PBDetailsDG.Value = 0;
+                SPPB.Background = new SolidColorBrush(Colors.Transparent);
+                PBTBX.Text = "Добавление деталей...";
                 DetailsDG.ItemsSource = new List<DetailsView>();
                 DisableActions();
+                Cursor = Cursors.AppStarting;
                 await PrintDetails();
             }
             catch (Exception ex)
@@ -61,6 +70,9 @@ namespace ac
             finally
             {
                 EnableActions();
+                Cursor = Cursors.Arrow;
+                SPPB.Background = new SolidColorBrush(Colors.LightGreen);
+                PBTBX.Text = "Детали добавлены!";
             }
         }
 
@@ -114,22 +126,274 @@ namespace ac
                 }
                 connection.Close();
             }
-            #region progressBar
+            /*#region progressBar
             int totalItems = details.Count;
             int processedItems = 0;
             foreach (DetailsView detail in details)
             {
                 processedItems++;
                 PBDetailsDG.Value = (double)processedItems / totalItems * 100;
+                PBTBX.Text = $"Добавляем детали: {processedItems}/{totalItems}";
                 await Task.Delay(1);
             }
-            #endregion
-
+            #endregion*/
             GC.Collect();
             GC.WaitForPendingFinalizers();
             return details;
         }
         #endregion
+        #endregion
+
+        #region SN
+        private void SerialNumbersLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SelectedSerialNumber = (SerialNumbersModel)SerialNumbersLB.SelectedItem;
+            if (SelectedSerialNumber != null)
+            {
+                SerialNumberTBX.Text = SelectedSerialNumber.DEV_SN;
+                SearchDetailsInDB();
+            }
+        }
+
+        private void SerialNumberTBX_GotFocus(object sender, RoutedEventArgs e)
+        {
+            SerialNumbersLB.Visibility = Visibility.Visible;
+        }
+
+        private void SerialNumberTBX_LostFocus(object sender, RoutedEventArgs e)
+        {
+            SerialNumbersLB.Visibility = Visibility.Collapsed;
+        }
+
+        private void SerialNumberTBX_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+            string txt = SerialNumberTBX.Text;
+            if (txt == null || txt == "")
+            {
+                SerialNumbersLB.ItemsSource = SerialNumbersList;
+            }
+            else
+            {
+                SerialNumbersLB.ItemsSource = SerialNumbersList.Where(u => u.FullSerialNumber.ToLower().Contains(txt.ToLower())).ToList();
+            }
+        }
+
+        #region Асинхронная загрузка серийных номеров
+        private async void LoadSerialNumbers()
+        {
+            try
+            {
+                SPPB.Background = new SolidColorBrush(Colors.Transparent);
+                PBTBX.Text = "Добавление серийных номеров...";
+                SerialNumberTBX.IsEnabled = false;
+                ProductTBX.IsEnabled = false;
+                SerialNumberTBX.Text = "Загрузка...";
+                Cursor = Cursors.AppStarting;
+                SerialNumbersLB.ItemsSource = new List<SerialNumbersModel>();
+                await PrintSerialNumbers();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Произошла ошибка[test]: " + ex.Message);
+            }
+            finally
+            {
+                //EnableActions();
+                if (SerialNumbersList.Count > 0)
+                {
+                    PBTBX.Text = "Серийные номера добавлены!";
+                    SPPB.Background = new SolidColorBrush(Colors.LightGreen);
+                    ProductSP.Visibility = Visibility.Collapsed;
+                    SNSP.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    PBTBX.Text = "Серийные номера не найдены!";
+                    SPPB.Background = new SolidColorBrush(Colors.Red);
+                    #region Анимация подсказки
+                    Storyboard storyboard = (Storyboard)this.Resources["AppearDisappearStoryboard"];
+                    if (storyboard != null)
+                        storyboard.Begin(PDNotFoundTB);
+                    #endregion
+                    ProductTBX.Clear();
+                }
+                Cursor = Cursors.Arrow;
+                SerialNumberTBX.IsEnabled = true;
+                SerialNumberTBX.IsEnabled = true;
+                SerialNumberTBX.Text = "";
+            }
+        }
+
+        async Task PrintSerialNumbers()
+        {
+            Console.WriteLine("-----Загрузка серийных номеров началась-----");
+            SerialNumbersList = await GetSerialNumbersAsync();
+            Console.WriteLine("-----Загрузка серийных номеров закончена----");
+
+            Dispatcher.Invoke(() => { SerialNumbersLB.ItemsSource = SerialNumbersList; });
+        }
+
+        async Task<List<SerialNumbersModel>> GetSerialNumbersAsync()
+        {
+            List<SerialNumbersModel> snsModel = new List<SerialNumbersModel>();
+
+
+            using (SqlConnection connection = new SqlConnection(Odb.db.Database.Connection.ConnectionString))
+            {
+                connection.Open();
+                SqlCommand cmd = new SqlCommand("select distinct DEV_SN, CC_ZN from SS_DEV_NUM as devnum left join SP_SS as spss on devnum.SS_ID = spss.SS_ID left join Cooperation.dbo.DetailsView as dv on spss.NUM_PP = dv.Договор collate Cyrillic_General_100_CI_AI LEFT JOIN CC_SUB_VIEW as subview on devnum.DEV_SN = subview.CC_SN where dv.Изделие = '" + product + "' and dv.НомерИ = '" + productnum + "' and DEV_SN is not null ORDER BY CC_ZN DESC", connection);
+                cmd.CommandTimeout = 40000;
+                var reader = await cmd.ExecuteReaderAsync();
+                while (reader.Read())
+                {
+                    SerialNumbersModel snModel = new SerialNumbersModel()
+                    {
+                        DEV_SN = reader.GetString(0),
+                        CC_ZN = reader.IsDBNull(1) ? "" : reader.GetString(1)
+                    };
+                    snsModel.Add(snModel);
+                }
+                connection.Close();
+            }
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            return snsModel;
+        }
+        #endregion
+        #endregion
+
+        #region Product
+        private void ProductLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SelectedProduct = (ProductModel)ProductLB.SelectedItem;
+            if (SelectedProduct == null)
+                return;
+            PPNameTB.Text = SelectedProduct.ProductFull;
+
+            product = SelectedProduct.Product;
+            productnum = SelectedProduct.ProductNum;
+
+            LoadSerialNumbers();
+            
+        }
+
+        #region Асинхронная загрузка изделий
+        private async void LoadProducts()
+        {
+            try
+            {
+                PBDetailsDG.Value = 0;
+                PBTBX.Text = "Начало добавления изделий...";
+                ProductLB.ItemsSource = new List<ProductModel>();
+                DisableActions();
+                await PrintProducts();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Произошла ошибка[test]: " + ex.Message);
+            }
+            finally
+            {
+                EnableActions();
+                SPPB.Background = new SolidColorBrush(Colors.LightGreen);
+                PBTBX.Text = "Изделия добавлены!";
+                
+            }
+        }
+
+        async Task PrintProducts()
+        {
+            Console.WriteLine("-----Загрузка изделий началась-----");
+            ProductTBX.Text = "Загрузка...";
+            Cursor = Cursors.AppStarting;
+            ProductTBX.IsEnabled = false;
+            ProductList = await GetProductsAsync();
+            Console.WriteLine("-----Загрузка изделий закончена----");
+            Cursor = Cursors.Arrow;
+            ProductTBX.Text = "";
+            ProductTBX.IsEnabled = true;
+
+            Dispatcher.Invoke(() => { ProductLB.ItemsSource = ProductList; });
+        }
+
+        async Task<List<ProductModel>> GetProductsAsync()
+        {
+            List<ProductModel> products = new List<ProductModel>();
+
+            using (SqlConnection connection = new SqlConnection(Odb.db.Database.Connection.ConnectionString))
+            {
+                connection.Open();
+                SqlCommand cmd = new SqlCommand("select distinct dv.Изделие as Product, dv.НомерИ as ProductNum from Cooperation.dbo.DetailsView as dv WHERE dv.Изделие is not null and dv.НомерИ is not null", connection);
+                cmd.CommandTimeout = 40000;
+                var reader = await cmd.ExecuteReaderAsync();
+                while (reader.Read())
+                {
+                    ProductModel product = new ProductModel()
+                    {
+                        Product = reader.GetString(0),
+                        ProductNum = reader.GetString(1)
+                    };
+                    products.Add(product);
+                }
+                connection.Close();
+            }
+            /*#region progressBar
+            int totalItems = products.Count;
+            int processedItems = 0;
+            foreach (ProductModel product in products)
+            {
+                processedItems++;
+                PBDetailsDG.Value = (double)processedItems / totalItems * 100;
+                PBTBX.Text = $"Добавляем изделия: {processedItems}/{totalItems}";
+                await Task.Delay(1);
+            }
+            #endregion
+            */
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            return products;
+        }
+        #endregion
+
+        private void ProductTBX_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            searchProduct();
+        }
+
+        private void ProductTBX_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ProductLB.Visibility = Visibility.Visible;
+        }
+
+        private void ProductTBX_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ProductLB.Visibility = Visibility.Collapsed;
+        }
+
+        private void ProductTBX_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            searchProduct();
+        }
+
+        public void searchProduct()
+        {
+            List<ProductModel> pd = new List<ProductModel>();
+            string txt = ProductTBX.Text;
+            if (txt.Length == 0)
+                pd = ProductList;
+            pd = ProductList.Where(u => u.ProductFull.ToLower().Contains(txt.ToLower())).ToList();
+            ProductLB.ItemsSource = pd;
+        }
+
+        private void BackToProductBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ProductSP.Visibility = Visibility.Visible;
+            SNSP.Visibility = Visibility.Collapsed;
+            DetailsDG.ItemsSource = new List<DetailsView>();
+        }
+        #endregion
+
 
         #region Поиск в таблице
         private void DetailSearchBTN_Click(object sender, RoutedEventArgs e)
@@ -156,20 +420,7 @@ namespace ac
         }
         #endregion
 
-        #region Поиск деталей
-        private  void FindPPBtn_Click(object sender, RoutedEventArgs e)
-        {
-            SearchDetailsInDB();
-        }
-
-        private void SerialNumberTBX_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == System.Windows.Input.Key.Enter)
-            {
-                SearchDetailsInDB();
-            }
-        }
-
+        #region Поиск деталей в БД
         private async void SearchDetailsInDB()
         {
             if (string.IsNullOrEmpty(SerialNumberTBX.Text))
@@ -240,26 +491,6 @@ namespace ac
         #endregion
 
         #region IMG
-        /*
-        private void UpdateImage(List<DetailsView> detail)
-        {
-            if (ImgCB.IsChecked.Value)
-            {
-                HashSet<string> DetNode = new HashSet<string>();
-                detailsView.ForEach(u => DetNode.Add(u.DetailNode));
-                foreach (string detnode in DetNode)
-                {
-                    List<DetailsView> det = detailsView.Where(u => u.DetailNode == detnode).ToList();
-                    if (det.Count == 0) continue;
-                    byte[] img = Odb.db.Database.SqlQuery<byte[]>("select Data from dsl_sp.dbo.DEV_IMAGES_V where PRT$$$MNF = @param1",
-                        new SqlParameter("@param1", detnode)).FirstOrDefault();
-                    if (img == null) continue;
-                    det.ForEach(u => u.Data = img);
-                }
-            }
-        }
-        */
-
         private void ImgCB_Checked(object sender, RoutedEventArgs e)
         {
             ImageColumn.Visibility = Visibility.Visible;
@@ -313,12 +544,6 @@ namespace ac
         }
         #endregion
 
-        private void OPSPCatalogBtn_Click(object sender, RoutedEventArgs e)
-        {
-            OPSPCatalogWindow oPSPCatalogWindow = new OPSPCatalogWindow();
-            oPSPCatalogWindow.Show();
-        }
-
         #region Поиск и контроль элементов
         public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
         {
@@ -345,6 +570,16 @@ namespace ac
             ImgCB.IsEnabled = false;
         }
 
+        private void ClearProductBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ProductTBX.Clear();
+        }
+
+        private void ClearSNBtn_Click(object sender, RoutedEventArgs e)
+        {
+            SerialNumberTBX.Clear();
+        }
+
         private void EnableActions()
         {
             foreach (Button btn in FindVisualChildren<Button>(this))
@@ -358,44 +593,33 @@ namespace ac
             ImgCB.IsEnabled = true;
         }
 
-        private void SerialNumbersLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SNListForProductBTN_Click(object sender, RoutedEventArgs e)
         {
-            SelectedSerialNumber = (SerialNumbersModel)SerialNumbersLB.SelectedItem;
-            if (SelectedSerialNumber != null)
+            if (productNameAndStatus != null)
             {
-                SerialNumberTBX.Text = SelectedSerialNumber.FullSerialNumber;
-            }
-        }
-
-        private void SerialNumberTBX_GotFocus(object sender, RoutedEventArgs e)
-        {
-            SerialNumbersLB.Visibility = Visibility.Visible;
-        }
-
-        private void SerialNumberTBX_LostFocus(object sender, RoutedEventArgs e)
-        {
-            SerialNumbersLB.Visibility = Visibility.Collapsed;
-        }
-
-        private void SerialNumberTBX_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            
-            string txt = SerialNumberTBX.Text;
-            if (txt == null || txt == "")
-            {
-                SerialNumbersLB.Visibility = Visibility.Collapsed;
-                SerialNumbersLB.ItemsSource = SerialNumbersList;
+                SerialNumbersForDetailList = Odb.db.Database.SqlQuery<SerialNumbersModel>(@"
+                select distinct DEV_SN, CC_ZN from SS_DEV_NUM as devnum
+                left join SP_SS as spss on devnum.SS_ID = spss.SS_ID
+                left join Cooperation.dbo.DetailsView as dv on spss.NUM_PP = dv.Договор collate Cyrillic_General_100_CI_AI
+                LEFT JOIN CC_SUB_VIEW as subview on devnum.DEV_SN = subview.CC_SN
+                where dv.Изделие = @product and dv.НомерИ = @productnum and DEV_SN is not null
+                order by CC_ZN desc
+                ", new SqlParameter("product", productNameAndStatus.ProductName), new SqlParameter("productnum", productNameAndStatus.ProductNum)).ToList();
+                SNForProductWindow snForDetailWindow = new SNForProductWindow(SerialNumbersForDetailList, productNameAndStatus);
+                snForDetailWindow.Show();
             }
             else
             {
-                SerialNumbersLB.Visibility = Visibility.Visible;
-                SerialNumbersLB.ItemsSource = SerialNumbersList.Where(u => u.FullSerialNumber.ToLower().Contains(txt.ToLower())).ToList();
+                MessageBox.Show("Изделие не выбрано");
             }
-                
         }
-
-
         #endregion
+
+        private void OPSPCatalogBtn_Click(object sender, RoutedEventArgs e)
+        {
+            OPSPCatalogWindow oPSPCatalogWindow = new OPSPCatalogWindow();
+            oPSPCatalogWindow.Show();
+        }
 
         /*public static void SaveByteArrayToFileWithBinaryWriter(byte[] data, string filePath)
         {

@@ -8,13 +8,13 @@
         Title="Справочник &quot;Специальные процессы&quot;" Height="650" Width="800">
     <Window.Resources>
         <Style TargetType="Image">
-            <Setter Property="Margin" Value="0 0 0 7"/>
+            <Setter Property="Margin" Value="0 0 0 3"/>
         </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
-            <RowDefinition Height="0.075*"/>
+            <RowDefinition Height="0.09*"/>
             <RowDefinition Height="0.925*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
@@ -23,19 +23,28 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="20"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="1" Grid.Column="1" Margin="6 0 10 0">
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="6 0 10 0" VerticalAlignment="Bottom">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <Button Name="OPSPAddBtn" Click="OPSPAddBtn_Click" Width="50" Height="50" BorderBrush="Transparent" ToolTip="Добавить" Style="{StaticResource UpRoundedButtonStyle}" IsEnabled="True">
-                    <Image Source="Resources/icons/misc/add.ico" MaxWidth="34" MaxHeight="34"/>
+                <Button Name="OPSPAddBtn" Click="OPSPAddBtn_Click" Width="40" Height="40" BorderBrush="Transparent" ToolTip="Добавить" Style="{StaticResource UpRoundedButtonStyle}" IsEnabled="True">
+                    <Image Source="Resources/icons/misc/add.ico" MaxWidth="30" MaxHeight="30"/>
                 </Button>
-                <Button Name="OPSPRemoveBtn" Click="OPSPRemoveBtn_Click" Width="50" Height="50" BorderBrush="Transparent" ToolTip="Удалить" Style="{StaticResource UpRoundedButtonStyle}" Background="Transparent" IsEnabled="False">
-                    <Image Source="Resources/icons/misc/remove.ico" MaxWidth="34" MaxHeight="34"/>
+                <Button Name="OPSPRemoveBtn" Click="OPSPRemoveBtn_Click" Width="40" Height="40" BorderBrush="Transparent" ToolTip="Удалить" Style="{StaticResource UpRoundedButtonStyle}" Background="Transparent" IsEnabled="False">
+                    <Image Source="Resources/icons/misc/remove.ico" MaxWidth="30" MaxHeight="30"/>
                 </Button>
-                <Button Name="OPSPEditBtn" Click="OPSPEditBtn_Click" Width="50" Height="50" BorderBrush="Transparent" ToolTip="Изменить" Style="{StaticResource UpRoundedButtonStyle}" IsEnabled="False">
-                    <Image Source="Resources/icons/misc/edit.ico" MaxWidth="34" MaxHeight="34"/>
+                <Button Name="OPSPEditBtn" Click="OPSPEditBtn_Click" Width="40" Height="40" BorderBrush="Transparent" ToolTip="Изменить" Style="{StaticResource UpRoundedButtonStyle}" IsEnabled="False">
+                    <Image Source="Resources/icons/misc/edit.ico" MaxWidth="30" MaxHeight="30"/>
                 </Button>
-                <Button Name="OPSPRefreshBtn" Click="OPSPRefreshBtn_Click" Width="50" Height="50" BorderBrush="Transparent" ToolTip="Изменить" Style="{StaticResource UpRoundedButtonStyle}" IsEnabled="True">
-                    <Image Source="Resources/icons/misc/refresh.ico" MaxWidth="34" MaxHeight="34"/>
+                <Button Name="OPSPRefreshBtn" Click="OPSPRefreshBtn_Click" Width="40" Height="40" BorderBrush="Transparent" ToolTip="Изменить" Style="{StaticResource UpRoundedButtonStyle}" IsEnabled="True">
+                    <Image Source="Resources/icons/misc/refresh.ico" MaxWidth="30" MaxHeight="30"/>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="10 10 10 5" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Поиск: " FontSize="16"/>
+                <TextBox x:Name="SearchTBX" MinWidth="100" Width="200" MaxWidth="200" FontSize="16" TextChanged="SearchTBX_TextChanged" TextAlignment="Center" Margin="0 0 -10 0" Style="{StaticResource TBXStyle}" BorderBrush="LightGray"/>
+                <Button x:Name="ClearBtn" Width="30" Height="30" HorizontalAlignment="Right" Margin="-20 0 5 0" Style="{StaticResource ClearButton}"  BorderBrush="Transparent" BorderThickness="0" Click="ClearBtn_Click">
+                    <Image Source="Resources/icons/misc/cross_1.ico" MaxWidth="30" MaxHeight="30" ToolTip="Очистить" Opacity="0.5"/>
                 </Button>
             </StackPanel>
         </StackPanel>

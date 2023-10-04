@@ -50,9 +50,9 @@
         <StackPanel Grid.Row="2" Grid.Column="1" Margin="10 10 10 0" HorizontalAlignment="Center" VerticalAlignment="Bottom">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Поиск: " FontSize="16"/>
-                <TextBox x:Name="SearchSNTBX" MinWidth="100" Width="200" MaxWidth="200" KeyDown="SearchSNTBX_KeyDown" FontSize="16" TextAlignment="Center" Margin="0 0 -10 0" Style="{StaticResource TBXStyle}" BorderBrush="LightGray"/>
-                <Button x:Name="SearchSPBtn" Height="Auto" Width="30" Style="{StaticResource RightRoundedButtonStyle}" Click="SearchSPBtn_Click">
-                    <Image Source="Resources/icons/misc/find1.ico" Margin="2.5"/>
+                <TextBox x:Name="SearchSNTBX" MinWidth="100" Width="200" MaxWidth="200" TextChanged="SearchSNTBX_TextChanged" FontSize="16" TextAlignment="Center" Margin="0 0 -10 0" Style="{StaticResource TBXStyle}" BorderBrush="LightGray"/>
+                <Button x:Name="ClearBtn" Width="30" Height="30" HorizontalAlignment="Right" Margin="10 0 5 0" BorderThickness="0" Click="ClearBtn_Click" Style="{StaticResource ClearButton}">
+                    <Image Source="Resources/icons/misc/cross_1.ico" MaxWidth="30" MaxHeight="30" ToolTip="Очистить" Opacity="0.5"/>
                 </Button>
             </StackPanel>
         </StackPanel>

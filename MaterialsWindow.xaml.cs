@@ -51,7 +51,7 @@ namespace ac
 
                 trns = Odb.db.Database.SqlQuery<MaterialsTRNModel>(
                     @"
-                    select distinct p.NMP$$$NAM as Material, p.PRTIDN as PRTIDN, w.NAM as WRH, EIZ_RASH as EIZ, IDN, doc.DTA as DTAPostav, doc.DOC
+                    select distinct p.NMP$$$NAM as Material, p.PRTIDN as PRTIDN, w.NAM as WRH, TRN.QTY, EIZ_RASH as EIZ, IDN, doc.DTA as DTAPostav, doc.DOC
                     from SPRUT.OKP.dbo.OKP_TRNDOC as doc
                     left join SPRUT.OKP.dbo.OKP_TRN as trn on doc.DOC = trn.DOC
                     left join SPRUT.OKP.dbo.OKP_OBJLINKS l on l.S_Type = 6 and l.S_ID = trn.TRN_ID

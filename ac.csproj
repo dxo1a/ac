@@ -150,8 +150,12 @@
     <Compile Include="OPSPEditWindow.xaml.cs">
       <DependentUpon>OPSPEditWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProductModel.cs" />
     <Compile Include="SmenZadanieWindow.xaml.cs">
       <DependentUpon>SmenZadanieWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SNForProductWindow.xaml.cs">
+      <DependentUpon>SNForProductWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SpecProcessInfoWindow.xaml.cs">
       <DependentUpon>SpecProcessInfoWindow.xaml</DependentUpon>
@@ -206,6 +210,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="SmenZadanieWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SNForProductWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -306,6 +314,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\icons\misc\catalogue.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icons\misc\arrows\right_arrow_2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icons\misc\cross_1.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" />
