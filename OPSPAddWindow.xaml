@@ -31,7 +31,7 @@
             </StackPanel>
             <StackPanel MinWidth="200" MaxWidth="400" VerticalAlignment="Center" Margin="5 0 0 20">
                 <TextBlock Text="Спец. процесс" FontSize="16" FontWeight="SemiBold"/>
-                <TextBox Name="SpecProcessesTB" GotFocus="SpecProcessesTB_GotFocus" Width="auto" Height="auto" MaxHeight="75" Style="{StaticResource TBXStyle}" TextWrapping="Wrap"/>
+                <TextBox Name="SpecProcessesTB" GotFocus="SpecProcessesTB_GotFocus" Width="auto" Height="auto" MaxHeight="75" Style="{StaticResource TBXStyle}" TextWrapping="Wrap" TextChanged="SpecProcessesTB_TextChanged"/>
                 
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
                     <ListView Name="SpecProcessesLB" SelectionChanged="SpecProcessesLB_SelectionChanged" SelectionMode="Multiple" Visibility="Collapsed" Height="auto" MaxHeight="130" MinHeight="100" MaxWidth="450" Width="auto"/>

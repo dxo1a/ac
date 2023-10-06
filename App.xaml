@@ -303,7 +303,7 @@
                 </Setter>
                 <!--<Setter Property="Effect" Value="{StaticResource ShadowEffectSeparator}"/>-->
             </Style>
-    
+
             <!--#region ScrollBar-->
             <SolidColorBrush x:Key="StandardBorderBrush" Color="#888" />
             <SolidColorBrush x:Key="StandardBackgroundBrush" Color="Black" />

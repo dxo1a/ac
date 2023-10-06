@@ -56,10 +56,18 @@
         <!--#endregion-->
         
         <!--#region TOP PANEL-->
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="5 0">
-            <Button Name="OPSPCatalogBtn" Click="OPSPCatalogBtn_Click" Width="40" Height="40" BorderBrush="Transparent" ToolTip="Справочник спец. процессы" Style="{StaticResource RoundedButtonStyle}" IsEnabled="True">
-                <Image Source="Resources/icons/misc/catalogue.ico" MaxWidth="30" MaxHeight="30" ToolTip="Справочник &quot;Спец. процессы&quot;"/>
-            </Button>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="5 15" Panel.ZIndex="2" Grid.RowSpan="3">
+            <StackPanel Orientation="Vertical">
+                <Button HorizontalAlignment="Left" Name="OPSPCatalogBtn" Click="OPSPCatalogBtn_Click" Width="40" Height="40" BorderBrush="Transparent" ToolTip="Справочники" Style="{StaticResource RoundedButtonStyle}" IsEnabled="True">
+                    <Image Source="Resources/icons/misc/catalogue.ico" MaxWidth="28" MaxHeight="28" ToolTip="Справочник &quot;Спец. процессы&quot;"/>
+                </Button>
+                <Menu Name="CatalogsM" Height="50" VerticalAlignment="Top" Panel.ZIndex="2" Grid.RowSpan="3" Background="LightGray" Visibility="Collapsed" Style="{StaticResource MaterialDesignMenu}">
+                    <StackPanel Orientation="Vertical">
+                        <MenuItem Name="SpecProcessMI" Header="Спец. процессы" FontSize="10" Padding="20 0" Margin="0" Height="20" Click="SpecProcessMI_Click"/>
+                    </StackPanel>
+                </Menu>
+            </StackPanel>
+            
         </StackPanel>
 
         <StackPanel Name="ProductSP" Orientation="Horizontal" Grid.Column="1" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Top" Panel.ZIndex="2" Grid.Row="0" Visibility="Visible">

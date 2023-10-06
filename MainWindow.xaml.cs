@@ -29,13 +29,15 @@ namespace ac
         DetailsView productNameAndStatus { get; set; }
 
         public string SerialNumber, numpp, product, productnum;
+        bool isCatalogMenuOpened;
         #endregion
 
         public MainWindow()
         {
             InitializeComponent();
 
-            Odb.db = new System.Data.Entity.DbContext("Data Source=sql;initial catalog=dsl_sp;MultipleActiveResultSets=True;App=EntityFramework&quot;Integrated Security=SSPI;");
+            //Odb.db = new System.Data.Entity.DbContext("Data Source=sql;initial catalog=dsl_sp;MultipleActiveResultSets=True;App=EntityFramework&quot;User ID=sa;Password=server_esa;Integrated Security=True;");
+            Odb.db = new System.Data.Entity.DbContext("Persist Security Info=False;User ID=sa; Password=server_esa;Initial Catalog=dsl_sp;Server=sql");
 
             ViewModel = new ViewModel();
             DataContext = ViewModel;
@@ -570,6 +572,14 @@ namespace ac
             SerialNumberTBX.Clear();
         }
 
+        private void SpecProcessMI_Click(object sender, RoutedEventArgs e)
+        {
+            OPSPCatalogWindow oPSPCatalogWindow = new OPSPCatalogWindow();
+            CatalogsM.Visibility = Visibility.Collapsed;
+            isCatalogMenuOpened = false;
+            oPSPCatalogWindow.Show();
+        }
+
         private void EnableActions()
         {
             foreach (Button btn in FindVisualChildren<Button>(this))
@@ -607,8 +617,16 @@ namespace ac
 
         private void OPSPCatalogBtn_Click(object sender, RoutedEventArgs e)
         {
-            OPSPCatalogWindow oPSPCatalogWindow = new OPSPCatalogWindow();
-            oPSPCatalogWindow.Show();
+            isCatalogMenuOpened = !isCatalogMenuOpened;
+            if (isCatalogMenuOpened)
+            {
+                CatalogsM.Visibility = Visibility.Visible;
+                //isCatalogMenuOpened = !isCatalogMenuOpened;
+            }
+            else
+            {
+                CatalogsM.Visibility= Visibility.Collapsed;
+            }
         }
 
         /*#region для вывода файла из бд

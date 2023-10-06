@@ -39,7 +39,6 @@
                     </Button>
                 </StackPanel>
             </StackPanel>
-            
         </StackPanel>
 
         <DataGrid x:Name="SmenZadanieDG" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="1" Grid.Column="1" Margin="5" CanUserDeleteRows="False" Style="{StaticResource DataGridOwn}">
